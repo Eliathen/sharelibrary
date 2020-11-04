@@ -1,9 +1,9 @@
-package pl.szymanski.sharelibrary.models;
+package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 
 @Entity
@@ -21,9 +21,9 @@ public class Book {
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "authorId"))
-    private Set<Author> authors;
+    private List<Author> authors;
 
     @ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
-    private Set<User> users;
+    private List<User> users;
 
 }

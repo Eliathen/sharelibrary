@@ -1,9 +1,9 @@
-package pl.szymanski.sharelibrary.models;
+package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -12,12 +12,12 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-    private Set<Book> books;
+    private List<Book> books;
 }

@@ -1,4 +1,4 @@
-package pl.szymanski.sharelibrary.models;
+package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
 

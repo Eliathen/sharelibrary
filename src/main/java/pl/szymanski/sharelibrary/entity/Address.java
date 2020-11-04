@@ -1,7 +1,9 @@
-package pl.szymanski.sharelibrary.models;
+package pl.szymanski.sharelibrary.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Data
 @Table(name = "address")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
