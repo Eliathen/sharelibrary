@@ -1,6 +1,6 @@
 package pl.szymanski.sharelibrary.repositories.ports;
 
-import pl.szymanski.sharelibrary.models.Address;
+import pl.szymanski.sharelibrary.entity.Address;
 
 import java.util.Optional;
 import java.util.Set;

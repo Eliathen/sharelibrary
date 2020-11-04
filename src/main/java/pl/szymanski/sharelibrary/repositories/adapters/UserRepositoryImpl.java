@@ -1,0 +1,38 @@
+package pl.szymanski.sharelibrary.repositories.adapters;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.repositories.jpa.UserJPARepository;
+import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@RequiredArgsConstructor
+public class UserRepositoryImpl implements UserRepository {
+
+    private final UserJPARepository userJPARepository;
+
+
+    @Override
+    public User saveUser(User user) {
+        return userJPARepository.save(user);
+    }
+
+    @Override
+    public Optional<User> getUserById(Long id) {
+        return userJPARepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return userJPARepository.findUserByEmail(email);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userJPARepository.findAll();
+    }
+}

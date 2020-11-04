@@ -2,7 +2,7 @@ package pl.szymanski.sharelibrary.repositories.adapters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import pl.szymanski.sharelibrary.models.Address;
+import pl.szymanski.sharelibrary.entity.Address;
 import pl.szymanski.sharelibrary.repositories.jpa.AddressJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.AddressRepository;
 
