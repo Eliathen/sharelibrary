@@ -4,8 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-import static javax.persistence.CascadeType.*;
-
 @Entity
 @Data
 @Table(name = "coordinates")
@@ -19,6 +17,6 @@ public class Coordinates {
     @Column(nullable = false)
     private Double longitude;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {PERSIST, MERGE, REFRESH}, mappedBy = "coordinates" )
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "coordinates")
     private Address address;
 }

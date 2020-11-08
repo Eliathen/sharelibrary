@@ -20,6 +20,8 @@ public class Address {
     @Column(insertable = false, nullable = false)
     private Long id;
     @Column(nullable = false, columnDefinition = "TEXT")
+    private String country;
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String city;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String street;

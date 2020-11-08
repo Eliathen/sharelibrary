@@ -21,6 +21,8 @@ public class User {
     @Column(nullable = false)
     private char[] password;
 
+    private String username;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
 
