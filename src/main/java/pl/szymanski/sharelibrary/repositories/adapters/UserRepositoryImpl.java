@@ -15,7 +15,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final UserJPARepository userJPARepository;
 
-
     @Override
     public User saveUser(User user) {
         return userJPARepository.save(user);
@@ -34,5 +33,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getUsers() {
         return userJPARepository.findAll();
+    }
+
+    @Override
+    public Optional<User> getUserByUsernameOrEmail(String username, String email) {
+        return userJPARepository.findUserByUsernameOrEmail(username, email);
     }
 }

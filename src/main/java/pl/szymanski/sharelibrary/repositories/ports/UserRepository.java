@@ -15,5 +15,7 @@ public interface UserRepository {
 
     List<User> getUsers();
 
+    Optional<User> getUserByUsernameOrEmail(String user, String email);
+
 
 }
