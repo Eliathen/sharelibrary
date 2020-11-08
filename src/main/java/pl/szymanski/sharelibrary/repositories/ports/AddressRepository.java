@@ -12,4 +12,6 @@ public interface AddressRepository {
     Optional<Address> getById(Long id);
 
     Address saveAndFlush(Address address);
+
+    Optional<Address> getAddressByCountryAndCityAndStreetAndBuilding(String country, String city, String street, String building);
 }

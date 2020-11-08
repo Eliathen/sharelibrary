@@ -30,4 +30,9 @@ public class AddressRepositoryImpl implements AddressRepository {
     public Address saveAndFlush(Address address) {
         return addressJPARepository.saveAndFlush(address);
     }
+
+    @Override
+    public Optional<Address> getAddressByCountryAndCityAndStreetAndBuilding(String country, String city, String street, String building) {
+        return addressJPARepository.findAddressByCountryAndCityAndStreetAndBuildingNumber(country, city, street, building);
+    }
 }
