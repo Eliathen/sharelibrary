@@ -10,6 +10,7 @@ public class AddressView {
     private Long id;
     private String country;
     private String city;
+    private String postalCode;
     private String street;
     private String buildingNumber;
 
@@ -20,6 +21,7 @@ public class AddressView {
                 address.getId(),
                 address.getCountry(),
                 address.getCity(),
+                address.getPostalCode(),
                 address.getStreet(),
                 address.getBuildingNumber(),
                 CoordinatesView.of(address.getCoordinates())

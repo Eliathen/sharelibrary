@@ -5,7 +5,7 @@ import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
 @Value
-public class UserLoginView {
+public class UserLoginView {if
     private Long id;
     private String userName;
     private JwtAuthenticationResponse response;

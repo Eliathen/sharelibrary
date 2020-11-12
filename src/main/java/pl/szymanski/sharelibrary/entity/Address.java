@@ -26,6 +26,8 @@ public class Address {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String street;
     @Column(nullable = false, columnDefinition = "TEXT")
+    private String postalCode;
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String buildingNumber;
 
     @OneToOne(cascade = {MERGE, PERSIST, REFRESH}, fetch = FetchType.EAGER)

@@ -32,7 +32,7 @@ public class AddressRepositoryImpl implements AddressRepository {
     }
 
     @Override
-    public Optional<Address> getAddressByCountryAndCityAndStreetAndBuilding(String country, String city, String street, String building) {
-        return addressJPARepository.findAddressByCountryAndCityAndStreetAndBuildingNumber(country, city, street, building);
+    public Optional<Address> getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(String country, String city, String postalCode, String street, String buildingNumber) {
+        return addressJPARepository.getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(country, city, postalCode, street, buildingNumber);
     }
 }

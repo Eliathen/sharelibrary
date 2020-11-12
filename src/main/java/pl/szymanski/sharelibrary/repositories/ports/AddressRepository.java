@@ -13,5 +13,5 @@ public interface AddressRepository {
 
     Address saveAndFlush(Address address);
 
-    Optional<Address> getAddressByCountryAndCityAndStreetAndBuilding(String country, String city, String street, String building);
+    Optional<Address> getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(String country, String city, String postalCode, String street, String buildingNumber);
 }

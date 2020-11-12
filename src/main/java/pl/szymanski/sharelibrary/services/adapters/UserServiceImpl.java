@@ -57,9 +57,10 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user) {
         validateUser(user);
         user.setPassword(passwordEncoder.encode(String.valueOf(user.getPassword())).toCharArray());
-        Optional<Address> address = addressRepository.getAddressByCountryAndCityAndStreetAndBuilding(
+        Optional<Address> address = addressRepository.getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(
                 user.getDefaultAddress().getCountry(),
                 user.getDefaultAddress().getCity(),
+                user.getDefaultAddress().getPostalCode(),
                 user.getDefaultAddress().getStreet(),
                 user.getDefaultAddress().getBuildingNumber()
         );
