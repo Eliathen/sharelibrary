@@ -1,6 +1,6 @@
 package pl.szymanski.sharelibrary.utilities;
 
-import pl.szymanski.sharelibrary.exceptions.InvalidEmailAddress;
+import pl.szymanski.sharelibrary.exceptions.users.InvalidEmailAddress;
 
 public class Utils {
 

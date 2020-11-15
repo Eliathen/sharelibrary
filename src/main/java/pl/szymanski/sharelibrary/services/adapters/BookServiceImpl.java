@@ -2,15 +2,21 @@ package pl.szymanski.sharelibrary.services.adapters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.exceptions.BookDoesNotExist;
+import pl.szymanski.sharelibrary.entity.Cover;
+import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,17 +27,8 @@ public class BookServiceImpl implements BookService {
     private final AuthorRepository authorRepository;
 
     @Override
-    public Book saveBook(Book book) {
-        List<Author> authors = book.getAuthors().stream().map(it ->
-                authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
-        ).collect(Collectors.toList());
-        book.setAuthors(authors);
-        return bookRepository.saveBook(book);
-    }
-
-    @Override
     public Book findBookById(Long id) {
-        return bookRepository.findBookById(id).orElseThrow(() -> new BookDoesNotExist(id));
+        return bookRepository.getBookById(id).orElseThrow(() -> new BookDoesNotExist(id));
     }
 
     @Override
@@ -48,6 +45,32 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getBooksByTitle(String title) {
         return bookRepository.findBooksByTitle(title);
+    }
+
+    @Override
+    public Book saveBook(Book book, MultipartFile cover) throws IOException {
+        if (!Objects.isNull(cover)) {
+            book.setCover(getCoverFromMultipartFile(cover));
+        }
+        List<Author> authors = book.getAuthors().stream().map(it ->
+                authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
+        ).collect(Collectors.toList());
+        book.setAuthors(authors);
+        return bookRepository.saveBook(book);
+    }
+
+    @Override
+    public Set<Book> findBooksByUserId(Long userId) {
+        return bookRepository.findBooksByUserId(userId);
+    }
+
+    private Cover getCoverFromMultipartFile(MultipartFile cover) throws IOException {
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(cover.getOriginalFilename()));
+        return new Cover(
+                fileName,
+                cover.getContentType(),
+                cover.getBytes()
+        );
     }
 
 }
