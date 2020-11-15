@@ -15,11 +15,9 @@ public class CommandsDataConverter {
     public static Book AddBookCommandDataToBook(AddBookCommandData addBookCommandData) {
         Book book = new Book();
         List<Author> authors = new LinkedList<>();
-        addBookCommandData.getAuthors().forEach(it -> {
-            authors.add(AuthorCommandDataToAuthor(it));
-        });
+        addBookCommandData.getAuthors().forEach(it -> authors.add(AuthorCommandDataToAuthor(it)));
         book.setAuthors(authors);
-        BeanUtils.copyProperties(addBookCommandData, book, "authors");
+        BeanUtils.copyProperties(addBookCommandData, book, "authors", "image");
         return book;
     }
 
