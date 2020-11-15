@@ -1,4 +1,6 @@
-package pl.szymanski.sharelibrary.exceptions;
+package pl.szymanski.sharelibrary.exceptions.authors;
+
+import pl.szymanski.sharelibrary.exceptions.ExceptionMessages;
 
 public class AuthorDoesNotExist extends RuntimeException {
 

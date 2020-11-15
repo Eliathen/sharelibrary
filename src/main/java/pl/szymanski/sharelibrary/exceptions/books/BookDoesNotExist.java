@@ -1,4 +1,6 @@
-package pl.szymanski.sharelibrary.exceptions;
+package pl.szymanski.sharelibrary.exceptions.books;
+
+import pl.szymanski.sharelibrary.exceptions.ExceptionMessages;
 
 public class BookDoesNotExist extends RuntimeException {
     public BookDoesNotExist(Long id) {
