@@ -1,0 +1,2 @@
+INSERT INTO public.user (id, email, name, password, surname, username)
+    VALUES (1, 'poczta@pocztowska.pl', 'haslo jak', '$2a$10$NBwGzPSWNXVOlSBbVgdqyexaL4SvcSwXEu2ziXyQ4qooER.g5whgS', 'username', 'z');
