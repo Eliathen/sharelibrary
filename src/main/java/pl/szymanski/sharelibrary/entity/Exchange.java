@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "exchange")
 public class Exchange {
 
     @Id

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -18,6 +19,10 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cover_id", referencedColumnName = "id")
+    private Cover cover;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "authorId"))
@@ -26,4 +31,19 @@ public class Book {
     @ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
     private List<User> users;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(id, book.id) &&
+                Objects.equals(title, book.title) &&
+                Objects.equals(authors, book.authors) &&
+                Objects.equals(users, book.users);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, authors, users);
+    }
 }
