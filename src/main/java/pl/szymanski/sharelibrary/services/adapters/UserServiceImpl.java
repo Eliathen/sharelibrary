@@ -5,7 +5,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +13,11 @@ import pl.szymanski.sharelibrary.entity.Address;
 import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.User;
-import pl.szymanski.sharelibrary.exceptions.BookDoesNotExist;
-import pl.szymanski.sharelibrary.exceptions.EmailAlreadyExist;
-import pl.szymanski.sharelibrary.exceptions.UserNotFoundById;
+import pl.szymanski.sharelibrary.exceptions.auth.InvalidUsernameEmailOrPassword;
+import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
+import pl.szymanski.sharelibrary.exceptions.users.EmailAlreadyExist;
+import pl.szymanski.sharelibrary.exceptions.users.UserNotFoundById;
+import pl.szymanski.sharelibrary.exceptions.users.UsernameAlreadyExists;
 import pl.szymanski.sharelibrary.repositories.ports.AddressRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
@@ -57,13 +58,7 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user) {
         validateUser(user);
         user.setPassword(passwordEncoder.encode(String.valueOf(user.getPassword())).toCharArray());
-        Optional<Address> address = addressRepository.getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(
-                user.getDefaultAddress().getCountry(),
-                user.getDefaultAddress().getCity(),
-                user.getDefaultAddress().getPostalCode(),
-                user.getDefaultAddress().getStreet(),
-                user.getDefaultAddress().getBuildingNumber()
-        );
+        Optional<Address> address = checkIfAddressExists(user.getDefaultAddress());
         if (address.isPresent()) {
             user.setDefaultAddress(address.get());
         } else {
@@ -72,14 +67,14 @@ public class UserServiceImpl implements UserService {
 //            user.getDefaultAddress().getCoordinates().setLongitude(coordinates.getLongitude());
             user.getDefaultAddress().getCoordinates().setLatitude(50.12);
             user.getDefaultAddress().getCoordinates().setLongitude(50.13);
-
         }
         return userRepository.saveUser(user);
     }
 
+
     @Override
     public User getUserByEmailOrUserName(String user) {
-        return userRepository.getUserByUsernameOrEmail(user, user).orElseThrow(() -> new UsernameNotFoundException(user));
+        return userRepository.getUserByUsernameOrEmail(user, user).orElseThrow(InvalidUsernameEmailOrPassword::new);
     }
 
     @Override
@@ -99,7 +94,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User assignBookToUser(Long userId, Long bookId) {
         User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
-        Book book = bookRepository.findBookById(bookId).orElseThrow(() -> new BookDoesNotExist(bookId));
+        Book book = bookRepository.getBookById(bookId).orElseThrow(() -> new BookDoesNotExist(bookId));
         Set<Book> usersBooks = user.getBooks();
         usersBooks.add(book);
         user.setBooks(usersBooks);
@@ -107,10 +102,22 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validateUser(User user) {
-        Utils.validateEmailAddress(user.getEmail());
         if (userRepository.getUserByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist(user.getEmail());
+        } else if (userRepository.getUserByUsername(user.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExists(user.getUsername());
         }
+        Utils.validateEmailAddress(user.getEmail());
+    }
+
+    private Optional<Address> checkIfAddressExists(Address address) {
+        return addressRepository.getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(
+                address.getCountry(),
+                address.getCity(),
+                address.getPostalCode(),
+                address.getStreet(),
+                address.getBuildingNumber()
+        );
     }
 
 }
