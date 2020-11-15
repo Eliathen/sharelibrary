@@ -31,6 +31,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userJPARepository.findUserByUsername(username);
+    }
+
+    @Override
     public List<User> getUsers() {
         return userJPARepository.findAll();
     }

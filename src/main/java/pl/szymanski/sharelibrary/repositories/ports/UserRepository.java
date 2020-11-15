@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Optional<User> getUserByEmail(String email);
 
+    Optional<User> getUserByUsername(String username);
+
     List<User> getUsers();
 
     Optional<User> getUserByUsernameOrEmail(String user, String email);

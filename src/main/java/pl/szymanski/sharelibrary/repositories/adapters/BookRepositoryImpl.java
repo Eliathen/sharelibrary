@@ -8,6 +8,7 @@ import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,13 +27,18 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Optional<Book> findBookById(Long id) {
+    public Optional<Book> getBookById(Long id) {
         return bookJPARepository.findById(id);
     }
 
     @Override
     public List<Book> findBooksByTitle(String title) {
         return bookJPARepository.findByTitleIsContainingIgnoreCase(title);
+    }
+
+    @Override
+    public Set<Book> findBooksByUserId(Long userId) {
+        return bookJPARepository.findByUsers_Id(userId);
     }
 
 }
