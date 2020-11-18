@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface AuthorRepository {
 
     Optional<Author> findAuthorByNameAndSurname(String name, String surname);
+
+    Optional<Author> findAuthorByNameOrSurname(String name, String surname);
 }

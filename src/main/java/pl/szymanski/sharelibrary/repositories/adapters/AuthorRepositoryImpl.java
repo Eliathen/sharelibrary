@@ -19,4 +19,9 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     public Optional<Author> findAuthorByNameAndSurname(String name, String surname) {
         return authorJPARepository.findAuthorByNameAndSurname(name, surname);
     }
+
+    @Override
+    public Optional<Author> findAuthorByNameOrSurname(String name, String surname) {
+        return authorJPARepository.findAuthorByNameOrSurname(name, surname);
+    }
 }
