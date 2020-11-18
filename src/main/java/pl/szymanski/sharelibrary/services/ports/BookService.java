@@ -12,13 +12,13 @@ public interface BookService {
 
     Book findBookById(Long id);
 
-    List<Book> getBooks();
+    List<Book> getBooks(String query);
 
     List<Book> getBooksByAuthorNameAndSurname(Author author);
 
     List<Book> getBooksByTitle(String title);
 
-    Book saveBook(Book book, MultipartFile cover) throws IOException;
+    Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException;
 
     Set<Book> findBooksByUserId(Long userId);
 }
