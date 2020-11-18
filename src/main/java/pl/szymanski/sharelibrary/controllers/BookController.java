@@ -33,8 +33,8 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<BookWithoutUsersView>> getBooks() {
-        return new ResponseEntity<>(bookService.getBooks().stream().map(BookWithoutUsersView::of).collect(Collectors.toSet()), OK);
+    public ResponseEntity<Set<BookWithoutUsersView>> searchBooks(@RequestParam(name = "q") String query) {
+        return new ResponseEntity<>(bookService.getBooks(query).stream().map(BookWithoutUsersView::of).collect(Collectors.toSet()), OK);
     }
 
 
@@ -43,6 +43,7 @@ public class BookController {
     public ResponseEntity<BookWithoutUsersView> saveBook(@ModelAttribute AddBookCommandData book, MultipartFile image) throws IOException {
         return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image)), OK);
     }
+
 
     @GetMapping("/author")
     public ResponseEntity<Set<BookWithoutUsersView>> getBooksByAuthor(@RequestBody AuthorCommandData authorCommandData) {
