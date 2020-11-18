@@ -11,12 +11,10 @@ import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.services.ports.BookService;
+import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +23,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final UserService userService;
 
     @Override
     public Book findBookById(Long id) {
@@ -32,8 +31,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooks() {
-        return bookRepository.getBooks();
+    public List<Book> getBooks(String query) {
+        Set<Book> books = new HashSet<>(bookRepository.findBooksByTitle(query));
+        List<String> queries = Arrays.asList(query.split(" "));
+        queries.forEach(it -> books.addAll(bookRepository.findBooksByTitle(it)));
+        queries.forEach(it -> authorRepository.findAuthorByNameAndSurname(it, it).map(author ->
+                        author.getBooks().stream().map(books::add)
+                )
+        );
+        return new ArrayList<>(books);
     }
 
     @Override
@@ -48,7 +54,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book saveBook(Book book, MultipartFile cover) throws IOException {
+    public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
         if (!Objects.isNull(cover)) {
             book.setCover(getCoverFromMultipartFile(cover));
         }
@@ -56,7 +62,9 @@ public class BookServiceImpl implements BookService {
                 authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
         ).collect(Collectors.toList());
         book.setAuthors(authors);
-        return bookRepository.saveBook(book);
+        Book newBook = bookRepository.saveBook(book);
+        userService.assignBookToUser(userId, newBook.getId());
+        return newBook;
     }
 
     @Override
