@@ -17,6 +17,6 @@ public class Coordinates {
     @Column(nullable = false)
     private Double longitude;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "coordinates")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinates")
     private Address address;
 }

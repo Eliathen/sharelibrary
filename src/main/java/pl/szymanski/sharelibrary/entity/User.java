@@ -20,7 +20,7 @@ public class User {
     private String email;
     @Column(nullable = false)
     private char[] password;
-
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -29,12 +29,12 @@ public class User {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
-    @ManyToMany(cascade = {PERSIST, MERGE})
+    @ManyToMany(cascade = {PERSIST, MERGE}, fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "bookId"))
     private Set<Book> books;
 
     @ManyToOne(cascade = {PERSIST, MERGE})
-    @JoinTable(name = "addressId")
+    @JoinColumn(name = "addressId")
     private Address defaultAddress;
 }
