@@ -10,6 +10,7 @@ public class GeoCoordinateApiServiceImpl implements GeoCoordinateApiService {
 
     @Override
     public Coordinates getCoordinatesByAddress(Address address) {
+
         return null;
     }
 

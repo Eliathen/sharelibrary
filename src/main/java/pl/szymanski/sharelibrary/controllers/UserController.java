@@ -11,7 +11,6 @@ import pl.szymanski.sharelibrary.commanddata.AssignBookCommandData;
 import pl.szymanski.sharelibrary.commanddata.UserCommandData;
 import pl.szymanski.sharelibrary.converters.CommandsDataConverter;
 import pl.szymanski.sharelibrary.entity.User;
-import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 import pl.szymanski.sharelibrary.views.UserWithoutBooksView;
 
@@ -21,7 +20,6 @@ import pl.szymanski.sharelibrary.views.UserWithoutBooksView;
 public class UserController {
 
     private final UserService userService;
-    private final BookService bookService;
 
     @PostMapping("/register")
     public ResponseEntity<UserWithoutBooksView> add(@RequestBody UserCommandData userCommandData) {
