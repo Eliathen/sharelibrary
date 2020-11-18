@@ -40,8 +40,8 @@ public class BookController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
-    public ResponseEntity<BookWithoutUsersView> saveBook(@ModelAttribute AddBookCommandData book, MultipartFile image) throws IOException {
-        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image)), OK);
+    public ResponseEntity<BookWithoutUsersView> saveBook(@ModelAttribute AddBookCommandData book, MultipartFile image, Long userId) throws IOException {
+        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image, userId)), OK);
     }
 
 
