@@ -1,6 +1,7 @@
 package pl.szymanski.sharelibrary.services.ports;
 
 import pl.szymanski.sharelibrary.commanddata.LoginCommandData;
+import pl.szymanski.sharelibrary.entity.Address;
 import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
@@ -20,4 +21,8 @@ public interface UserService {
     JwtAuthenticationResponse getJwt(LoginCommandData loginCommandData);
 
     User assignBookToUser(Long userId, Long bookId);
+
+    User changeUserAddress(Long id, Address address);
+
+    User getUserById(Long id);
 }

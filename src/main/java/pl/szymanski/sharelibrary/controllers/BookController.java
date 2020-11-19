@@ -2,6 +2,7 @@ package pl.szymanski.sharelibrary.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +12,16 @@ import pl.szymanski.sharelibrary.commanddata.AddBookCommandData;
 import pl.szymanski.sharelibrary.commanddata.AuthorCommandData;
 import pl.szymanski.sharelibrary.converters.CommandsDataConverter;
 import pl.szymanski.sharelibrary.entity.Author;
+import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.services.ports.BookService;
+import pl.szymanski.sharelibrary.services.ports.CoverService;
 import pl.szymanski.sharelibrary.views.BookWithoutUsersView;
 
 import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -26,10 +30,19 @@ import static org.springframework.http.HttpStatus.OK;
 public class BookController {
 
     private final BookService bookService;
+    private final CoverService coverService;
 
     @GetMapping("/{bookId}")
     public ResponseEntity<BookWithoutUsersView> getBookById(@PathVariable Long bookId) {
         return new ResponseEntity<>(BookWithoutUsersView.of(bookService.findBookById(bookId)), OK);
+    }
+
+    @GetMapping("/{bookId}/cover")
+    public ResponseEntity<byte[]> getCoverByBookId(@PathVariable Long bookId) {
+        Cover cover = coverService.getCoverByBookId(bookId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, cover.getType())
+                .body(cover.getData());
     }
 
     @GetMapping
@@ -41,7 +54,7 @@ public class BookController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
     public ResponseEntity<BookWithoutUsersView> saveBook(@ModelAttribute AddBookCommandData book, MultipartFile image, Long userId) throws IOException {
-        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image, userId)), OK);
+        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image, userId)), CREATED);
     }
 
 

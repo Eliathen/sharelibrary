@@ -17,15 +17,11 @@ public class BookWithoutUsersView {
 
     private Set<AuthorView> authors;
 
-    private CoverView cover;
-
-
     public static BookWithoutUsersView of(Book book) {
         return new BookWithoutUsersView(
                 book.getId(),
                 book.getTitle(),
-                book.getAuthors().stream().map(AuthorView::of).collect(Collectors.toSet()),
-                (book.getCover() != null) ? CoverView.of(book.getCover()) : new CoverView()
+                book.getAuthors().stream().map(AuthorView::of).collect(Collectors.toSet())
         );
     }
 

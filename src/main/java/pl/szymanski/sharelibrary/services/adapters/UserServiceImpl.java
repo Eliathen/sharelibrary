@@ -101,6 +101,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveUser(user);
     }
 
+    @Override
+    public User changeUserAddress(Long id, Address address) {
+        User user = userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
+        user.setDefaultAddress(address);
+        return userRepository.saveUser(user);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
+    }
+
     private void validateUser(User user) {
         if (userRepository.getUserByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyExist(user.getEmail());

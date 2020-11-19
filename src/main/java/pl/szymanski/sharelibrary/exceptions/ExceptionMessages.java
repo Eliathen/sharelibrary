@@ -14,4 +14,5 @@ public class ExceptionMessages {
 
     public static final String UNKNOWN_ERROR_OCCURRED = "unknown error occurred";
 
+    public static final String COVER_WITH_ID_DOES_NOT_EXISTS = "Cover with id %s does not exist";
 }

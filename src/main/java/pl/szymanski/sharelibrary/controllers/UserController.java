@@ -3,10 +3,8 @@ package pl.szymanski.sharelibrary.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.szymanski.sharelibrary.commanddata.AddressCommandData;
 import pl.szymanski.sharelibrary.commanddata.AssignBookCommandData;
 import pl.szymanski.sharelibrary.commanddata.UserCommandData;
 import pl.szymanski.sharelibrary.converters.CommandsDataConverter;
@@ -38,4 +36,19 @@ public class UserController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<UserWithoutBooksView> editUser(@PathVariable("id") Long id, @RequestBody AddressCommandData addressCommandData) {
+        return new ResponseEntity<>(
+                UserWithoutBooksView.of(userService.changeUserAddress(id, CommandsDataConverter.AddressCommandDataToAddress(addressCommandData))),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserWithoutBooksView> editUser(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(
+                UserWithoutBooksView.of(userService.getUserById(id)),
+                HttpStatus.OK
+        );
+    }
 }
