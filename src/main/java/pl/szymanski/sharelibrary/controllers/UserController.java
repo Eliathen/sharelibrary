@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserWithoutBooksView> editUser(@PathVariable("id") Long id) {
+    public ResponseEntity<UserWithoutBooksView> getUser(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
                 UserWithoutBooksView.of(userService.getUserById(id)),
                 HttpStatus.OK
