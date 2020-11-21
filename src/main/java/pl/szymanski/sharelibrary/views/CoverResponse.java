@@ -8,7 +8,7 @@ import pl.szymanski.sharelibrary.entity.Cover;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoverView {
+public class CoverResponse {
 
     private String id;
 
@@ -18,8 +18,8 @@ public class CoverView {
 
     private byte[] data;
 
-    public static CoverView of(Cover cover) {
-        return new CoverView(
+    public static CoverResponse of(Cover cover) {
+        return new CoverResponse(
                 cover.getId(),
                 cover.getName(),
                 cover.getType(),

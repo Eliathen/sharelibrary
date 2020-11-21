@@ -9,19 +9,19 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Data
-public class BookWithoutUsersView {
+public class BookWithoutUsersResponse {
 
     private Long id;
 
     private String title;
 
-    private Set<AuthorView> authors;
+    private Set<AuthorResponse> authors;
 
-    public static BookWithoutUsersView of(Book book) {
-        return new BookWithoutUsersView(
+    public static BookWithoutUsersResponse of(Book book) {
+        return new BookWithoutUsersResponse(
                 book.getId(),
                 book.getTitle(),
-                book.getAuthors().stream().map(AuthorView::of).collect(Collectors.toSet())
+                book.getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toSet())
         );
     }
 

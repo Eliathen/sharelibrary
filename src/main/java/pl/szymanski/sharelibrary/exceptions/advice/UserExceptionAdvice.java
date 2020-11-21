@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.szymanski.sharelibrary.exceptions.users.EmailAlreadyExist;
+import pl.szymanski.sharelibrary.exceptions.users.InvalidEmailAddress;
 import pl.szymanski.sharelibrary.exceptions.users.UserNotFoundById;
 import pl.szymanski.sharelibrary.exceptions.users.UsernameAlreadyExists;
 
@@ -34,6 +35,14 @@ public class UserExceptionAdvice {
         ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
         return new ResponseEntity<>(errorInfo
                 , HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(InvalidEmailAddress.class)
+    public ResponseEntity<ErrorInfo> invalidEmailAddress(InvalidEmailAddress exception) {
+        ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
+        return new ResponseEntity<>(errorInfo
+                , HttpStatus.BAD_REQUEST
         );
     }
 

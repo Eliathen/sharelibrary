@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.szymanski.sharelibrary.commanddata.AddBookCommandData;
-import pl.szymanski.sharelibrary.commanddata.AuthorCommandData;
-import pl.szymanski.sharelibrary.converters.CommandsDataConverter;
+import pl.szymanski.sharelibrary.commanddata.AddBookRequest;
+import pl.szymanski.sharelibrary.commanddata.AuthorRequest;
+import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CoverService;
-import pl.szymanski.sharelibrary.views.BookWithoutUsersView;
+import pl.szymanski.sharelibrary.views.BookWithoutUsersResponse;
 
 import java.io.IOException;
 import java.util.Set;
@@ -33,8 +33,8 @@ public class BookController {
     private final CoverService coverService;
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookWithoutUsersView> getBookById(@PathVariable Long bookId) {
-        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.findBookById(bookId)), OK);
+    public ResponseEntity<BookWithoutUsersResponse> getBookById(@PathVariable Long bookId) {
+        return new ResponseEntity<>(BookWithoutUsersResponse.of(bookService.findBookById(bookId)), OK);
     }
 
     @GetMapping("/{bookId}/cover")
@@ -46,46 +46,46 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<Set<BookWithoutUsersView>> searchBooks(@RequestParam(name = "q") String query) {
-        return new ResponseEntity<>(bookService.getBooks(query).stream().map(BookWithoutUsersView::of).collect(Collectors.toSet()), OK);
+    public ResponseEntity<Set<BookWithoutUsersResponse>> searchBooks(@RequestParam(name = "q") String query) {
+        return new ResponseEntity<>(bookService.getBooks(query).stream().map(BookWithoutUsersResponse::of).collect(Collectors.toSet()), OK);
     }
 
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
-    public ResponseEntity<BookWithoutUsersView> saveBook(@ModelAttribute AddBookCommandData book, MultipartFile image, Long userId) throws IOException {
-        return new ResponseEntity<>(BookWithoutUsersView.of(bookService.saveBook(CommandsDataConverter.AddBookCommandDataToBook(book), image, userId)), CREATED);
+    public ResponseEntity<BookWithoutUsersResponse> saveBook(@ModelAttribute AddBookRequest book, MultipartFile image, Long userId) throws IOException {
+        return new ResponseEntity<>(BookWithoutUsersResponse.of(bookService.saveBook(RequestConverter.addBookRequestToBook(book), image, userId)), CREATED);
     }
 
 
     @GetMapping("/author")
-    public ResponseEntity<Set<BookWithoutUsersView>> getBooksByAuthor(@RequestBody AuthorCommandData authorCommandData) {
-        Author author = CommandsDataConverter.AuthorCommandDataToAuthor(authorCommandData);
+    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByAuthor(@RequestBody AuthorRequest authorRequest) {
+        Author author = RequestConverter.authorCommandRequestToAuthor(authorRequest);
         return new ResponseEntity<>(
                 bookService.getBooksByAuthorNameAndSurname(author)
                         .stream()
-                        .map(BookWithoutUsersView::of)
+                        .map(BookWithoutUsersResponse::of)
                         .collect(Collectors.toSet()),
                 OK);
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<Set<BookWithoutUsersView>> getUsersBooks(@PathVariable Long userId) {
+    public ResponseEntity<Set<BookWithoutUsersResponse>> getUsersBooks(@PathVariable Long userId) {
         return new ResponseEntity<>(
                 bookService.findBooksByUserId(userId)
                         .stream()
-                        .map(BookWithoutUsersView::of)
+                        .map(BookWithoutUsersResponse::of)
                         .collect(Collectors.toSet()),
                 OK
         );
     }
 
     @GetMapping("/title")
-    public ResponseEntity<Set<BookWithoutUsersView>> getBooksByTitle(@RequestParam String title) {
+    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByTitle(@RequestParam String title) {
         return new ResponseEntity<>(
                 bookService.getBooksByTitle(title)
                         .stream()
-                        .map(BookWithoutUsersView::of)
+                        .map(BookWithoutUsersResponse::of)
                         .collect(Collectors.toSet()),
                 OK);
     }

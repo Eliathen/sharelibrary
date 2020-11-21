@@ -9,15 +9,15 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class AddBookCommandData {
+public class AddBookRequest {
 
     private String title;
 
-    private List<AuthorCommandData> authors;
+    private List<AuthorRequest> authors;
 
     @JsonCreator
-    public AddBookCommandData(@JsonProperty(value = "title", required = true) String title,
-                              @JsonProperty(value = "authors", required = true) List<AuthorCommandData> authors) {
+    public AddBookRequest(@JsonProperty(value = "title", required = true) String title,
+                          @JsonProperty(value = "authors", required = true) List<AuthorRequest> authors) {
         this.title = title;
         this.authors = authors;
     }

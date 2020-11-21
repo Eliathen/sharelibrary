@@ -6,7 +6,7 @@ import pl.szymanski.sharelibrary.entity.User;
 
 @AllArgsConstructor
 @Data
-public class UserWithoutBooksView {
+public class UserWithoutBooksResponse {
 
     private Long id;
     private String email;
@@ -14,16 +14,16 @@ public class UserWithoutBooksView {
     private String name;
     private String surname;
 
-    private AddressView addressView;
+    private CoordinatesResponse coordinatesResponse;
 
-    public static UserWithoutBooksView of(User user) {
-        return new UserWithoutBooksView(
+    public static UserWithoutBooksResponse of(User user) {
+        return new UserWithoutBooksResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),
                 user.getName(),
                 user.getSurname(),
-                AddressView.of(user.getDefaultAddress())
+                CoordinatesResponse.of(user.getCoordinates())
         );
     }
 }

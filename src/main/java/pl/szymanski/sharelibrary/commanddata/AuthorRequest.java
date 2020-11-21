@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AuthorCommandData {
+public class AuthorRequest {
 
     private String name;
 
     private String surname;
 
     @JsonCreator
-    public AuthorCommandData(@JsonProperty(value = "name", required = true) String name,
-                             @JsonProperty(value = "surname", required = true) String surname) {
+    public AuthorRequest(@JsonProperty(value = "name", required = true) String name,
+                         @JsonProperty(value = "surname", required = true) String surname) {
         this.name = name;
         this.surname = surname;
     }
+
 }

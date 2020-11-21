@@ -6,7 +6,7 @@ import pl.szymanski.sharelibrary.entity.Address;
 
 @AllArgsConstructor
 @Data
-public class AddressView {
+public class AddressResponse {
     private Long id;
     private String country;
     private String city;
@@ -14,17 +14,17 @@ public class AddressView {
     private String street;
     private String buildingNumber;
 
-    private CoordinatesView coordinates;
+    private CoordinatesResponse coordinates;
 
-    public static AddressView of(Address address) {
-        return new AddressView(
+    public static AddressResponse of(Address address) {
+        return new AddressResponse(
                 address.getId(),
                 address.getCountry(),
                 address.getCity(),
                 address.getPostalCode(),
                 address.getStreet(),
                 address.getBuildingNumber(),
-                CoordinatesView.of(address.getCoordinates())
+                CoordinatesResponse.of(address.getCoordinates())
         );
     }
 }

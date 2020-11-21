@@ -6,7 +6,7 @@ import pl.szymanski.sharelibrary.entity.Author;
 
 @AllArgsConstructor
 @Data
-public class AuthorView {
+public class AuthorResponse {
 
     private Long id;
 
@@ -14,8 +14,8 @@ public class AuthorView {
 
     private String surname;
 
-    public static AuthorView of(Author author) {
-        return new AuthorView(
+    public static AuthorResponse of(Author author) {
+        return new AuthorResponse(
                 author.getId(),
                 author.getName(),
                 author.getSurname()

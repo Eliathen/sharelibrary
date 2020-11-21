@@ -35,6 +35,6 @@ public class User {
     private Set<Book> books;
 
     @ManyToOne(cascade = {PERSIST, MERGE})
-    @JoinColumn(name = "addressId")
-    private Address defaultAddress;
+    @JoinColumn(name = "coordinatesId")
+    private Coordinates coordinates;
 }

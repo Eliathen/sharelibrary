@@ -5,7 +5,7 @@ import pl.szymanski.sharelibrary.entity.Cover;
 
 import java.util.Optional;
 
-public interface CoverJpaRepository extends JpaRepository<Cover, Long> {
+public interface CoverJPARepository extends JpaRepository<Cover, Long> {
 
     Optional<Cover> findCoverById(Long id);
 }

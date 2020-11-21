@@ -23,6 +23,8 @@ public class BookExceptionAdvice {
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<ErrorInfo> iOException(IOException exception) {
+        System.out.println(exception.getMessage());
+        System.out.println(exception.getLocalizedMessage());
         ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), ExceptionMessages.UNKNOWN_ERROR_OCCURRED);
         return new ResponseEntity<>(
                 errorInfo, HttpStatus.INTERNAL_SERVER_ERROR

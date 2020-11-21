@@ -8,8 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.szymanski.sharelibrary.commanddata.LoginCommandData;
-import pl.szymanski.sharelibrary.entity.Address;
+import pl.szymanski.sharelibrary.commanddata.LoginRequest;
 import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.User;
@@ -18,8 +17,8 @@ import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.exceptions.users.EmailAlreadyExist;
 import pl.szymanski.sharelibrary.exceptions.users.UserNotFoundById;
 import pl.szymanski.sharelibrary.exceptions.users.UsernameAlreadyExists;
-import pl.szymanski.sharelibrary.repositories.ports.AddressRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
+import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 import pl.szymanski.sharelibrary.security.JwtTokenProvider;
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-    private final AddressRepository addressRepository;
+    private final CoordinatesRepository coordinatesRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
     private final GeoCoordinateApiService geoCoordinateApiService;
@@ -58,16 +57,8 @@ public class UserServiceImpl implements UserService {
     public User saveUser(User user) {
         validateUser(user);
         user.setPassword(passwordEncoder.encode(String.valueOf(user.getPassword())).toCharArray());
-        Optional<Address> address = checkIfAddressExists(user.getDefaultAddress());
-        if (address.isPresent()) {
-            user.setDefaultAddress(address.get());
-        } else {
-            Coordinates coordinates = geoCoordinateApiService.getCoordinatesByAddress(user.getDefaultAddress());
-//            user.getDefaultAddress().getCoordinates().setLatitude(coordinates.getLatitude());
-//            user.getDefaultAddress().getCoordinates().setLongitude(coordinates.getLongitude());
-            user.getDefaultAddress().getCoordinates().setLatitude(50.12);
-            user.getDefaultAddress().getCoordinates().setLongitude(50.13);
-        }
+        Optional<Coordinates> coordinates = checkIfCoordinatesExist(user.getCoordinates());
+        coordinates.ifPresent(user::setCoordinates);
         return userRepository.saveUser(user);
     }
 
@@ -78,11 +69,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JwtAuthenticationResponse getJwt(LoginCommandData loginCommandData) {
+    public JwtAuthenticationResponse getJwt(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginCommandData.getUserNameOrEmail(),
-                        String.valueOf(loginCommandData.getPassword())
+                        loginRequest.getUserNameOrEmail(),
+                        String.valueOf(loginRequest.getPassword())
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -101,11 +92,26 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveUser(user);
     }
 
-    @Override
-    public User changeUserAddress(Long id, Address address) {
-        User user = userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
-        user.setDefaultAddress(address);
+    public User changeUserDetails(Long id, User newUserDetails) {
+        User user = prepareEditedUserDetails(id, newUserDetails);
         return userRepository.saveUser(user);
+    }
+
+    private User prepareEditedUserDetails(Long id, User newUserDetails) {
+        User user = userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
+        if (newUserDetails.getName() != null) {
+            user.setName(newUserDetails.getName());
+        }
+        if (newUserDetails.getSurname() != null) {
+            user.setSurname(newUserDetails.getSurname());
+        }
+        if (newUserDetails.getCoordinates().getLatitude() != null || newUserDetails.getCoordinates().getLongitude() != null) {
+            Coordinates coordinates = checkIfCoordinatesExist(newUserDetails.getCoordinates()).orElseGet(
+                    newUserDetails::getCoordinates
+            );
+            user.setCoordinates(coordinates);
+        }
+        return user;
     }
 
     @Override
@@ -122,14 +128,8 @@ public class UserServiceImpl implements UserService {
         Utils.validateEmailAddress(user.getEmail());
     }
 
-    private Optional<Address> checkIfAddressExists(Address address) {
-        return addressRepository.getAddressByCountryAndPostalCodeAndCityAndStreetAndBuildingNumber(
-                address.getCountry(),
-                address.getCity(),
-                address.getPostalCode(),
-                address.getStreet(),
-                address.getBuildingNumber()
-        );
+    private Optional<Coordinates> checkIfCoordinatesExist(Coordinates coordinates) {
+        return coordinatesRepository.findAllByLatitudeAndLongitude(coordinates.getLatitude(), coordinates.getLongitude());
     }
 
 }

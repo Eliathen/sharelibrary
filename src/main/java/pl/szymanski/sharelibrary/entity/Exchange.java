@@ -32,8 +32,8 @@ public class Exchange {
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "addressId")
-    private Address address;
+    @JoinColumn(name = "coordinatesId")
+    private Coordinates coordinates;
 
     @OneToMany(mappedBy = "exchange")
     private Set<Request> requests;

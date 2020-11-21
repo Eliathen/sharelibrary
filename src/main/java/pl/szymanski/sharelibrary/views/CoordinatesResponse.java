@@ -6,14 +6,14 @@ import pl.szymanski.sharelibrary.entity.Coordinates;
 
 @AllArgsConstructor
 @Data
-public class CoordinatesView {
+public class CoordinatesResponse {
 
     private Long id;
     private Double latitude;
     private Double longitude;
 
-    public static CoordinatesView of(Coordinates coordinates) {
-        return new CoordinatesView(
+    public static CoordinatesResponse of(Coordinates coordinates) {
+        return new CoordinatesResponse(
                 coordinates.getId(),
                 coordinates.getLatitude(),
                 coordinates.getLongitude()
