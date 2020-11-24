@@ -5,10 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.szymanski.sharelibrary.commanddata.AssignBookRequest;
+import pl.szymanski.sharelibrary.commanddata.RemoveBookFromUserRequest;
 import pl.szymanski.sharelibrary.commanddata.UserRequest;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.services.ports.UserService;
+import pl.szymanski.sharelibrary.views.UserResponse;
 import pl.szymanski.sharelibrary.views.UserWithoutBooksResponse;
 
 @RestController
@@ -27,10 +29,10 @@ public class UserController {
         );
     }
 
-    @PostMapping("/assign")
-    public ResponseEntity<UserWithoutBooksResponse> assignBook(@RequestBody AssignBookRequest assignBookRequest) {
+    @PostMapping("/assignment")
+    public ResponseEntity<UserResponse> assignBook(@RequestBody AssignBookRequest assignBookRequest) {
         return new ResponseEntity<>(
-                UserWithoutBooksResponse.of(userService.assignBookToUser(assignBookRequest.getUserId(), assignBookRequest.getBookId())),
+                UserResponse.of(userService.assignBookToUser(assignBookRequest.getUserId(), assignBookRequest.getBookId())),
                 HttpStatus.OK
         );
     }
@@ -39,6 +41,14 @@ public class UserController {
     public ResponseEntity<UserWithoutBooksResponse> editUser(@PathVariable("id") Long id, @RequestBody UserRequest userRequest) {
         return new ResponseEntity<>(
                 UserWithoutBooksResponse.of(userService.changeUserDetails(id, RequestConverter.userRequestToUser(userRequest))),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/withdrawal")
+    public ResponseEntity<UserResponse> withdrawBookFromUser(@RequestBody RemoveBookFromUserRequest removeBookFromUserRequest) {
+        return new ResponseEntity<>(
+                UserResponse.of(userService.withdrawBookFromUser(removeBookFromUserRequest.getUserId(), removeBookFromUserRequest.getBookId())),
                 HttpStatus.OK
         );
     }

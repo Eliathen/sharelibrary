@@ -24,4 +24,6 @@ public interface UserService {
     User changeUserDetails(Long id, User user);
 
     User getUserById(Long id);
+
+    User withdrawBookFromUser(Long userId, Long bookId);
 }

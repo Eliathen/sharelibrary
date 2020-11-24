@@ -29,6 +29,7 @@ import pl.szymanski.sharelibrary.utilities.Utils;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -117,6 +118,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
+    }
+
+    @Override
+    public User withdrawBookFromUser(Long userId, Long bookId) {
+        User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
+        Set<Book> books = user.getBooks().stream().filter((it) -> !it.getId().equals(bookId)).collect(Collectors.toSet());
+        user.setBooks(books);
+        return userRepository.saveUser(user);
     }
 
     private void validateUser(User user) {
