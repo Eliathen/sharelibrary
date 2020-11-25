@@ -1,10 +1,13 @@
 package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
-import pl.szymanski.sharelibrary.enums.BookCondition;
+import pl.szymanski.sharelibrary.enums.ExchangeType;
 
 import javax.persistence.*;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
 
 @Entity
 @Data
@@ -13,15 +16,17 @@ public class Exchange {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @Column(columnDefinition = "boolean default false")
     private Boolean isFinished;
 
+    @Column(nullable = false)
+    private ExchangeType exchangeType;
+
     @Column(columnDefinition = "NUMBER")
     private Double deposit;
-
-    private BookCondition bookCondition;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bookId")
@@ -31,11 +36,11 @@ public class Exchange {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {PERSIST, MERGE})
     @JoinColumn(name = "coordinatesId")
     private Coordinates coordinates;
 
-    @OneToMany(mappedBy = "exchange")
+    @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
     private Set<Request> requests;
 
 }

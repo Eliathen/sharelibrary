@@ -22,7 +22,6 @@ import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 import pl.szymanski.sharelibrary.security.JwtTokenProvider;
-import pl.szymanski.sharelibrary.services.ports.GeoCoordinateApiService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 import pl.szymanski.sharelibrary.utilities.Utils;
 
@@ -41,7 +40,6 @@ public class UserServiceImpl implements UserService {
     private final CoordinatesRepository coordinatesRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
-    private final GeoCoordinateApiService geoCoordinateApiService;
 
     @Override
     public Optional<User> getUserByEmail(String email) {
@@ -138,7 +136,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Optional<Coordinates> checkIfCoordinatesExist(Coordinates coordinates) {
-        return coordinatesRepository.findAllByLatitudeAndLongitude(coordinates.getLatitude(), coordinates.getLongitude());
+        return coordinatesRepository.findByLatitudeAndLongitude(coordinates.getLatitude(), coordinates.getLongitude());
     }
 
 }

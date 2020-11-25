@@ -1,14 +1,8 @@
 package pl.szymanski.sharelibrary.converters;
 
 import org.springframework.beans.BeanUtils;
-import pl.szymanski.sharelibrary.commanddata.AddBookRequest;
-import pl.szymanski.sharelibrary.commanddata.AuthorRequest;
-import pl.szymanski.sharelibrary.commanddata.CoordinatesRequest;
-import pl.szymanski.sharelibrary.commanddata.UserRequest;
-import pl.szymanski.sharelibrary.entity.Author;
-import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.entity.Coordinates;
-import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.commanddata.*;
+import pl.szymanski.sharelibrary.entity.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,13 +12,13 @@ public class RequestConverter {
     public static Book addBookRequestToBook(AddBookRequest addBookRequest) {
         Book book = new Book();
         List<Author> authors = new LinkedList<>();
-        addBookRequest.getAuthors().forEach(it -> authors.add(authorCommandRequestToAuthor(it)));
+        addBookRequest.getAuthors().forEach(it -> authors.add(authorRequestToAuthor(it)));
         book.setAuthors(authors);
         BeanUtils.copyProperties(addBookRequest, book, "authors", "image");
         return book;
     }
 
-    public static Author authorCommandRequestToAuthor(AuthorRequest authorRequest) {
+    public static Author authorRequestToAuthor(AuthorRequest authorRequest) {
         Author author = new Author();
         BeanUtils.copyProperties(authorRequest, author);
         return author;
@@ -42,6 +36,15 @@ public class RequestConverter {
         user.setCoordinates(coordinatesRequestToCoordinates(userRequest.getCoordinates()));
         BeanUtils.copyProperties(userRequest, user);
         return user;
+    }
+
+    public static Exchange addExchangeRequestToExchange(AddExchangeRequest addExchangeRequest) {
+        Exchange exchange = new Exchange();
+        exchange.setCoordinates(
+                coordinatesRequestToCoordinates(addExchangeRequest.getCoordinates())
+        );
+        BeanUtils.copyProperties(addExchangeRequest, exchange, "authors");
+        return exchange;
     }
 
 

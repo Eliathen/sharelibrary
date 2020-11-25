@@ -8,6 +8,6 @@ public interface CoordinatesRepository {
 
     Coordinates saveCoordinates(Coordinates coordinates);
 
-    Optional<Coordinates> findAllByLatitudeAndLongitude(Double latitude, Double longitude);
+    Optional<Coordinates> findByLatitudeAndLongitude(Double latitude, Double longitude);
 
 }

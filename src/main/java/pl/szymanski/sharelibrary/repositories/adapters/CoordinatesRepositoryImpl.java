@@ -20,7 +20,7 @@ public class CoordinatesRepositoryImpl implements CoordinatesRepository {
     }
 
     @Override
-    public Optional<Coordinates> findAllByLatitudeAndLongitude(Double latitude, Double longitude) {
-        return coordinatesJPARepository.findAllByLatitudeAndLongitude(latitude, longitude);
+    public Optional<Coordinates> findByLatitudeAndLongitude(Double latitude, Double longitude) {
+        return coordinatesJPARepository.findByLatitudeAndLongitude(latitude, longitude);
     }
 }

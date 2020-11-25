@@ -60,7 +60,7 @@ public class BookController {
 
     @GetMapping("/author")
     public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByAuthor(@RequestBody AuthorRequest authorRequest) {
-        Author author = RequestConverter.authorCommandRequestToAuthor(authorRequest);
+        Author author = RequestConverter.authorRequestToAuthor(authorRequest);
         return new ResponseEntity<>(
                 bookService.getBooksByAuthorNameAndSurname(author)
                         .stream()
