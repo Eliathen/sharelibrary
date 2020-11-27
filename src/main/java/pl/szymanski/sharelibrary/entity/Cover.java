@@ -24,7 +24,8 @@ public class Cover {
     @Lob
     private byte[] data;
 
-    @OneToOne(mappedBy = "cover")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bookId")
     private Book book;
 
     public Cover(String name, String type, byte[] data) {

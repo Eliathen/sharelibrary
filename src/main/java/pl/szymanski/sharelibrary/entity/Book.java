@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -19,9 +20,9 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "cover_id", referencedColumnName = "id")
-    private Cover cover;
+    private Set<Cover> cover;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),

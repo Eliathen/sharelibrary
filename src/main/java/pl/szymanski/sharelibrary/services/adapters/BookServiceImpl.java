@@ -56,7 +56,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
         if (!Objects.isNull(cover)) {
-            book.setCover(getCoverFromMultipartFile(cover));
+            Set<Cover> covers = new HashSet<>();
+            covers.add(getCoverFromMultipartFile(cover));
+            book.setCover(covers);
         }
         List<Author> authors = book.getAuthors().stream().map(it ->
                 authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
