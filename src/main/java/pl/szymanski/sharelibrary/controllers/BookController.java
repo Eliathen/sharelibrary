@@ -16,6 +16,7 @@ import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CoverService;
 import pl.szymanski.sharelibrary.views.BookWithoutUsersResponse;
+import pl.szymanski.sharelibrary.views.UserBookResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -71,12 +72,9 @@ public class BookController {
     }
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<List<BookWithoutUsersResponse>> getUsersBooks(@PathVariable Long userId) {
+    public ResponseEntity<List<UserBookResponse>> getUsersBooks(@PathVariable Long userId) {
         return new ResponseEntity<>(
-                bookService.findBooksByUserId(userId)
-                        .stream()
-                        .map(BookWithoutUsersResponse::of)
-                        .collect(Collectors.toList()),
+                bookService.findBooksByUserId(userId),
                 OK
         );
     }

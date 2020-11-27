@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.szymanski.sharelibrary.entity.Author;
-import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.entity.Cover;
+import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
+import pl.szymanski.sharelibrary.views.UserBookResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -55,6 +54,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
+        book.setTitle(book.getTitle().replace("\"", ""));
         if (!Objects.isNull(cover)) {
             List<Cover> covers = new LinkedList<>();
             covers.add(getCoverFromMultipartFile(cover));
@@ -70,8 +70,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Set<Book> findBooksByUserId(Long userId) {
-        return bookRepository.findBooksByUserId(userId);
+    public List<UserBookResponse> findBooksByUserId(Long userId) {
+        User user = userService.getUserById(userId);
+        List<UserBook> books = user.getBooks();
+        List<UserBookResponse> response = new LinkedList<>();
+        books.forEach(book -> response.add(UserBookResponse.of(book)));
+        return response;
     }
 
     private Cover getCoverFromMultipartFile(MultipartFile cover) throws IOException {

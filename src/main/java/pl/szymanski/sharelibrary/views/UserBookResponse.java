@@ -1,0 +1,36 @@
+package pl.szymanski.sharelibrary.views;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import pl.szymanski.sharelibrary.entity.UserBook;
+import pl.szymanski.sharelibrary.enums.BookStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Data
+@AllArgsConstructor
+public class UserBookResponse {
+
+    private Long id;
+
+    private String title;
+
+    private List<AuthorResponse> authors;
+
+    private BookStatus status;
+
+    private UserResponse atUser;
+
+    public static UserBookResponse of(UserBook user) {
+        return new UserBookResponse(
+                user.getBook().getId(),
+                user.getBook().getTitle(),
+                user.getBook().getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toList()),
+                user.getStatus(),
+                (user.getAtUser() != null) ? UserResponse.of(user.getAtUser()) : null
+        );
+    }
+
+}

@@ -4,7 +4,6 @@ import pl.szymanski.sharelibrary.entity.Book;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface BookRepository {
 
@@ -16,5 +15,5 @@ public interface BookRepository {
 
     List<Book> findBooksByTitle(String title);
 
-    Set<Book> findBooksByUserId(Long userId);
+    List<Book> findBooksByUserId(Long userId);
 }

@@ -26,7 +26,7 @@ public class UserBook {
     private Book book;
 
     @Column(name = "book_status")
-    private BookStatus atOwner;
+    private BookStatus status;
 
     @ManyToOne
     @JoinColumn(name = "atUserId")
