@@ -29,7 +29,7 @@ public class ExchangeController {
     @GetMapping
     public ResponseEntity<List<ExchangeResponse>> getExchanges() {
         return new ResponseEntity<>(
-                exchangeService.getNotFinishedExchanges(),
+                exchangeService.getStartedExchanges(),
                 OK
         );
     }
