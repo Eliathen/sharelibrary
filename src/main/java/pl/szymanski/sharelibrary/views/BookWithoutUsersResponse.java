@@ -17,6 +17,7 @@ public class BookWithoutUsersResponse {
 
     private Set<AuthorResponse> authors;
 
+
     public static BookWithoutUsersResponse of(Book book) {
         return new BookWithoutUsersResponse(
                 book.getId(),

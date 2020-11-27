@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
         if (!Objects.isNull(cover)) {
-            Set<Cover> covers = new HashSet<>();
+            List<Cover> covers = new LinkedList<>();
             covers.add(getCoverFromMultipartFile(cover));
             book.setCover(covers);
         }

@@ -3,7 +3,7 @@ package pl.szymanski.sharelibrary.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -29,10 +29,8 @@ public class User {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
-    @ManyToMany(cascade = {PERSIST, MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "bookId"))
-    private Set<Book> books;
+    @OneToMany(cascade = {PERSIST, MERGE}, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserBook> books;
 
     @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "coordinatesId")

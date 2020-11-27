@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.szymanski.sharelibrary.commanddata.AssignBookRequest;
+import pl.szymanski.sharelibrary.commanddata.EditUserRequest;
 import pl.szymanski.sharelibrary.commanddata.RemoveBookFromUserRequest;
 import pl.szymanski.sharelibrary.commanddata.UserRequest;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
@@ -38,9 +39,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserWithoutBooksResponse> editUser(@PathVariable("id") Long id, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserWithoutBooksResponse> editUser(@PathVariable("id") Long id, @RequestBody EditUserRequest editUserRequest) {
         return new ResponseEntity<>(
-                UserWithoutBooksResponse.of(userService.changeUserDetails(id, RequestConverter.userRequestToUser(userRequest))),
+                UserWithoutBooksResponse.of(userService.changeUserDetails(id, editUserRequest)),
                 HttpStatus.OK
         );
     }

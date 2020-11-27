@@ -38,7 +38,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Set<Book> findBooksByUserId(Long userId) {
-        return bookJPARepository.findByUsers_Id(userId);
+        return bookJPARepository.findByUserId(userId);
     }
 
 }

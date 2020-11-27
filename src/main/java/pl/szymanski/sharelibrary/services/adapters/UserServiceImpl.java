@@ -8,10 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.szymanski.sharelibrary.commanddata.EditUserRequest;
 import pl.szymanski.sharelibrary.commanddata.LoginRequest;
+import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.entity.UserBook;
+import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.exceptions.auth.InvalidUsernameEmailOrPassword;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.exceptions.users.EmailAlreadyExist;
@@ -26,6 +30,7 @@ import pl.szymanski.sharelibrary.services.ports.UserService;
 import pl.szymanski.sharelibrary.utilities.Utils;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,28 +90,30 @@ public class UserServiceImpl implements UserService {
     public User assignBookToUser(Long userId, Long bookId) {
         User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
         Book book = bookRepository.getBookById(bookId).orElseThrow(() -> new BookDoesNotExist(bookId));
-        Set<Book> usersBooks = user.getBooks();
-        usersBooks.add(book);
+
+        List<UserBook> usersBooks = user.getBooks();
+        UserBook userBook = new UserBook(user, book, BookStatus.AT_OWNER, null);
+        usersBooks.add(userBook);
         user.setBooks(usersBooks);
         return userRepository.saveUser(user);
     }
 
-    public User changeUserDetails(Long id, User newUserDetails) {
-        User user = prepareEditedUserDetails(id, newUserDetails);
+    public User changeUserDetails(Long id, EditUserRequest editUserRequest) {
+        User user = prepareEditedUserDetails(id, editUserRequest);
         return userRepository.saveUser(user);
     }
 
-    private User prepareEditedUserDetails(Long id, User newUserDetails) {
+    private User prepareEditedUserDetails(Long id, EditUserRequest editUserRequest) {
         User user = userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
-        if (newUserDetails.getName() != null) {
-            user.setName(newUserDetails.getName());
+        if (editUserRequest.getName() != null) {
+            user.setName(editUserRequest.getName());
         }
-        if (newUserDetails.getSurname() != null) {
-            user.setSurname(newUserDetails.getSurname());
+        if (editUserRequest.getSurname() != null) {
+            user.setSurname(editUserRequest.getSurname());
         }
-        if (newUserDetails.getCoordinates().getLatitude() != null || newUserDetails.getCoordinates().getLongitude() != null) {
-            Coordinates coordinates = checkIfCoordinatesExist(newUserDetails.getCoordinates()).orElseGet(
-                    newUserDetails::getCoordinates
+        if (editUserRequest.getCoordinates().getLatitude() != null || editUserRequest.getCoordinates().getLongitude() != null) {
+            Coordinates coordinatesToEdit = RequestConverter.coordinatesRequestToCoordinates(editUserRequest.getCoordinates());
+            Coordinates coordinates = checkIfCoordinatesExist(coordinatesToEdit).orElse(coordinatesToEdit
             );
             user.setCoordinates(coordinates);
         }
@@ -121,8 +128,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User withdrawBookFromUser(Long userId, Long bookId) {
         User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
-        Set<Book> books = user.getBooks().stream().filter((it) -> !it.getId().equals(bookId)).collect(Collectors.toSet());
-        user.setBooks(books);
+        Set<UserBook> books = user.getBooks().stream().filter(userBook -> !userBook.getBook().getId().equals(bookId)).collect(Collectors.toSet());
         return userRepository.saveUser(user);
     }
 

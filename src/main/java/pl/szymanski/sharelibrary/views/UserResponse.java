@@ -29,7 +29,7 @@ public class UserResponse {
                 user.getName(),
                 user.getSurname(),
                 CoordinatesResponse.of(user.getCoordinates()),
-                user.getBooks().stream().map(BookWithoutUsersResponse::of).collect(Collectors.toList())
+                user.getBooks().stream().map(userBook -> BookWithoutUsersResponse.of(userBook.getBook())).collect(Collectors.toList())
         );
     }
 }
