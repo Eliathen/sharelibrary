@@ -9,6 +9,7 @@ import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.Exchange;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
@@ -36,7 +37,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setBook(checkIfBookExists(addExchangeRequest.getBookId()));
         exchange.setUser(checkIfUserExists(addExchangeRequest.getUserId()));
         exchange.setCoordinates(checkIfCoordinatesExist(exchange.getCoordinates()));
-        exchange.setIsFinished(false);
+        exchange.setExchangeStatus(ExchangeStatus.STARTED);
         return ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
     }
 
@@ -59,13 +60,13 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public void finishExchange(Long exchangeId) {
         Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
-        exchange.setIsFinished(true);
+        exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
     }
 
     @Override
-    public List<ExchangeResponse> getNotFinishedExchanges() {
-        return exchangeRepository.getNotFinishedExchanges(false).stream().map(ExchangeResponse::of).collect(Collectors.toList());
+    public List<ExchangeResponse> getStartedExchanges() {
+        return exchangeRepository.getExchangeByStatus(ExchangeStatus.STARTED).stream().map(ExchangeResponse::of).collect(Collectors.toList());
     }
 
     @Override

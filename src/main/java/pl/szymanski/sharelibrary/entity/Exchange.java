@@ -1,7 +1,7 @@
 package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
-import pl.szymanski.sharelibrary.enums.ExchangeType;
+import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -19,11 +19,8 @@ public class Exchange {
     @Column(nullable = false)
     private Long id;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isFinished;
-
     @Column(nullable = false)
-    private ExchangeType exchangeType;
+    private ExchangeStatus exchangeStatus;
 
     @Column(columnDefinition = "NUMBER")
     private Double deposit;
