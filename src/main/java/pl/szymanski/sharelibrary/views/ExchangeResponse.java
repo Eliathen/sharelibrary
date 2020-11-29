@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.views;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.szymanski.sharelibrary.entity.Exchange;
+import pl.szymanski.sharelibrary.entity.UserBook;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class ExchangeResponse {
 
     private Double deposit;
 
-    private BookWithoutUsersResponse book;
+    private UserBookResponse book;
 
     private BaseUserResponse user;
 
@@ -26,7 +27,10 @@ public class ExchangeResponse {
                 exchange.getId(),
                 exchange.getExchangeStatus(),
                 exchange.getDeposit(),
-                BookWithoutUsersResponse.of(exchange.getBook()),
+                UserBookResponse.of(exchange.getUser().getBooks()
+                        .stream()
+                        .filter(it -> it.getBook().getId().equals(exchange.getBook().getId()))
+                        .findFirst().orElse(new UserBook(null, null, null, null))),
                 BaseUserResponse.of(exchange.getUser()),
                 CoordinatesResponse.of(exchange.getCoordinates())
         );

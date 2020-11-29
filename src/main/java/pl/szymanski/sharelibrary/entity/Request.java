@@ -20,4 +20,6 @@ public class Request {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    private boolean isActual;
 }

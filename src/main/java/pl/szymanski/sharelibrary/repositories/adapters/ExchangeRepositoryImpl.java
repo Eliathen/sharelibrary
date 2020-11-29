@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.repositories.adapters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.szymanski.sharelibrary.entity.Exchange;
+import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.repositories.jpa.ExchangeJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
@@ -36,4 +37,10 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
     public List<Exchange> getExchangeByStatus(ExchangeStatus exchangeStatus) {
         return exchangeJPARepository.findAllByExchangeStatus(exchangeStatus);
     }
+
+    @Override
+    public List<Exchange> getExchangesWithoutUser(ExchangeStatus exchangeStatus, User user) {
+        return exchangeJPARepository.findAllByExchangeStatusAndUserIsNot(exchangeStatus, user);
+    }
+
 }

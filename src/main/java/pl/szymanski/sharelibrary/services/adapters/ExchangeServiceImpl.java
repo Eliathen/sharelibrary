@@ -65,8 +65,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<ExchangeResponse> getStartedExchanges() {
-        return exchangeRepository.getExchangeByStatus(ExchangeStatus.STARTED).stream().map(ExchangeResponse::of).collect(Collectors.toList());
+    public List<ExchangeResponse> getStartedExchanges(Long userId) {
+        return exchangeRepository.getExchangesWithoutUser(ExchangeStatus.STARTED, userService.getUserById(userId)).stream().map(ExchangeResponse::of).collect(Collectors.toList());
     }
 
     @Override

@@ -4,7 +4,7 @@ import lombok.Data;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
@@ -38,6 +38,6 @@ public class Exchange {
     private Coordinates coordinates;
 
     @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
-    private Set<Request> requests;
+    private List<Request> requests;
 
 }

@@ -13,6 +13,7 @@ public class BaseUserResponse {
     private String username;
     private String name;
     private String surname;
+    private CoordinatesResponse coordinates;
 
 
     public static BaseUserResponse of(User user) {
@@ -21,7 +22,8 @@ public class BaseUserResponse {
                 user.getEmail(),
                 user.getUsername(),
                 user.getName(),
-                user.getSurname()
+                user.getSurname(),
+                CoordinatesResponse.of(user.getCoordinates())
         );
     }
 }

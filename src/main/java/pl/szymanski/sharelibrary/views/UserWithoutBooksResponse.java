@@ -14,7 +14,7 @@ public class UserWithoutBooksResponse {
     private String name;
     private String surname;
 
-    private CoordinatesResponse coordinatesResponse;
+    private CoordinatesResponse coordinates;
 
     public static UserWithoutBooksResponse of(User user) {
         return new UserWithoutBooksResponse(

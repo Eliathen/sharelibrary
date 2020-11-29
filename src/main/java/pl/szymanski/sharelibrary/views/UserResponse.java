@@ -17,7 +17,7 @@ public class UserResponse {
     private String name;
     private String surname;
 
-    private CoordinatesResponse coordinatesResponse;
+    private CoordinatesResponse coordinates;
 
     private List<BookWithoutUsersResponse> books;
 
