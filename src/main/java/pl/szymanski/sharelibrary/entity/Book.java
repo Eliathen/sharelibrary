@@ -19,7 +19,7 @@ public class Book {
     private String title;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cover_id", referencedColumnName = "id")
+    //@Size(max = 1, min = 1)
     private List<Cover> cover;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

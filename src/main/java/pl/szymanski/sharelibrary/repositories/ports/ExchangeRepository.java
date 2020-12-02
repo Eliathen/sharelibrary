@@ -1,7 +1,6 @@
 package pl.szymanski.sharelibrary.repositories.ports;
 
 import pl.szymanski.sharelibrary.entity.Exchange;
-import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 import java.util.List;
@@ -16,7 +15,5 @@ public interface ExchangeRepository {
     Optional<Exchange> getExchangeById(Long id);
 
     List<Exchange> getExchangeByStatus(ExchangeStatus exchangeStatus);
-
-    List<Exchange> getExchangesWithoutUser(ExchangeStatus exchangeStatus, User user);
 
 }

@@ -21,7 +21,7 @@ public class UserBook {
     private User user;
 
     @Id
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 

@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -125,10 +124,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundById(id));
     }
 
+    @Transactional
     @Override
     public User withdrawBookFromUser(Long userId, Long bookId) {
-        User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
-        Set<UserBook> books = user.getBooks().stream().filter(userBook -> !userBook.getBook().getId().equals(bookId)).collect(Collectors.toSet());
+        User user = getUserById(userId);
+        user.getBooks().removeIf(it ->
+                it.getBook().getId().equals(bookId)
+        );
         return userRepository.saveUser(user);
     }
 

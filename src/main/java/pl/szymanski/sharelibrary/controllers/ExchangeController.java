@@ -26,10 +26,10 @@ public class ExchangeController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<ExchangeResponse>> getExchanges(@PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<List<ExchangeResponse>> getExchanges() {
         return new ResponseEntity<>(
-                exchangeService.getStartedExchanges(id),
+                exchangeService.getStartedExchanges(),
                 OK
         );
     }

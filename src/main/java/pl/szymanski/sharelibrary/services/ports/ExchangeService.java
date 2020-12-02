@@ -12,7 +12,7 @@ public interface ExchangeService {
 
     void finishExchange(Long exchangeId);
 
-    List<ExchangeResponse> getStartedExchanges(Long userId);
+    List<ExchangeResponse> getStartedExchanges();
 
     List<ExchangeResponse> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinates, Double radius);
 

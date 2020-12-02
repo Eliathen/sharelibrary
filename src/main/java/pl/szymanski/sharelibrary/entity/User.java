@@ -5,8 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Data
@@ -29,7 +28,7 @@ public class User {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
-    @OneToMany(cascade = {PERSIST, MERGE}, fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private List<UserBook> books;
 
     @ManyToOne(cascade = {PERSIST, MERGE})

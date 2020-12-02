@@ -5,16 +5,16 @@ import org.springframework.stereotype.Service;
 import pl.szymanski.sharelibrary.commanddata.AddExchangeRequest;
 import pl.szymanski.sharelibrary.commanddata.CoordinatesRequest;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
-import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.Exchange;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.entity.UserBook;
+import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
-import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
-import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
+import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 import pl.szymanski.sharelibrary.views.ExchangeResponse;
@@ -27,28 +27,25 @@ import java.util.stream.Collectors;
 public class ExchangeServiceImpl implements ExchangeService {
 
     private final ExchangeRepository exchangeRepository;
-    private final BookRepository bookRepository;
+    private final BookService bookService;
     private final UserService userService;
     private final CoordinatesRepository coordinatesRepository;
 
     @Override
     public ExchangeResponse saveExchange(AddExchangeRequest addExchangeRequest) {
         Exchange exchange = RequestConverter.addExchangeRequestToExchange(addExchangeRequest);
-        exchange.setBook(checkIfBookExists(addExchangeRequest.getBookId()));
-        exchange.setUser(checkIfUserExists(addExchangeRequest.getUserId()));
+        exchange.setBook(bookService.findBookById(addExchangeRequest.getBookId()));
+        exchange.setUser(userService.getUserById(addExchangeRequest.getUserId()));
         exchange.setCoordinates(checkIfCoordinatesExist(exchange.getCoordinates()));
         exchange.setExchangeStatus(ExchangeStatus.STARTED);
-        return ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
-    }
-
-    private Book checkIfBookExists(Long bookId) {
-        return bookRepository.getBookById(bookId).orElseThrow(() ->
-                new BookDoesNotExist(bookId)
+        exchange.getUser().getBooks().forEach(
+                it -> {
+                    if (it.getBook().getId().equals(exchange.getBook().getId())) {
+                        it.setStatus(BookStatus.DURING_EXCHANGE);
+                    }
+                }
         );
-    }
-
-    private User checkIfUserExists(Long userId) {
-        return userService.getUserById(userId);
+        return ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
     }
 
     private Coordinates checkIfCoordinatesExist(Coordinates coordinates) {
@@ -62,11 +59,21 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
+        User user = userService.getUserById(exchange.getUser().getId());
+        List<UserBook> userBooks = user.getBooks()
+                .stream()
+                .peek(ub -> {
+                    if (ub.getBook().getId().equals(exchange.getBook().getId())) ub.setStatus(BookStatus.AT_OWNER);
+                }).collect(Collectors.toList());
+        user.setBooks(userBooks);
+        userService.saveUser(user);
     }
 
     @Override
-    public List<ExchangeResponse> getStartedExchanges(Long userId) {
-        return exchangeRepository.getExchangesWithoutUser(ExchangeStatus.STARTED, userService.getUserById(userId)).stream().map(ExchangeResponse::of).collect(Collectors.toList());
+    public List<ExchangeResponse> getStartedExchanges() {
+        return exchangeRepository.getExchangeByStatus(
+                ExchangeStatus.STARTED
+        ).stream().map(ExchangeResponse::of).collect(Collectors.toList());
     }
 
     @Override
