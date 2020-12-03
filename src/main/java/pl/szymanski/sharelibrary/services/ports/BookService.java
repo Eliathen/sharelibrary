@@ -3,7 +3,7 @@ package pl.szymanski.sharelibrary.services.ports;
 import org.springframework.web.multipart.MultipartFile;
 import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.views.UserBookResponse;
+import pl.szymanski.sharelibrary.response.UserBookResponse;
 
 import java.io.IOException;
 import java.util.List;

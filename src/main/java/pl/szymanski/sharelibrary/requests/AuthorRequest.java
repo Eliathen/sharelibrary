@@ -1,4 +1,4 @@
-package pl.szymanski.sharelibrary.commanddata;
+package pl.szymanski.sharelibrary.requests;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

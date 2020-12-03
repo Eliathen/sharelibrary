@@ -3,11 +3,12 @@ package pl.szymanski.sharelibrary.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.szymanski.sharelibrary.commanddata.AddExchangeRequest;
+import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
+import pl.szymanski.sharelibrary.response.ExchangeResponse;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
-import pl.szymanski.sharelibrary.views.ExchangeResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -21,7 +22,7 @@ public class ExchangeController {
     @PostMapping
     public ResponseEntity<ExchangeResponse> saveExchange(@RequestBody AddExchangeRequest addExchangeRequest) {
         return new ResponseEntity<>(
-                exchangeService.saveExchange(addExchangeRequest),
+                ExchangeResponse.of(exchangeService.saveExchange(addExchangeRequest)),
                 CREATED
         );
     }
@@ -29,7 +30,7 @@ public class ExchangeController {
     @GetMapping
     public ResponseEntity<List<ExchangeResponse>> getExchanges() {
         return new ResponseEntity<>(
-                exchangeService.getStartedExchanges(),
+                exchangeService.getStartedExchanges().stream().map(ExchangeResponse::of).collect(Collectors.toList()),
                 OK
         );
     }

@@ -1,8 +1,8 @@
 package pl.szymanski.sharelibrary.converters;
 
 import org.springframework.beans.BeanUtils;
-import pl.szymanski.sharelibrary.commanddata.*;
 import pl.szymanski.sharelibrary.entity.*;
+import pl.szymanski.sharelibrary.requests.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +46,4 @@ public class RequestConverter {
         BeanUtils.copyProperties(addExchangeRequest, exchange, "authors");
         return exchange;
     }
-
-
 }

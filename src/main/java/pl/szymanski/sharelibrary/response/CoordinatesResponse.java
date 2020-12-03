@@ -1,4 +1,4 @@
-package pl.szymanski.sharelibrary.views;
+package pl.szymanski.sharelibrary.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

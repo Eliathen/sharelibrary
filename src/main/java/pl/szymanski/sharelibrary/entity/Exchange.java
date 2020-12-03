@@ -38,6 +38,6 @@ public class Exchange {
     private Coordinates coordinates;
 
     @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
-    private List<Request> requests;
+    private List<Requirement> requirements;
 
 }

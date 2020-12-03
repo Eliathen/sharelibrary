@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.szymanski.sharelibrary.commanddata.AssignBookRequest;
-import pl.szymanski.sharelibrary.commanddata.EditUserRequest;
-import pl.szymanski.sharelibrary.commanddata.RemoveBookFromUserRequest;
-import pl.szymanski.sharelibrary.commanddata.UserRequest;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.requests.AssignBookRequest;
+import pl.szymanski.sharelibrary.requests.EditUserRequest;
+import pl.szymanski.sharelibrary.requests.RemoveBookFromUserRequest;
+import pl.szymanski.sharelibrary.requests.UserRequest;
+import pl.szymanski.sharelibrary.response.UserResponse;
+import pl.szymanski.sharelibrary.response.UserWithoutBooksResponse;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.UserResponse;
-import pl.szymanski.sharelibrary.views.UserWithoutBooksResponse;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")

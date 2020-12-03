@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.szymanski.sharelibrary.commanddata.LoginRequest;
+import pl.szymanski.sharelibrary.requests.LoginRequest;
+import pl.szymanski.sharelibrary.response.UserLoginResponse;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.UserLoginResponse;
 
 import static org.springframework.http.HttpStatus.OK;
 

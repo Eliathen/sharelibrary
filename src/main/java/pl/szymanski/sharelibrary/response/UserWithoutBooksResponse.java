@@ -1,4 +1,4 @@
-package pl.szymanski.sharelibrary.views;
+package pl.szymanski.sharelibrary.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,18 +6,18 @@ import pl.szymanski.sharelibrary.entity.User;
 
 @AllArgsConstructor
 @Data
-public class BaseUserResponse {
+public class UserWithoutBooksResponse {
 
     private Long id;
     private String email;
     private String username;
     private String name;
     private String surname;
+
     private CoordinatesResponse coordinates;
 
-
-    public static BaseUserResponse of(User user) {
-        return new BaseUserResponse(
+    public static UserWithoutBooksResponse of(User user) {
+        return new UserWithoutBooksResponse(
                 user.getId(),
                 user.getEmail(),
                 user.getUsername(),

@@ -8,9 +8,9 @@ import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
+import pl.szymanski.sharelibrary.response.UserBookResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.UserBookResponse;
 
 import java.io.IOException;
 import java.util.*;

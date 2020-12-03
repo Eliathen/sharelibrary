@@ -1,10 +1,10 @@
-package pl.szymanski.sharelibrary.commanddata;
+package pl.szymanski.sharelibrary.requests;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class AssignBookRequest {
 
     private Long userId;

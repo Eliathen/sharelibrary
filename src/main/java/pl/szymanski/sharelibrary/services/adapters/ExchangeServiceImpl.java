@@ -3,8 +3,6 @@ package pl.szymanski.sharelibrary.services.adapters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.szymanski.sharelibrary.commanddata.AddExchangeRequest;
-import pl.szymanski.sharelibrary.commanddata.CoordinatesRequest;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.Coordinates;
 import pl.szymanski.sharelibrary.entity.Exchange;
@@ -16,13 +14,13 @@ import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
+import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
+import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.ExchangeResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final CoordinatesRepository coordinatesRepository;
 
     @Override
-    public ExchangeResponse saveExchange(AddExchangeRequest addExchangeRequest) {
+    public Exchange saveExchange(AddExchangeRequest addExchangeRequest) {
         Exchange exchange = RequestConverter.addExchangeRequestToExchange(addExchangeRequest);
         exchange.setBook(bookService.findBookById(addExchangeRequest.getBookId()));
         exchange.setUser(userService.getUserById(addExchangeRequest.getUserId()));
@@ -48,7 +46,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                     }
                 }
         );
-        return ExchangeResponse.of(exchangeRepository.saveExchange(exchange));
+        return exchangeRepository.saveExchange(exchange);
     }
 
     private Coordinates checkIfCoordinatesExist(Coordinates coordinates) {
@@ -75,14 +73,19 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<ExchangeResponse> getStartedExchanges() {
+    public List<Exchange> getStartedExchanges() {
         return exchangeRepository.getExchangeByStatus(
                 ExchangeStatus.STARTED
-        ).stream().map(ExchangeResponse::of).collect(Collectors.toList());
+        );
     }
 
     @Override
-    public List<ExchangeResponse> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
+    public Exchange getExchangeById(Long id) {
+        return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExists(id));
+    }
+
+    @Override
+    public List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
         return null;
     }
 }

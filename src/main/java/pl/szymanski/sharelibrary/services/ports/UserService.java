@@ -1,8 +1,8 @@
 package pl.szymanski.sharelibrary.services.ports;
 
-import pl.szymanski.sharelibrary.commanddata.EditUserRequest;
-import pl.szymanski.sharelibrary.commanddata.LoginRequest;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.requests.EditUserRequest;
+import pl.szymanski.sharelibrary.requests.LoginRequest;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
 import java.util.Optional;

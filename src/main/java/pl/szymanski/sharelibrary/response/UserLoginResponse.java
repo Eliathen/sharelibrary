@@ -1,10 +1,12 @@
-package pl.szymanski.sharelibrary.views;
+package pl.szymanski.sharelibrary.response;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import pl.szymanski.sharelibrary.entity.User;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
-@Value
+@Data
+@AllArgsConstructor
 public class UserLoginResponse {
     private Long id;
     private String userName;
