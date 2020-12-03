@@ -97,6 +97,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveUser(user);
     }
 
+    @Override
+    @Transactional
     public User changeUserDetails(Long id, EditUserRequest editUserRequest) {
         User user = prepareEditedUserDetails(id, editUserRequest);
         return userRepository.saveUser(user);
