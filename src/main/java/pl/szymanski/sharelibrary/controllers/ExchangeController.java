@@ -40,4 +40,11 @@ public class ExchangeController {
         exchangeService.finishExchange(exchangeId);
         return new ResponseEntity<>(NO_CONTENT);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExchangeResponse> getExchange(@PathVariable("id") Long exchangeId) {
+        return new ResponseEntity<>(
+                ExchangeResponse.of(exchangeService.getExchangeById(exchangeId)), OK
+        );
+    }
 }
