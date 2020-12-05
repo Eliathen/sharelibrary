@@ -40,4 +40,12 @@ public class Exchange {
     @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
     private List<Requirement> requirements;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "forBookId")
+    private Book forBook;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "withUserId")
+    private User withUser;
+
 }

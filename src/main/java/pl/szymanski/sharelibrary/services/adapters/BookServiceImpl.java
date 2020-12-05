@@ -60,10 +60,10 @@ public class BookServiceImpl implements BookService {
             covers.add(getCoverFromMultipartFile(cover));
             book.setCover(covers);
         }
-        List<Author> authors = book.getAuthors().stream().map(it ->
+        Set<Author> authors = book.getAuthors().stream().map(it ->
                 authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
-        ).collect(Collectors.toList());
-        book.setAuthors(authors);
+        ).collect(Collectors.toSet());
+        book.setAuthors(new ArrayList<>(authors));
         Book newBook = bookRepository.saveBook(book);
         userService.assignBookToUser(userId, newBook.getId());
         return newBook;

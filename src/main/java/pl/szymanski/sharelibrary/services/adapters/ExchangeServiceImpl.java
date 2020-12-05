@@ -16,6 +16,7 @@ import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
+import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
@@ -60,16 +61,17 @@ public class ExchangeServiceImpl implements ExchangeService {
     public void finishExchange(Long exchangeId) {
         Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
-        Long id = exchangeRepository.saveExchange(exchange).getBook().getId();
-        User user = userService.getUserById(exchange.getUser().getId());
-        List<UserBook> userBooks = user.getBooks();
-        userBooks.forEach(ub -> {
-            if (ub.getBook().getId().equals(id)) {
-                ub.setStatus(BookStatus.AT_OWNER);
-            }
-        });
-        user.setBooks(userBooks);
-        userRepository.saveUser(user);
+        exchangeRepository.saveExchange(exchange);
+//        User user = userService.getUserById(exchange.getUser().getId());
+        changeBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
+//        List<UserBook> userBooks = user.getBooks();
+//        userBooks.forEach(ub -> {
+//            if (ub.getBook().getId().equals(id)) {
+//                ub.setStatus(BookStatus.AT_OWNER);
+//            }
+//        });
+//        user.setBooks(userBooks);
+//        userRepository.saveUser(user);
     }
 
     @Override
@@ -88,4 +90,46 @@ public class ExchangeServiceImpl implements ExchangeService {
     public List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
         return null;
     }
+
+    @Override
+    @Transactional
+    public Exchange executeExchange(ExecuteExchangeRequest executeExchangeRequest) {
+        Exchange exchange = getExchangeById(executeExchangeRequest.getExchangeId());
+        if (executeExchangeRequest.getForBookId() != null) {
+            exchange.setForBook(bookService.findBookById(executeExchangeRequest.getForBookId()));
+        }
+        exchange.setExchangeStatus(ExchangeStatus.DURING);
+        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.DURING_EXCHANGE, executeExchangeRequest.getWithUserId());
+        User withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(), exchange.getForBook().getId(), BookStatus.DURING_EXCHANGE, exchange.getUser().getId());
+        exchange.setWithUser(withUser);
+        exchange.setUser(owner);
+        return exchangeRepository.saveExchange(exchange);
+    }
+
+    private void changeBookStatus(Long userId, Long bookId, BookStatus newStatus) {
+        User user = userService.getUserById(userId);
+        List<UserBook> userBooks = user.getBooks();
+        userBooks.forEach(ub -> {
+            if (ub.getBook().getId().equals(bookId)) {
+                ub.setStatus(newStatus);
+            }
+        });
+        user.setBooks(userBooks);
+        userRepository.saveUser(user);
+    }
+
+    private User changeBookStatusAndAtUser(Long userId, Long bookId, BookStatus newStatus, Long atUserId) {
+        User user = userService.getUserById(userId);
+        User atUser = userService.getUserById(atUserId);
+        List<UserBook> userBooks = user.getBooks();
+        userBooks.forEach(ub -> {
+            if (ub.getBook().getId().equals(bookId)) {
+                ub.setStatus(newStatus);
+                ub.setAtUser(atUser);
+            }
+        });
+        user.setBooks(userBooks);
+        return user;
+    }
+
 }

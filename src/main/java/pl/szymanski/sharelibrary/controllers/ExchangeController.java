@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
+import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.response.ExchangeResponse;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 
@@ -47,4 +48,13 @@ public class ExchangeController {
                 ExchangeResponse.of(exchangeService.getExchangeById(exchangeId)), OK
         );
     }
+
+    @PostMapping("/execution")
+    public ResponseEntity<ExchangeResponse> executeExchange(@RequestBody ExecuteExchangeRequest executeExchangeRequest) {
+        return new ResponseEntity<>(
+                ExchangeResponse.of(exchangeService.executeExchange(executeExchangeRequest))
+                , OK
+        );
+    }
+
 }
