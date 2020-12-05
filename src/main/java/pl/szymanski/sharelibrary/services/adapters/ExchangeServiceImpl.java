@@ -13,7 +13,6 @@ import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
-import pl.szymanski.sharelibrary.repositories.ports.UserRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
@@ -30,7 +29,6 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final ExchangeRepository exchangeRepository;
     private final BookService bookService;
     private final UserService userService;
-    private final UserRepository userRepository;
     private final CoordinatesRepository coordinatesRepository;
 
     @Override
@@ -95,18 +93,19 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     public Exchange executeExchange(ExecuteExchangeRequest executeExchangeRequest) {
         Exchange exchange = getExchangeById(executeExchangeRequest.getExchangeId());
+        User withUser = userService.getUserById(executeExchangeRequest.getWithUserId());
         if (executeExchangeRequest.getForBookId() != null) {
             exchange.setForBook(bookService.findBookById(executeExchangeRequest.getForBookId()));
+            withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(), exchange.getForBook().getId(), BookStatus.EXCHANGED, exchange.getUser().getId());
         }
+        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.EXCHANGED, executeExchangeRequest.getWithUserId());
         exchange.setExchangeStatus(ExchangeStatus.DURING);
-        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.DURING_EXCHANGE, executeExchangeRequest.getWithUserId());
-        User withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(), exchange.getForBook().getId(), BookStatus.DURING_EXCHANGE, exchange.getUser().getId());
         exchange.setWithUser(withUser);
         exchange.setUser(owner);
         return exchangeRepository.saveExchange(exchange);
     }
 
-    private void changeBookStatus(Long userId, Long bookId, BookStatus newStatus) {
+    private User changeBookStatus(Long userId, Long bookId, BookStatus newStatus) {
         User user = userService.getUserById(userId);
         List<UserBook> userBooks = user.getBooks();
         userBooks.forEach(ub -> {
@@ -115,7 +114,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             }
         });
         user.setBooks(userBooks);
-        userRepository.saveUser(user);
+        return user;
     }
 
     private User changeBookStatusAndAtUser(Long userId, Long bookId, BookStatus newStatus, Long atUserId) {

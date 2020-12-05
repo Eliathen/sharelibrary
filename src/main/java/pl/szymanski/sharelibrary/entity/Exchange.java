@@ -6,8 +6,7 @@ import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Data
@@ -40,11 +39,11 @@ public class Exchange {
     @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
     private List<Requirement> requirements;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {MERGE, PERSIST, REFRESH})
     @JoinColumn(name = "forBookId")
     private Book forBook;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {MERGE, PERSIST, REFRESH})
     @JoinColumn(name = "withUserId")
     private User withUser;
 
