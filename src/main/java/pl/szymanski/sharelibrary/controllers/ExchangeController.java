@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.response.ExchangeResponse;
+import pl.szymanski.sharelibrary.response.RequirementResponse;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 
 import java.util.List;
@@ -54,6 +55,14 @@ public class ExchangeController {
         return new ResponseEntity<>(
                 ExchangeResponse.of(exchangeService.executeExchange(executeExchangeRequest))
                 , OK
+        );
+    }
+
+    @GetMapping("/{id}/requirements")
+    public ResponseEntity<List<RequirementResponse>> getRequirements(@PathVariable("id") Long exchangeId) {
+        return new ResponseEntity<>(
+                exchangeService.getRequirements(exchangeId).stream().map(RequirementResponse::of).collect(Collectors.toList()),
+                OK
         );
     }
 

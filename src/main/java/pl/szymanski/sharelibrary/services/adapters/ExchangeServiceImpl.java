@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
-import pl.szymanski.sharelibrary.entity.Coordinates;
-import pl.szymanski.sharelibrary.entity.Exchange;
-import pl.szymanski.sharelibrary.entity.User;
-import pl.szymanski.sharelibrary.entity.UserBook;
+import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
@@ -21,6 +18,7 @@ import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +39,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.getUser().getBooks().forEach(
                 it -> {
                     if (it.getBook().getId().equals(exchange.getBook().getId())) {
-                        it.setStatus(BookStatus.DURING_EXCHANGE);
+                        it.setStatus(BookStatus.SHARED);
                     }
                 }
         );
@@ -103,6 +101,11 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setWithUser(withUser);
         exchange.setUser(owner);
         return exchangeRepository.saveExchange(exchange);
+    }
+
+    @Override
+    public List<Requirement> getRequirements(Long exchangeId) {
+        return getExchangeById(exchangeId).getRequirements().stream().filter(Requirement::isActual).collect(Collectors.toList());
     }
 
     private User changeBookStatus(Long userId, Long bookId, BookStatus newStatus) {
