@@ -28,9 +28,10 @@ public class RequirementServiceImpl implements RequirementService {
     @Override
     @Transactional
     public Requirement createRequirement(CreateRequirementRequest requirementRequest) {
-        requirementRepository.getRequirements().stream().filter((it) ->
-                it.getExchange().getId().equals(requirementRequest.getExchangeId()) && it.getUser().getId().equals(requirementRequest.getUserId())
-        ).findAny().orElseThrow(RequirementAlreadyExists::new);
+        if (requirementRepository.getRequirements().stream().anyMatch((it) ->
+                it.getExchange().getId().equals(requirementRequest.getExchangeId()) && it.getUser().getId().equals(requirementRequest.getUserId()))) {
+            throw new RequirementAlreadyExists();
+        }
         Requirement requirement = new Requirement();
         requirement.setUser(userService.getUserById(requirementRequest.getUserId()));
         requirement.setActual(true);

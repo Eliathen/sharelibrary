@@ -15,7 +15,7 @@ public class RequirementExceptionAdvice {
     public ResponseEntity<ErrorInfo> requirementAlreadyExists(RequirementAlreadyExists exception) {
         ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
         return new ResponseEntity<>(
-                errorInfo, HttpStatus.NOT_FOUND
+                errorInfo, HttpStatus.FOUND
         );
     }
 
