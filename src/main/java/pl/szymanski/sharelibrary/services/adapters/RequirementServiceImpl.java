@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.szymanski.sharelibrary.entity.Exchange;
 import pl.szymanski.sharelibrary.entity.Requirement;
+import pl.szymanski.sharelibrary.exceptions.requirements.RequirementAlreadyExists;
 import pl.szymanski.sharelibrary.repositories.ports.RequirementRepository;
 import pl.szymanski.sharelibrary.requests.CreateRequirementRequest;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
@@ -27,8 +28,9 @@ public class RequirementServiceImpl implements RequirementService {
     @Override
     @Transactional
     public Requirement createRequirement(CreateRequirementRequest requirementRequest) {
-        System.out.println(requirementRequest.getExchangeId());
-        System.out.println(requirementRequest.getUserId());
+        requirementRepository.getRequirements().stream().filter((it) ->
+                it.getExchange().getId().equals(requirementRequest.getExchangeId()) && it.getUser().getId().equals(requirementRequest.getUserId())
+        ).findAny().orElseThrow(RequirementAlreadyExists::new);
         Requirement requirement = new Requirement();
         requirement.setUser(userService.getUserById(requirementRequest.getUserId()));
         requirement.setActual(true);

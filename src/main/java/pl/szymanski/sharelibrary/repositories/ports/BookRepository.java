@@ -16,4 +16,5 @@ public interface BookRepository {
     List<Book> findBooksByTitle(String title);
 
     List<Book> findBooksByUserId(Long userId);
+
 }
