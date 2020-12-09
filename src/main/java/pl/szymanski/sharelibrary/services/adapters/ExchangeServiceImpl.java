@@ -58,16 +58,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         exchangeRepository.saveExchange(exchange);
-//        User user = userService.getUserById(exchange.getUser().getId());
         changeBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
-//        List<UserBook> userBooks = user.getBooks();
-//        userBooks.forEach(ub -> {
-//            if (ub.getBook().getId().equals(id)) {
-//                ub.setStatus(BookStatus.AT_OWNER);
-//            }
-//        });
-//        user.setBooks(userBooks);
-//        userRepository.saveUser(user);
     }
 
     @Override
@@ -100,6 +91,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setExchangeStatus(ExchangeStatus.DURING);
         exchange.setWithUser(withUser);
         exchange.setUser(owner);
+        exchange.getRequirements().forEach(requirement -> requirement.setActual(false));
         return exchangeRepository.saveExchange(exchange);
     }
 
@@ -132,6 +124,13 @@ public class ExchangeServiceImpl implements ExchangeService {
         });
         user.setBooks(userBooks);
         return user;
+    }
+
+    public List<Exchange> getExchangesWhereUserIdIsWithUser(Long userId) {
+        return exchangeRepository.getExchangeByStatus(ExchangeStatus.DURING)
+                .stream()
+                .filter(it -> it.getWithUser().getId().equals(userId))
+                .collect(Collectors.toList());
     }
 
 }

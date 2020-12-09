@@ -14,7 +14,7 @@ public class ExecuteExchangeRequest {
     public ExecuteExchangeRequest(
             @JsonProperty(value = "exchangeId", required = true) Long exchangeId,
             @JsonProperty(value = "withUserId", required = true) Long withUserId,
-            @JsonProperty("forBookId") Long forBookId) {
+            @JsonProperty(value = "forBookId") Long forBookId) {
         this.exchangeId = exchangeId;
         this.withUserId = withUserId;
         this.forBookId = forBookId;
