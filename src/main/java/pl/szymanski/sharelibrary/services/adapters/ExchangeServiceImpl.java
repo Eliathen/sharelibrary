@@ -59,13 +59,14 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         exchangeRepository.saveExchange(exchange);
         changeBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
+        if (exchange.getForBook() != null) {
+            changeBookStatus(exchange.getWithUser().getId(), exchange.getForBook().getId(), BookStatus.AT_OWNER);
+        }
     }
 
     @Override
-    public List<Exchange> getStartedExchanges() {
-        return exchangeRepository.getExchangeByStatus(
-                ExchangeStatus.STARTED
-        );
+    public List<Exchange> getExchanges() {
+        return exchangeRepository.getAll().stream().filter(it -> it.getExchangeStatus() != ExchangeStatus.FINISHED).collect(Collectors.toList());
     }
 
     @Override

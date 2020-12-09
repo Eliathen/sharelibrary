@@ -37,4 +37,5 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
         return exchangeJPARepository.findAllByExchangeStatus(exchangeStatus);
     }
 
+
 }

@@ -32,7 +32,7 @@ public class ExchangeController {
     @GetMapping
     public ResponseEntity<List<ExchangeResponse>> getExchanges() {
         return new ResponseEntity<>(
-                exchangeService.getStartedExchanges().stream().map(ExchangeResponse::of).collect(Collectors.toList()),
+                exchangeService.getExchanges().stream().map(ExchangeResponse::of).collect(Collectors.toList()),
                 OK
         );
     }
