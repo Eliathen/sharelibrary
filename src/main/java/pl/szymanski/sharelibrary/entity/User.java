@@ -31,6 +31,9 @@ public class User {
     @OneToMany(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private List<UserBook> books;
 
+    @OneToMany(cascade = ALL, fetch = FetchType.LAZY)
+    private List<ChatRoom> chatRooms;
+
     @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "coordinatesId")
     private Coordinates coordinates;
