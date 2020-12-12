@@ -38,7 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
-//TODO Remove "/chat" after sockets start working
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
@@ -47,8 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
-                "/webjars/**",
-                "/chat"
+                "/webjars/**"
         );
     }
 
