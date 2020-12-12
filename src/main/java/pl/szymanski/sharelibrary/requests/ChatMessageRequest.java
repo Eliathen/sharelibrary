@@ -17,8 +17,6 @@ public class ChatMessageRequest {
 
     private String content;
 
-    private LocalDateTime timestamp;
-
     @JsonCreator
     public ChatMessageRequest(@JsonProperty(value = "chatId", required = true) Long chatId,
                               @JsonProperty(value = "senderId", required = true) Long senderId,
@@ -29,6 +27,5 @@ public class ChatMessageRequest {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.content = content;
-        this.timestamp = timestamp;
     }
 }

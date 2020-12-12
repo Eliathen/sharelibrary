@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -27,8 +28,8 @@ public class ChatController {
     private final ChatMessageService chatMessageService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping
-    public void processMessage(@Payload ChatMessageRequest chatMessage) {
+    @MessageMapping("/{roomId}")
+    public void processMessage(@DestinationVariable("roomId") Long roomId, @Payload ChatMessageRequest chatMessage) {
         ChatMessage message = chatMessageService.saveMessage(chatMessage);
 
         simpMessagingTemplate.convertAndSendToUser(
