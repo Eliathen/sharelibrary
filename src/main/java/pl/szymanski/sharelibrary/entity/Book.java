@@ -30,4 +30,8 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<UserBook> users;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
+            inverseJoinColumns = @JoinColumn(name = "categoryId"))
+    private List<Category> categories;
 }

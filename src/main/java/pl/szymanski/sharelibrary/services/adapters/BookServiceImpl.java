@@ -10,6 +10,7 @@ import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 import pl.szymanski.sharelibrary.response.UserBookResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
+import pl.szymanski.sharelibrary.services.ports.CategoryService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Override
     public Book findBookById(Long id) {
@@ -60,10 +62,15 @@ public class BookServiceImpl implements BookService {
             covers.add(getCoverFromMultipartFile(cover));
             book.setCover(covers);
         }
+
         Set<Author> authors = book.getAuthors().stream().map(it ->
                 authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
         ).collect(Collectors.toSet());
+        Set<Category> categories = book.getCategories().stream().map(it ->
+                categoryService.findByName(it.getName())
+        ).collect(Collectors.toSet());
         book.setAuthors(new ArrayList<>(authors));
+        book.setCategories(new ArrayList<>(categories));
         Book newBook = bookRepository.saveBook(book);
         userService.assignBookToUser(userId, newBook.getId());
         return newBook;

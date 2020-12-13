@@ -19,6 +19,8 @@ public class UserBookResponse {
 
     private List<AuthorResponse> authors;
 
+    private List<CategoryResponse> categories;
+
     private BookStatus status;
 
     private UserResponse atUser;
@@ -28,6 +30,7 @@ public class UserBookResponse {
                 user.getBook().getId(),
                 user.getBook().getTitle(),
                 user.getBook().getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toList()),
+                user.getBook().getCategories().stream().map(CategoryResponse::of).collect(Collectors.toList()),
                 user.getStatus(),
                 (user.getAtUser() != null) ? UserResponse.of(user.getAtUser()) : null
         );

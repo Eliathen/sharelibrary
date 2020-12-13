@@ -13,9 +13,18 @@ public class RequestConverter {
         Book book = new Book();
         List<Author> authors = new LinkedList<>();
         addBookRequest.getAuthors().forEach(it -> authors.add(authorRequestToAuthor(it)));
+        List<Category> categories = new LinkedList<>();
+        addBookRequest.getCategories().forEach(it -> categories.add(categoryRequestToCategory(it)));
         book.setAuthors(authors);
-        BeanUtils.copyProperties(addBookRequest, book, "authors", "image");
+        book.setCategories(categories);
+        BeanUtils.copyProperties(addBookRequest, book, "authors", "image", "categories");
         return book;
+    }
+
+    private static Category categoryRequestToCategory(CategoryRequest categoryRequest) {
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryRequest, category);
+        return category;
     }
 
     public static Author authorRequestToAuthor(AuthorRequest authorRequest) {

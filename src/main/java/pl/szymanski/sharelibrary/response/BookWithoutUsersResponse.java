@@ -17,11 +17,14 @@ public class BookWithoutUsersResponse {
 
     private Set<AuthorResponse> authors;
 
+    private Set<CategoryResponse> categories;
+
     public static BookWithoutUsersResponse of(Book book) {
         return new BookWithoutUsersResponse(
                 book.getId(),
                 book.getTitle(),
-                book.getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toSet())
+                book.getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toSet()),
+                book.getCategories().stream().map(CategoryResponse::of).collect(Collectors.toSet())
         );
     }
 

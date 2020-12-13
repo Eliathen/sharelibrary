@@ -19,4 +19,5 @@ public class ExceptionMessages {
 
 
     public static final String CHAT_ROOM_NOT_EXIST_FORMAT = "Room with id %s does not exist";
+    public static final String CATEGORY_NOT_EXISTS = "Category %s does not exists";
 }
