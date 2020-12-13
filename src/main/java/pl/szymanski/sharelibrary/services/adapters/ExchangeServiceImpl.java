@@ -93,7 +93,23 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.setWithUser(withUser);
         exchange.setUser(owner);
         exchange.getRequirements().forEach(requirement -> requirement.setActual(false));
-        return exchangeRepository.saveExchange(exchange);
+
+        Exchange savedExchange = exchangeRepository.saveExchange(exchange);
+        //If for book is shared. Finish exchange
+        if (savedExchange != null && savedExchange.getForBook() != null) {
+            getUserExchange(withUser.getId())
+                    .stream()
+                    .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED) && it.getBook().getId().equals(savedExchange.getForBook().getId()))
+                    .findFirst().ifPresent(it -> {
+                it.setExchangeStatus(ExchangeStatus.FINISHED);
+                exchangeRepository.saveExchange(it);
+            });
+        }
+        return savedExchange;
+    }
+
+    private List<Exchange> getUserExchange(Long userId) {
+        return getExchanges().stream().filter(it -> it.getUser().getId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override
