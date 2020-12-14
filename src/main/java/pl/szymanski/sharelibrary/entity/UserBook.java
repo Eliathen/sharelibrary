@@ -32,5 +32,14 @@ public class UserBook {
     @JoinColumn(name = "atUserId")
     private User atUser;
 
+    @Override
+    public String toString() {
+        return "UserBook{" +
+                "user=" + user +
+                ", book=" + book +
+                ", status=" + status +
+                ", atUser=" + atUser +
+                '}';
+    }
 }
 

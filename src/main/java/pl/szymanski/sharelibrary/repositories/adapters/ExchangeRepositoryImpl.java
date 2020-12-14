@@ -37,5 +37,10 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
         return exchangeJPARepository.findAllByExchangeStatus(exchangeStatus);
     }
 
+    @Override
+    public List<Exchange> getExchangeByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {
+        return exchangeJPARepository.findByLatitudeAndLongitudeAndRadius(latitude, longitude, radius);
+    }
+
 
 }

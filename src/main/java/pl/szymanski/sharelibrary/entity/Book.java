@@ -34,4 +34,14 @@ public class Book {
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private List<Category> categories;
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", authors=" + authors +
+                ", categories=" + categories +
+                '}';
+    }
 }

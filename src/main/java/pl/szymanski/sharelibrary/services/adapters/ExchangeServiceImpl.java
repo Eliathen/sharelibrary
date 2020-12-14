@@ -8,6 +8,7 @@ import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
+import pl.szymanski.sharelibrary.repositories.ports.CategoryRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
@@ -17,7 +18,10 @@ import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +32,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final BookService bookService;
     private final UserService userService;
     private final CoordinatesRepository coordinatesRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Exchange saveExchange(AddExchangeRequest addExchangeRequest) {
@@ -58,9 +63,9 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         exchangeRepository.saveExchange(exchange);
-        changeBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
+        changeUserBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
         if (exchange.getForBook() != null) {
-            changeBookStatus(exchange.getWithUser().getId(), exchange.getForBook().getId(), BookStatus.AT_OWNER);
+            changeUserBookStatus(exchange.getWithUser().getId(), exchange.getForBook().getId(), BookStatus.AT_OWNER);
         }
     }
 
@@ -74,10 +79,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExists(id));
     }
 
-    @Override
-    public List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
-        return null;
-    }
 
     @Override
     @Transactional
@@ -117,7 +118,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return getExchangeById(exchangeId).getRequirements().stream().filter(Requirement::isActual).collect(Collectors.toList());
     }
 
-    private User changeBookStatus(Long userId, Long bookId, BookStatus newStatus) {
+    private User changeUserBookStatus(Long userId, Long bookId, BookStatus newStatus) {
         User user = userService.getUserById(userId);
         List<UserBook> userBooks = user.getBooks();
         userBooks.forEach(ub -> {
@@ -148,6 +149,83 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .stream()
                 .filter(it -> it.getWithUser().getId().equals(userId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Exchange> filter(Double latitude, Double longitude, Double radius, List<String> categories, String query) {
+        List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius);
+        System.out.println(exchanges);
+        if (query != null && categories != null) {
+            System.out.println("Filter by categories and query");
+            List<Category> newCategories = getCategoryListFromNameList(categories);
+            return filterByCategoryAndQuery(exchanges, newCategories, query);
+        } else if (categories != null) {
+            System.out.println("Filter by categories");
+            List<Category> newCategories = getCategoryListFromNameList(categories);
+            return filterByCategory(exchanges, newCategories);
+        } else if (query != null && !query.isBlank()) {
+            System.out.println("Filter by query");
+            return filterByQuery(exchanges, query);
+        }
+        System.out.println("No filters");
+        return exchanges;
+    }
+
+    private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
+        Set<Exchange> result = new HashSet<>();
+        result.addAll(filterByCategory(exchanges, categories));
+        result.addAll(filterByQuery(exchanges, query));
+        return new LinkedList<>(result);
+    }
+
+    //TODO Maybe add filter by authors name and surname
+    private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
+        return exchanges.stream().filter(it ->
+                it.getBook().getTitle().contains(query)
+        ).collect(Collectors.toList());
+    }
+
+    private List<Exchange> filterByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {
+        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
+    }
+
+    private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
+        exchanges = exchanges.stream()
+                .filter(exchange -> exchange.getExchangeStatus() == ExchangeStatus.STARTED)
+                .collect(Collectors.toList());
+        List<Exchange> finalExchanges = getExchangeWhichContainsAllCategories(exchanges, categories);
+        return new LinkedList<>(finalExchanges);
+    }
+
+    private List<Exchange> getExchangeWhichContainsAllCategories(List<Exchange> exchanges, List<Category> categories) {
+        return exchanges.stream().filter(
+                exchange -> exchange.getBook().getCategories().containsAll(categories)
+        ).collect(Collectors.toList());
+    }
+
+
+    private List<Category> getCategoryListFromNameList(List<String> categories) {
+        List<Category> categoryList = new LinkedList<>();
+        categories.forEach(it ->
+                categoryRepository.findByName(it).ifPresent(categoryList::add)
+        );
+        return categoryList;
+    }
+
+    @Override
+    public List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
+        Double latitude = coordinatesRequest.getLatitude();
+        Double longitude = coordinatesRequest.getLongitude();
+
+        return exchangeRepository.getExchangeByCoordinatesAndRadius(
+                latitude,
+                longitude,
+                radius
+        );
+    }
+
+    private Double convertDegreesToRadians(Double degrees) {
+        return degrees * Math.PI / 180;
     }
 
 }

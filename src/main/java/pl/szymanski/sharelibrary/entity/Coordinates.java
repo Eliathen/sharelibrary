@@ -23,4 +23,12 @@ public class Coordinates {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "coordinates")
     private List<Exchange> exchanges;
 
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

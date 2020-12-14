@@ -22,6 +22,6 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Optional<Category> findByName(String name) {
-        return categoryJPARepository.findFirstByName(name);
+        return categoryJPARepository.findFirstByNameIgnoreCase(name);
     }
 }

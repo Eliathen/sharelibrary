@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -37,4 +38,17 @@ public class User {
     @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "coordinatesId")
     private Coordinates coordinates;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password=" + Arrays.toString(password) +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", coordinates=" + coordinates +
+                '}';
+    }
 }

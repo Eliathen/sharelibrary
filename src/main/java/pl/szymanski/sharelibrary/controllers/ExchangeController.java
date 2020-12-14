@@ -37,6 +37,22 @@ public class ExchangeController {
         );
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<ExchangeResponse>> getWithFilters(
+            @RequestParam(value = "lat") Double latitude,
+            @RequestParam(value = "long") Double longitude,
+            @RequestParam(value = "rad", defaultValue = "100.0") Double radius,
+            @RequestParam(value = "cat", required = false) List<String> categories,
+            @RequestParam(value = "q", required = false) String query
+    ) {
+        return new ResponseEntity<>(
+                exchangeService.filter(latitude, longitude, radius, categories, query)
+                        .stream()
+                        .map(ExchangeResponse::of)
+                        .collect(Collectors.toList()),
+                OK);
+    }
+
     @PostMapping("/{id}/end")
     public ResponseEntity<Void> finishExchange(@PathVariable("id") Long exchangeId) {
         exchangeService.finishExchange(exchangeId);

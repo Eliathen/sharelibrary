@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface CategoryJPARepository extends JpaRepository<Category, Integer> {
 
-    Optional<Category> findFirstByName(String name);
+    Optional<Category> findFirstByNameIgnoreCase(String name);
 
 }

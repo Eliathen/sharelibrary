@@ -19,4 +19,12 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<Book> books;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

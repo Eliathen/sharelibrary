@@ -50,4 +50,11 @@ public class Cover {
     public int hashCode() {
         return Objects.hash(id, name, type, book);
     }
+
+    @Override
+    public String toString() {
+        return "Cover{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

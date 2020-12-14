@@ -47,4 +47,11 @@ public class Exchange {
     @JoinColumn(name = "withUserId")
     private User withUser;
 
+    @Override
+    public String toString() {
+        return "Exchange{" +
+                "\nid=\n" + id +
+                "\nbook =\n" + book +
+                '}';
+    }
 }

@@ -26,4 +26,10 @@ public interface ExchangeService {
 
     List<Exchange> getExchangesWhereUserIdIsWithUser(Long userId);
 
+    List<Exchange> filter(Double latitude,
+                          Double longitude,
+                          Double radius,
+                          List<String> categories,
+                          String query
+    );
 }
