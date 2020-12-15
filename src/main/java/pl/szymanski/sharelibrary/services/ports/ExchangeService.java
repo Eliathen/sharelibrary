@@ -5,6 +5,7 @@ import pl.szymanski.sharelibrary.entity.Requirement;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
+import pl.szymanski.sharelibrary.response.ExchangeResponse;
 
 import java.util.List;
 
@@ -26,10 +27,10 @@ public interface ExchangeService {
 
     List<Exchange> getExchangesWhereUserIdIsWithUser(Long userId);
 
-    List<Exchange> filter(Double latitude,
-                          Double longitude,
-                          Double radius,
-                          List<String> categories,
-                          String query
+    List<ExchangeResponse> filter(Double latitude,
+                                  Double longitude,
+                                  Double radius,
+                                  List<String> categories,
+                                  String query
     );
 }

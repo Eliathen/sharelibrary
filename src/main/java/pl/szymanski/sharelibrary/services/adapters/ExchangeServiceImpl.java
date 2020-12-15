@@ -14,6 +14,7 @@ import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
+import pl.szymanski.sharelibrary.response.ExchangeResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
@@ -152,23 +153,20 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<Exchange> filter(Double latitude, Double longitude, Double radius, List<String> categories, String query) {
+    public List<ExchangeResponse> filter(Double latitude, Double longitude, Double radius, List<String> categories, String query) {
         List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius);
-        System.out.println(exchanges);
         if (query != null && categories != null) {
-            System.out.println("Filter by categories and query");
             List<Category> newCategories = getCategoryListFromNameList(categories);
-            return filterByCategoryAndQuery(exchanges, newCategories, query);
+            exchanges = filterByCategoryAndQuery(exchanges, newCategories, query);
         } else if (categories != null) {
-            System.out.println("Filter by categories");
             List<Category> newCategories = getCategoryListFromNameList(categories);
-            return filterByCategory(exchanges, newCategories);
+            exchanges = filterByCategory(exchanges, newCategories);
         } else if (query != null && !query.isBlank()) {
-            System.out.println("Filter by query");
-            return filterByQuery(exchanges, query);
+            exchanges = filterByQuery(exchanges, query);
         }
-        System.out.println("No filters");
-        return exchanges;
+        return exchanges.stream().map(it -> ExchangeResponse.of(it,
+                countDistanceBetweenPoints(latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude())))
+                .collect(Collectors.toList());
     }
 
     private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
@@ -183,6 +181,23 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchanges.stream().filter(it ->
                 it.getBook().getTitle().contains(query)
         ).collect(Collectors.toList());
+    }
+
+    private Double countDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return dist * 1.609344;
+    }
+
+    private Double rad2deg(double rad) {
+        return (rad * 180 / Math.PI);
+    }
+
+    private Double deg2rad(double deg) {
+        return (deg * Math.PI / 180);
     }
 
     private List<Exchange> filterByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {

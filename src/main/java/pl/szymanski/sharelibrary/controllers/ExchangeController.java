@@ -46,10 +46,7 @@ public class ExchangeController {
             @RequestParam(value = "q", required = false) String query
     ) {
         return new ResponseEntity<>(
-                exchangeService.filter(latitude, longitude, radius, categories, query)
-                        .stream()
-                        .map(ExchangeResponse::of)
-                        .collect(Collectors.toList()),
+                exchangeService.filter(latitude, longitude, radius, categories, query),
                 OK);
     }
 

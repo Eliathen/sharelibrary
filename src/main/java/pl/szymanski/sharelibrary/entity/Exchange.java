@@ -50,8 +50,14 @@ public class Exchange {
     @Override
     public String toString() {
         return "Exchange{" +
-                "\nid=\n" + id +
-                "\nbook =\n" + book +
+                "id=" + id +
+                ", exchangeStatus=" + exchangeStatus +
+                ", deposit=" + deposit +
+                ", book=" + book +
+                ", user=" + user +
+                ", coordinates=" + coordinates +
+                ", forBook=" + forBook +
+                ", withUser=" + withUser +
                 '}';
     }
 }
