@@ -1,6 +1,6 @@
 --coordinates
 INSERT INTO public.coordinates(id, latitude, longitude) VALUES (1, 50.5633811,21.1501939);
-INSERT INTO public.coordinates(id, latitude, longitude) VALUES (2, 50.5915108, 21.0749304);
+INSERT INTO public.coordinates(id, latitude, longitude) VALUES (2, 50.865729, 20.6337813);
 -- users
 INSERT INTO public.user (id, email, name, password, surname, username, coordinates_id)
     VALUES (1, 'poczta@pocztowska.pl', 'haslo jak', '$2a$10$NBwGzPSWNXVOlSBbVgdqyexaL4SvcSwXEu2ziXyQ4qooER.g5whgS', 'username', 'z', 1);
@@ -14,6 +14,10 @@ INSERT INTO PUBLIC.CHAT_MESSAGE (ID, CONTENT, TIMESTAMP, ROOM_ID, RECIPIENT_ID, 
 --categories
 INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (1, 'Fantasy');
 INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (2, 'Biography');
+INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (3, 'Action');
+INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (4, 'Thriller');
+INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (5, 'Science Fiction');
+INSERT INTO PUBLIC.CATEGORY (ID, NAME) VALUES (6, 'Romance');
 --authors
 INSERT INTO PUBLIC.AUTHOR (ID, NAME, SURNAME) VALUES (1, 'name', 'surname');
 INSERT INTO PUBLIC.AUTHOR (ID, NAME, SURNAME) VALUES (2, 'name', 'dhdbfb');

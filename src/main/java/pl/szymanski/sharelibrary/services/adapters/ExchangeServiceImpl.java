@@ -165,7 +165,11 @@ public class ExchangeServiceImpl implements ExchangeService {
             exchanges = filterByQuery(exchanges, query);
         }
         return exchanges.stream().map(it -> ExchangeResponse.of(it,
-                countDistanceBetweenPoints(latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude())))
+                countDistanceBetweenPoints(
+                        latitude,
+                        longitude,
+                        it.getCoordinates().getLatitude(),
+                        it.getCoordinates().getLongitude())))
                 .collect(Collectors.toList());
     }
 
@@ -179,25 +183,30 @@ public class ExchangeServiceImpl implements ExchangeService {
     //TODO Maybe add filter by authors name and surname
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         return exchanges.stream().filter(it ->
-                it.getBook().getTitle().contains(query)
+                it.getBook().getTitle().toLowerCase().contains(query.toLowerCase())
         ).collect(Collectors.toList());
     }
 
-    private Double countDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        return dist * 1.609344;
+    private double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {
+        double radiusInKM = 6371.0;
+        double thetaLong = deg2rad(lat2 - lat1);
+        double thetaLat = deg2rad(lon2 - lon1);
+        lat1 = deg2rad(lat1);
+        lat2 = deg2rad(lat2);
+        double dist =
+                Math.sin(thetaLat / 2) * Math.sin(thetaLat / 2) +
+                        Math.cos(lat1) * Math.cos(lat2) *
+                                Math.sin(thetaLong / 2) * Math.sin(thetaLong / 2);
+        double result = 2 * Math.atan2(Math.sqrt(dist), Math.sqrt(1 - dist)) * radiusInKM;
+        return result * 1000;
     }
 
     private Double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
+        return rad * 180 / Math.PI;
     }
 
     private Double deg2rad(double deg) {
-        return (deg * Math.PI / 180);
+        return deg * Math.PI / 180;
     }
 
     private List<Exchange> filterByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {
