@@ -19,10 +19,7 @@ import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -174,17 +171,20 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
-        Set<Exchange> result = new HashSet<>();
-        result.addAll(filterByCategory(exchanges, categories));
-        result.addAll(filterByQuery(exchanges, query));
-        return new LinkedList<>(result);
+        Set<Exchange> result = new HashSet<>(filterByCategory(exchanges, categories));
+        return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
     }
 
     //TODO Maybe add filter by authors name and surname
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
-        return exchanges.stream().filter(it ->
-                it.getBook().getTitle().toLowerCase().contains(query.toLowerCase())
-        ).collect(Collectors.toList());
+        List<String> queries = Arrays.asList(query.split(" "));
+        Set<Exchange> result = new HashSet<>();
+        exchanges.forEach(it -> queries.forEach(q -> {
+            if (it.getBook().getTitle().toLowerCase().contains(q)) {
+                result.add(it);
+            }
+        }));
+        return new LinkedList<>(result);
     }
 
     private double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {
