@@ -5,8 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static javax.persistence.CascadeType.*;
-
 @Entity
 @Data
 @Table(name = "chat_message")
@@ -15,15 +13,15 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})
+    @ManyToOne
     @JoinColumn(name = "roomId")
     private ChatRoom chat;
 
-    @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})
+    @ManyToOne
     @JoinColumn(name = "senderId")
     private User sender;
 
-    @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})
+    @ManyToOne
     @JoinColumn(name = "recipientId")
     private User recipient;
 

@@ -16,7 +16,7 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(mappedBy = "chat", cascade = {MERGE, PERSIST, REFRESH})
     private List<ChatMessage> messages;
 
     @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})

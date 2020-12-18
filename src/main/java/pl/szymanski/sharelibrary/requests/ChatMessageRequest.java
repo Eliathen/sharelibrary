@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class ChatMessageRequest {
 
@@ -21,8 +19,7 @@ public class ChatMessageRequest {
     public ChatMessageRequest(@JsonProperty(value = "chatId", required = true) Long chatId,
                               @JsonProperty(value = "senderId", required = true) Long senderId,
                               @JsonProperty(value = "recipientId", required = true) Long recipientId,
-                              @JsonProperty(value = "content", required = true) String content,
-                              @JsonProperty(value = "timestamp", required = true) LocalDateTime timestamp) {
+                              @JsonProperty(value = "content", required = true) String content) {
         this.chatId = chatId;
         this.senderId = senderId;
         this.recipientId = recipientId;

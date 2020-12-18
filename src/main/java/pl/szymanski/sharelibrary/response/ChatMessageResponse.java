@@ -14,9 +14,9 @@ public class ChatMessageResponse {
 
     private ChatRoomResponse room;
 
-    private UserResponse sender;
+    private BaseUserResponse sender;
 
-    private UserResponse recipient;
+    private BaseUserResponse recipient;
 
     private String content;
 
@@ -26,8 +26,8 @@ public class ChatMessageResponse {
         return new ChatMessageResponse(
                 message.getId(),
                 ChatRoomResponse.of(message.getChat()),
-                UserResponse.of(message.getSender()),
-                UserResponse.of(message.getRecipient()),
+                BaseUserResponse.of(message.getSender()),
+                BaseUserResponse.of(message.getRecipient()),
                 message.getContent(),
                 message.getTimestamp()
         );

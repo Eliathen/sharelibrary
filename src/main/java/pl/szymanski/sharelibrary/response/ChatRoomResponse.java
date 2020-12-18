@@ -10,15 +10,15 @@ public class ChatRoomResponse {
 
     private Long id;
 
-    private UserResponse sender;
+    private BaseUserResponse sender;
 
-    private UserResponse recipient;
+    private BaseUserResponse recipient;
 
     public static ChatRoomResponse of(ChatRoom chatRoom) {
         return new ChatRoomResponse(
                 chatRoom.getId(),
-                UserResponse.of(chatRoom.getSender()),
-                UserResponse.of(chatRoom.getRecipient())
+                BaseUserResponse.of(chatRoom.getSender()),
+                BaseUserResponse.of(chatRoom.getRecipient())
         );
     }
 }
