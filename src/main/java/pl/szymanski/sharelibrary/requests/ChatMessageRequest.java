@@ -16,7 +16,7 @@ public class ChatMessageRequest {
     private String content;
 
     @JsonCreator
-    public ChatMessageRequest(@JsonProperty(value = "chatId", required = true) Long chatId,
+    public ChatMessageRequest(@JsonProperty(value = "chatId") Long chatId,
                               @JsonProperty(value = "senderId", required = true) Long senderId,
                               @JsonProperty(value = "recipientId", required = true) Long recipientId,
                               @JsonProperty(value = "content", required = true) String content) {
