@@ -19,11 +19,11 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chat", cascade = {MERGE, PERSIST, REFRESH})
     private List<ChatMessage> messages;
 
-    @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})
+    @ManyToOne
     @JoinColumn(name = "senderId")
     private User sender;
 
-    @ManyToOne(cascade = {MERGE, PERSIST, REFRESH})
+    @ManyToOne
     @JoinColumn(name = "recipientId")
     private User recipient;
 
