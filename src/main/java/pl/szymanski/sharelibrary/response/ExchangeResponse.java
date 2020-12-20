@@ -24,7 +24,6 @@ public class ExchangeResponse {
 
     private CoordinatesResponse coordinates;
 
-
     public static ExchangeResponse of(Exchange exchange) {
         return new ExchangeResponse(
                 exchange.getId(),

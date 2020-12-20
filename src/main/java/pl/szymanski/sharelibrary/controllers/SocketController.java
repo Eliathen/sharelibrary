@@ -28,6 +28,10 @@ public class SocketController {
                 message.getRecipient().getId().toString(), "/queue/messages",
                 ChatMessageResponse.of(message)
         );
+        simpMessagingTemplate.convertAndSendToUser(
+                message.getSender().getId().toString(), "/queue/messages",
+                ChatMessageResponse.of(message)
+        );
 
     }
 

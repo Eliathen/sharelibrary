@@ -46,12 +46,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public Optional<ChatRoom> getRoomBySenderIdAndRecipientId(Long senderId, Long recipientId) {
-        return chatRoomRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+    public ChatRoom getRoomBySenderIdAndRecipientId(Long senderId, Long recipientId) {
+        Optional<ChatRoom> chatRoom = chatRoomRepository.findBySenderIdAndRecipientId(senderId, recipientId);
+        if (chatRoom.isEmpty()) {
+            return chatRoomRepository.findBySenderIdAndRecipientId(recipientId, senderId).orElseThrow(RoomNotExist::new);
+        }
+        return chatRoom.get();
     }
 
     private ChatRoom getRoomById(Long roomId) {
-        return chatRoomRepository.findByRoomId(roomId).orElseThrow(() -> new RoomNotExist(roomId));
+        return chatRoomRepository.findByRoomId(roomId).orElseThrow(RoomNotExist::new);
     }
 
 }

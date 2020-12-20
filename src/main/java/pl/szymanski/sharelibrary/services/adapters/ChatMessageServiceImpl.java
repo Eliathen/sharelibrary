@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.szymanski.sharelibrary.entity.ChatMessage;
 import pl.szymanski.sharelibrary.entity.ChatRoom;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.exceptions.chat.RoomNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.ChatMessageRepository;
 import pl.szymanski.sharelibrary.requests.ChatMessageRequest;
 import pl.szymanski.sharelibrary.services.ports.ChatMessageService;
@@ -12,7 +13,6 @@ import pl.szymanski.sharelibrary.services.ports.ChatRoomService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,18 +47,23 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     }
 
     private ChatRoom getChatRoom(User sender, User recipient) {
-        Optional<ChatRoom> room = chatRoomService.getRoomBySenderIdAndRecipientId(sender.getId(), recipient.getId());
-        ChatRoom chatRoom;
-        if (room.isEmpty()) {
-            room = chatRoomService.getRoomBySenderIdAndRecipientId(recipient.getId(), sender.getId());
-            if (room.isEmpty()) {
-                chatRoom = chatRoomService.createRoom(sender.getId(), recipient.getId());
-            } else {
-                chatRoom = room.get();
-            }
-        } else {
-            chatRoom = room.get();
+        ChatRoom room;
+        try {
+            room = chatRoomService.getRoomBySenderIdAndRecipientId(sender.getId(), recipient.getId());
+        } catch (RoomNotExist e) {
+            room = chatRoomService.createRoom(sender.getId(), recipient.getId());
+
         }
-        return chatRoom;
+//        ChatRoom chatRoom;
+//        if (room.isEmpty()) {
+//            room = chatRoomService.getRoomBySenderIdAndRecipientId(recipient.getId(), sender.getId());
+//            if (room.isEmpty()) {
+//            } else {
+//                chatRoom = room.get();
+//            }
+//        } else {
+//            chatRoom = room.get();
+//        }
+        return room;
     }
 }

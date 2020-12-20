@@ -17,24 +17,6 @@ import java.util.stream.Collectors;
 public class ChatController {
 
     private final ChatRoomService chatRoomService;
-//    private final ChatMessageService chatMessageService;
-//    private final SimpMessagingTemplate simpMessagingTemplate;
-//
-//    @MessageMapping
-//    public void processMessage(@Payload ChatMessageRequest chatMessage) {
-//        System.out.println("handling send message: " + chatMessage.getContent() + " to: "+ chatMessage.getRecipientId());
-//        ChatMessage message = chatMessageService.saveMessage(chatMessage);
-//        simpMessagingTemplate.convertAndSendToUser(
-//                message.getRecipient().getId().toString(), "queue/messages",
-//                ChatMessageResponse.of(message)
-//        );
-//    }
-//    @MessageMapping
-//    @SendTo("/topic/messages")
-//    public String processMessage(String message){
-//        System.out.println("Message = " + message);
-//        return "Hello";
-//    }
 
     @GetMapping("rooms/{user}")
     public @ResponseBody
@@ -51,5 +33,16 @@ public class ChatController {
                 chatRoomService.getMessageFromRoom(roomId).stream().map(ChatMessageResponse::of).collect(Collectors.toList()),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("rooms")
+    public @ResponseBody
+    ResponseEntity<ChatRoomResponse> getRoom(@RequestParam("sender") Long senderId,
+                                             @RequestParam("recipient") Long recipientId) {
+        return new ResponseEntity<>(
+                ChatRoomResponse.of(chatRoomService.getRoomBySenderIdAndRecipientId(senderId, recipientId)),
+                HttpStatus.OK
+        );
+
     }
 }

@@ -4,7 +4,6 @@ import pl.szymanski.sharelibrary.entity.ChatMessage;
 import pl.szymanski.sharelibrary.entity.ChatRoom;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ChatRoomService {
 
@@ -14,5 +13,5 @@ public interface ChatRoomService {
 
     List<ChatRoom> getRoomByUserId(Long userId);
 
-    Optional<ChatRoom> getRoomBySenderIdAndRecipientId(Long senderId, Long recipientId);
+    ChatRoom getRoomBySenderIdAndRecipientId(Long senderId, Long recipientId);
 }
