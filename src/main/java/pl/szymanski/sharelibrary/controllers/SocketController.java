@@ -22,7 +22,6 @@ public class SocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequest chatMessage) {
-        System.out.println("handling send message: " + chatMessage.getContent() + " to: " + chatMessage.getRecipientId());
         ChatMessage message = chatMessageService.saveMessage(chatMessage);
         simpMessagingTemplate.convertAndSendToUser(
                 message.getRecipient().getId().toString(), "/queue/messages",

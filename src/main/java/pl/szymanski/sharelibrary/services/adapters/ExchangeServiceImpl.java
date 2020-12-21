@@ -175,16 +175,35 @@ public class ExchangeServiceImpl implements ExchangeService {
         return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
     }
 
-    //TODO Maybe add filter by authors name and surname
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));
+        Set<Exchange> result = filterByTitle(exchanges, queries);
+        result.addAll(filterByAuthors(exchanges, queries));
+        return new LinkedList<>(result);
+    }
+
+    private Set<Exchange> filterByTitle(List<Exchange> exchanges, List<String> queries) {
         Set<Exchange> result = new HashSet<>();
         exchanges.forEach(it -> queries.forEach(q -> {
             if (it.getBook().getTitle().toLowerCase().contains(q)) {
                 result.add(it);
             }
         }));
-        return new LinkedList<>(result);
+        return result;
+    }
+
+    private Set<Exchange> filterByAuthors(List<Exchange> exchanges, List<String> queries) {
+        Set<Exchange> result = new HashSet<>();
+        exchanges.forEach(exchange ->
+                queries.forEach(query -> {
+                    if (exchange.getBook().getAuthors()
+                            .stream()
+                            .anyMatch(author -> author.getName().contains(query) || author.getSurname().contains(query))) {
+                        result.add(exchange);
+                    }
+                })
+        );
+        return result;
     }
 
     private double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {

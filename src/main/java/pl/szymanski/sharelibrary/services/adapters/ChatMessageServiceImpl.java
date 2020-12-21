@@ -32,11 +32,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         User recipient = userService.getUserById(chatMessage.getRecipientId());
 
         ChatRoom chatRoom = getChatRoom(sender, recipient);
-//        ChatRoom chatRoom =
-//                (chatRoomService.getRoomBySenderIdAndRecipientId(sender.getId(), recipient.getId())
-//                        .orElseGet(() ->
-//                                chatRoomService.createRoom(chatMessage.getSenderId(), chatMessage.getRecipientId())
-//                        ));
         ChatMessage message = new ChatMessage();
         message.setSender(sender);
         message.setRecipient(recipient);
