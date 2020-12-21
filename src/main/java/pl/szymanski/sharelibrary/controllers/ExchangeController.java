@@ -82,7 +82,7 @@ public class ExchangeController {
     @GetMapping("/withUser/{id}")
     public ResponseEntity<List<ExchangeResponse>> getExchangesAtUser(@PathVariable("id") Long userId) {
         return new ResponseEntity<>(
-                exchangeService.getExchangesWhereUserIdIsWithUser(userId).stream().map(ExchangeResponse::of).collect(Collectors.toList()), OK
+                exchangeService.getExchangesByWithUserId(userId).stream().map(ExchangeResponse::of).collect(Collectors.toList()), OK
         );
     }
 

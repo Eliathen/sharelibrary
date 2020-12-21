@@ -100,7 +100,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                     .stream()
                     .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED) && it.getBook().getId().equals(savedExchange.getForBook().getId()))
                     .findFirst().ifPresent(it -> {
-                it.setExchangeStatus(ExchangeStatus.FINISHED);
+                it.setExchangeStatus(ExchangeStatus.DURING);
                 exchangeRepository.saveExchange(it);
             });
         }
@@ -142,10 +142,11 @@ public class ExchangeServiceImpl implements ExchangeService {
         return user;
     }
 
-    public List<Exchange> getExchangesWhereUserIdIsWithUser(Long userId) {
-        return exchangeRepository.getExchangeByStatus(ExchangeStatus.DURING)
-                .stream()
-                .filter(it -> it.getWithUser().getId().equals(userId))
+    public List<Exchange> getExchangesByWithUserId(Long userId) {
+        System.out.println();
+        List<Exchange> exchanges = exchangeRepository.getExchangeByStatus(ExchangeStatus.DURING);
+        return exchanges.stream()
+                .filter(it -> it.getWithUser() != null && it.getWithUser().getId().equals(userId))
                 .collect(Collectors.toList());
     }
 
@@ -220,10 +221,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         return result * 1000;
     }
 
-    private Double rad2deg(double rad) {
-        return rad * 180 / Math.PI;
-    }
-
     private Double deg2rad(double deg) {
         return deg * Math.PI / 180;
     }
@@ -265,10 +262,6 @@ public class ExchangeServiceImpl implements ExchangeService {
                 longitude,
                 radius
         );
-    }
-
-    private Double convertDegreesToRadians(Double degrees) {
-        return degrees * Math.PI / 180;
     }
 
 }

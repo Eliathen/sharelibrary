@@ -25,7 +25,7 @@ public interface ExchangeService {
 
     List<Requirement> getRequirements(Long exchangeId);
 
-    List<Exchange> getExchangesWhereUserIdIsWithUser(Long userId);
+    List<Exchange> getExchangesByWithUserId(Long userId);
 
     List<ExchangeResponse> filter(Double latitude,
                                   Double longitude,
