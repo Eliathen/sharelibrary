@@ -68,8 +68,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<Exchange> getExchanges() {
-        return exchangeRepository.getAll().stream().filter(it -> it.getExchangeStatus() != ExchangeStatus.FINISHED).collect(Collectors.toList());
+    public List<Exchange> getExchangesByUserId(Long userId) {
+        return exchangeRepository.getAll().stream().filter(it -> it.getExchangeStatus() != ExchangeStatus.FINISHED && it.getUser().getId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     private List<Exchange> getUserExchange(Long userId) {
-        return getExchanges().stream().filter(it -> it.getUser().getId().equals(userId)).collect(Collectors.toList());
+        return exchangeRepository.getAll().stream().filter(it -> it.getUser().getId().equals(userId)).collect(Collectors.toList());
     }
 
     @Override

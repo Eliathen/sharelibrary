@@ -15,7 +15,7 @@ public interface ExchangeService {
 
     void finishExchange(Long exchangeId);
 
-    List<Exchange> getExchanges();
+    List<Exchange> getExchangesByUserId(Long userId);
 
     Exchange getExchangeById(Long id);
 

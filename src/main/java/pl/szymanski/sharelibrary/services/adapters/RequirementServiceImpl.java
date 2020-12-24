@@ -47,7 +47,7 @@ public class RequirementServiceImpl implements RequirementService {
 
     @Override
     public List<Requirement> getUserRequirements(Long userId) {
-        List<Exchange> userExchanges = exchangeService.getExchanges().stream().filter(exchange -> exchange.getUser().getId().equals(userId)).collect(Collectors.toList());
+        List<Exchange> userExchanges = exchangeService.getExchangesByUserId(userId);
         List<Requirement> requirements = new ArrayList<>();
         userExchanges.forEach(exchange -> requirements.addAll(
                 requirementRepository.getRequirementByExchange(exchange.getId()).stream().filter(Requirement::isActual).collect(Collectors.toList())
