@@ -30,7 +30,7 @@ public class ExchangeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExchangeResponse>> getExchanges(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<ExchangeResponse>> getUserExchanges(@RequestParam("userId") Long userId) {
         return new ResponseEntity<>(
                 exchangeService.getExchangesByUserId(userId).stream().map(ExchangeResponse::of).collect(Collectors.toList()),
                 OK
