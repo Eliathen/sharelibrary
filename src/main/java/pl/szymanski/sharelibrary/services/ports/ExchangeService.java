@@ -33,4 +33,6 @@ public interface ExchangeService {
                                   List<String> categories,
                                   String query
     );
+
+    double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2);
 }

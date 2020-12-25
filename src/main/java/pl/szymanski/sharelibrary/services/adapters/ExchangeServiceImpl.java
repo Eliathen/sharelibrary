@@ -207,22 +207,18 @@ public class ExchangeServiceImpl implements ExchangeService {
         return result;
     }
 
-    private double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {
-        double radiusInKM = 6371.0;
-        double thetaLong = deg2rad(lat2 - lat1);
-        double thetaLat = deg2rad(lon2 - lon1);
-        lat1 = deg2rad(lat1);
-        lat2 = deg2rad(lat2);
+    @Override
+    public double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {
+        double radiusInM = 6371000.0;
+        double thetaLat = Math.toRadians(lat2 - lat1);
+        double thetaLong = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
         double dist =
                 Math.sin(thetaLat / 2) * Math.sin(thetaLat / 2) +
                         Math.cos(lat1) * Math.cos(lat2) *
                                 Math.sin(thetaLong / 2) * Math.sin(thetaLong / 2);
-        double result = 2 * Math.atan2(Math.sqrt(dist), Math.sqrt(1 - dist)) * radiusInKM;
-        return result * 1000;
-    }
-
-    private Double deg2rad(double deg) {
-        return deg * Math.PI / 180;
+        return 2 * Math.atan2(Math.sqrt(dist), Math.sqrt(1 - dist)) * radiusInM;
     }
 
     private List<Exchange> filterByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {
