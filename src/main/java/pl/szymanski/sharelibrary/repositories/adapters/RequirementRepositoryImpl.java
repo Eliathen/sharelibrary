@@ -7,7 +7,6 @@ import pl.szymanski.sharelibrary.repositories.jpa.RequirementJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.RequirementRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,11 +17,6 @@ public class RequirementRepositoryImpl implements RequirementRepository {
     @Override
     public Requirement saveRequirement(Requirement requirement) {
         return requirementJPARepository.saveAndFlush(requirement);
-    }
-
-    @Override
-    public Optional<Requirement> getRequirementById(Long id) {
-        return requirementJPARepository.findById(id);
     }
 
     @Override
