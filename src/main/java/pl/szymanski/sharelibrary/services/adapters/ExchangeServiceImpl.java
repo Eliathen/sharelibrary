@@ -178,32 +178,34 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));
-        Set<Exchange> result = filterByTitle(exchanges, queries);
-        result.addAll(filterByAuthors(exchanges, queries));
+        Set<Exchange> result = filterByTitle(exchanges, query);
+        result.addAll(filterByAuthors(exchanges, query));
+        queries.forEach(q -> {
+            result.addAll(filterByTitle(exchanges, q));
+            result.addAll(filterByAuthors(exchanges, q));
+        });
         return new LinkedList<>(result);
     }
 
-    private Set<Exchange> filterByTitle(List<Exchange> exchanges, List<String> queries) {
+    private Set<Exchange> filterByTitle(List<Exchange> exchanges, String query) {
         Set<Exchange> result = new HashSet<>();
-        exchanges.forEach(it -> queries.forEach(q -> {
-            if (it.getBook().getTitle().toLowerCase().contains(q)) {
+        exchanges.forEach(it -> {
+            if (it.getBook().getTitle().toLowerCase().contains(query)) {
                 result.add(it);
             }
-        }));
+        });
         return result;
     }
 
-    private Set<Exchange> filterByAuthors(List<Exchange> exchanges, List<String> queries) {
+    private Set<Exchange> filterByAuthors(List<Exchange> exchanges, String query) {
         Set<Exchange> result = new HashSet<>();
-        exchanges.forEach(exchange ->
-                queries.forEach(query -> {
-                    if (exchange.getBook().getAuthors()
-                            .stream()
-                            .anyMatch(author -> author.getName().contains(query) || author.getSurname().contains(query))) {
-                        result.add(exchange);
-                    }
-                })
-        );
+        exchanges.forEach(exchange -> {
+            if (exchange.getBook().getAuthors()
+                    .stream()
+                    .anyMatch(author -> author.getName().contains(query) || author.getSurname().contains(query))) {
+                result.add(exchange);
+            }
+        });
         return result;
     }
 
