@@ -9,5 +9,4 @@ public interface AuthorJPARepository extends JpaRepository<Author, Long> {
 
     Optional<Author> findAuthorByNameAndSurname(String name, String surname);
 
-    Optional<Author> findAuthorByNameOrSurname(String name, String surname);
 }
