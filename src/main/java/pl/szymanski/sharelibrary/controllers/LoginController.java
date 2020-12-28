@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.szymanski.sharelibrary.commanddata.LoginCommandData;
+import pl.szymanski.sharelibrary.requests.LoginRequest;
+import pl.szymanski.sharelibrary.response.UserLoginResponse;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.UserLoginView;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -20,9 +20,9 @@ public class LoginController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Object> login(@RequestBody LoginCommandData loginCommandData) {
+    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(
-                UserLoginView.of(userService.getUserByEmailOrUserName(loginCommandData.getUserNameOrEmail()), userService.getJwt(loginCommandData))
+                UserLoginResponse.of(userService.getUserByEmailOrUserName(loginRequest.getUserNameOrEmail()), userService.getJwt(loginRequest))
                 , OK
         );
     }

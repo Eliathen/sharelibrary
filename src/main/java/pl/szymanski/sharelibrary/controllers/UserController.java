@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.szymanski.sharelibrary.commanddata.AddressCommandData;
-import pl.szymanski.sharelibrary.commanddata.AssignBookCommandData;
-import pl.szymanski.sharelibrary.commanddata.UserCommandData;
-import pl.szymanski.sharelibrary.converters.CommandsDataConverter;
+import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.requests.AssignBookRequest;
+import pl.szymanski.sharelibrary.requests.EditUserRequest;
+import pl.szymanski.sharelibrary.requests.RemoveBookFromUserRequest;
+import pl.szymanski.sharelibrary.requests.UserRequest;
+import pl.szymanski.sharelibrary.response.UserResponse;
+import pl.szymanski.sharelibrary.response.UserWithoutBooksResponse;
 import pl.szymanski.sharelibrary.services.ports.UserService;
-import pl.szymanski.sharelibrary.views.UserWithoutBooksView;
 
 @RestController
 @RequestMapping(value = "/api/v1/users")
@@ -20,34 +22,42 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserWithoutBooksView> add(@RequestBody UserCommandData userCommandData) {
-        User user = CommandsDataConverter.UserCommandDataToUser(userCommandData);
+    public ResponseEntity<UserWithoutBooksResponse> add(@RequestBody UserRequest userRequest) {
+        User user = RequestConverter.userRequestToUser(userRequest);
         return new ResponseEntity<>(
-                UserWithoutBooksView.of(userService.saveUser(user)),
+                UserWithoutBooksResponse.of(userService.saveUser(user)),
                 HttpStatus.CREATED
         );
     }
 
-    @PostMapping("/assign")
-    public ResponseEntity<UserWithoutBooksView> assignBook(@RequestBody AssignBookCommandData assignBookCommandData) {
+    @PostMapping("/assignment")
+    public ResponseEntity<UserResponse> assignBook(@RequestBody AssignBookRequest assignBookRequest) {
         return new ResponseEntity<>(
-                UserWithoutBooksView.of(userService.assignBookToUser(assignBookCommandData.getUserId(), assignBookCommandData.getBookId())),
+                UserResponse.of(userService.assignBookToUser(assignBookRequest.getUserId(), assignBookRequest.getBookId())),
                 HttpStatus.OK
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserWithoutBooksView> editUser(@PathVariable("id") Long id, @RequestBody AddressCommandData addressCommandData) {
+    public ResponseEntity<UserWithoutBooksResponse> editUser(@PathVariable("id") Long id, @RequestBody EditUserRequest editUserRequest) {
         return new ResponseEntity<>(
-                UserWithoutBooksView.of(userService.changeUserAddress(id, CommandsDataConverter.AddressCommandDataToAddress(addressCommandData))),
+                UserWithoutBooksResponse.of(userService.changeUserDetails(id, editUserRequest)),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/withdrawal")
+    public ResponseEntity<UserResponse> withdrawBookFromUser(@RequestBody RemoveBookFromUserRequest removeBookFromUserRequest) {
+        return new ResponseEntity<>(
+                UserResponse.of(userService.withdrawBookFromUser(removeBookFromUserRequest.getUserId(), removeBookFromUserRequest.getBookId())),
                 HttpStatus.OK
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserWithoutBooksView> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<UserWithoutBooksResponse> getUser(@PathVariable("id") Long id) {
         return new ResponseEntity<>(
-                UserWithoutBooksView.of(userService.getUserById(id)),
+                UserWithoutBooksResponse.of(userService.getUserById(id)),
                 HttpStatus.OK
         );
     }

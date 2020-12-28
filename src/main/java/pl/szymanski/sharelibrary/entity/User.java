@@ -3,10 +3,10 @@ package pl.szymanski.sharelibrary.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Data
@@ -29,12 +29,26 @@ public class User {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
-    @ManyToMany(cascade = {PERSIST, MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "bookId"))
-    private Set<Book> books;
+    @OneToMany(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
+    private List<UserBook> books;
+
+    @OneToMany(cascade = ALL, fetch = FetchType.LAZY)
+    private List<ChatRoom> chatRooms;
 
     @ManyToOne(cascade = {PERSIST, MERGE})
-    @JoinColumn(name = "addressId")
-    private Address defaultAddress;
+    @JoinColumn(name = "coordinatesId")
+    private Coordinates coordinates;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password=" + Arrays.toString(password) +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", coordinates=" + coordinates +
+                '}';
+    }
 }

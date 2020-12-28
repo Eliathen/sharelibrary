@@ -8,7 +8,6 @@ import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,8 +36,8 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public Set<Book> findBooksByUserId(Long userId) {
-        return bookJPARepository.findByUsers_Id(userId);
+    public List<Book> findBooksByUserId(Long userId) {
+        return bookJPARepository.findByUserId(userId);
     }
 
 }

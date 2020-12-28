@@ -20,4 +20,12 @@ public class Author {
 
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     private List<Book> books;
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                '}';
+    }
 }

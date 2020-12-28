@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import pl.szymanski.sharelibrary.entity.Author;
-import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.entity.Cover;
+import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
+import pl.szymanski.sharelibrary.response.UserBookResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
+import pl.szymanski.sharelibrary.services.ports.CategoryService;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.io.IOException;
@@ -24,6 +24,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @Override
     public Book findBookById(Long id) {
@@ -55,21 +56,33 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
+        book.setTitle(book.getTitle().replace("\"", ""));
         if (!Objects.isNull(cover)) {
-            book.setCover(getCoverFromMultipartFile(cover));
+            List<Cover> covers = new LinkedList<>();
+            covers.add(getCoverFromMultipartFile(cover));
+            book.setCover(covers);
         }
-        List<Author> authors = book.getAuthors().stream().map(it ->
+
+        Set<Author> authors = book.getAuthors().stream().map(it ->
                 authorRepository.findAuthorByNameAndSurname(it.getName(), it.getSurname()).orElse(it)
-        ).collect(Collectors.toList());
-        book.setAuthors(authors);
+        ).collect(Collectors.toSet());
+        Set<Category> categories = book.getCategories().stream().map(it ->
+                categoryService.findByName(it.getName())
+        ).collect(Collectors.toSet());
+        book.setAuthors(new ArrayList<>(authors));
+        book.setCategories(new ArrayList<>(categories));
         Book newBook = bookRepository.saveBook(book);
         userService.assignBookToUser(userId, newBook.getId());
         return newBook;
     }
 
     @Override
-    public Set<Book> findBooksByUserId(Long userId) {
-        return bookRepository.findBooksByUserId(userId);
+    public List<UserBookResponse> findBooksByUserId(Long userId) {
+        User user = userService.getUserById(userId);
+        List<UserBook> books = user.getBooks();
+        List<UserBookResponse> response = new LinkedList<>();
+        books.forEach(book -> response.add(UserBookResponse.of(book)));
+        return response;
     }
 
     private Cover getCoverFromMultipartFile(MultipartFile cover) throws IOException {

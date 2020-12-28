@@ -1,5 +1,6 @@
 package pl.szymanski.sharelibrary.configuration;
 
+import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -12,6 +13,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,5 +50,11 @@ public class SwaggerConfig {
 
     private ApiKey apiKey() {
         return new ApiKey("JWT", "Authorization", "header");
+    }
+
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public Server inMemoryH2DatabaseServer() throws SQLException {
+        return Server.createTcpServer(
+                "-tcp", "-tcpAllowOthers", "-tcpPort", "9090");
     }
 }

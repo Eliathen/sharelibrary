@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,6 +18,17 @@ public class Coordinates {
     @Column(nullable = false)
     private Double longitude;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinates")
-    private Address address;
+    //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinates")
+//    private Address address;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coordinates")
+    private List<Exchange> exchanges;
+
+    @Override
+    public String toString() {
+        return "Coordinates{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

@@ -1,8 +1,8 @@
 package pl.szymanski.sharelibrary.services.ports;
 
-import pl.szymanski.sharelibrary.commanddata.LoginCommandData;
-import pl.szymanski.sharelibrary.entity.Address;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.requests.EditUserRequest;
+import pl.szymanski.sharelibrary.requests.LoginRequest;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
 import java.util.Optional;
@@ -18,11 +18,13 @@ public interface UserService {
 
     User getUserByEmailOrUserName(String user);
 
-    JwtAuthenticationResponse getJwt(LoginCommandData loginCommandData);
+    JwtAuthenticationResponse getJwt(LoginRequest loginRequest);
 
     User assignBookToUser(Long userId, Long bookId);
 
-    User changeUserAddress(Long id, Address address);
+    User changeUserDetails(Long id, EditUserRequest editUserRequest);
 
     User getUserById(Long id);
+
+    User withdrawBookFromUser(Long userId, Long bookId);
 }

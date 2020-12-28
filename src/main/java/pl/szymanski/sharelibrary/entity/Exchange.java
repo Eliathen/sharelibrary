@@ -1,10 +1,12 @@
 package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
-import pl.szymanski.sharelibrary.enums.BookCondition;
+import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Data
@@ -13,15 +15,14 @@ public class Exchange {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
-    @Column(columnDefinition = "boolean default false")
-    private Boolean isFinished;
+    @Column(nullable = false)
+    private ExchangeStatus exchangeStatus;
 
     @Column(columnDefinition = "NUMBER")
     private Double deposit;
-
-    private BookCondition bookCondition;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bookId")
@@ -31,11 +32,32 @@ public class Exchange {
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "addressId")
-    private Address address;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {PERSIST, MERGE})
+    @JoinColumn(name = "coordinatesId")
+    private Coordinates coordinates;
 
-    @OneToMany(mappedBy = "exchange")
-    private Set<Request> requests;
+    @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY)
+    private List<Requirement> requirements;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {MERGE, PERSIST, REFRESH})
+    @JoinColumn(name = "forBookId")
+    private Book forBook;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {MERGE, PERSIST, REFRESH})
+    @JoinColumn(name = "withUserId")
+    private User withUser;
+
+    @Override
+    public String toString() {
+        return "Exchange{" +
+                "id=" + id +
+                ", exchangeStatus=" + exchangeStatus +
+                ", deposit=" + deposit +
+                ", book=" + book +
+                ", user=" + user +
+                ", coordinates=" + coordinates +
+                ", forBook=" + forBook +
+                ", withUser=" + withUser +
+                '}';
+    }
 }
