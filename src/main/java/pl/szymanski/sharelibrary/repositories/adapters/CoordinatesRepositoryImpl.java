@@ -21,6 +21,6 @@ public class CoordinatesRepositoryImpl implements CoordinatesRepository {
 
     @Override
     public Optional<Coordinates> findByLatitudeAndLongitude(Double latitude, Double longitude) {
-        return coordinatesJPARepository.findByLatitudeAndLongitude(latitude, longitude);
+        return coordinatesJPARepository.findByLatitudeAndLongitude(latitude, longitude).stream().findFirst();
     }
 }

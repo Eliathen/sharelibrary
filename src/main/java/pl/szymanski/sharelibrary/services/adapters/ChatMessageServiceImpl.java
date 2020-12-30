@@ -49,16 +49,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             room = chatRoomService.createRoom(sender.getId(), recipient.getId());
 
         }
-//        ChatRoom chatRoom;
-//        if (room.isEmpty()) {
-//            room = chatRoomService.getRoomBySenderIdAndRecipientId(recipient.getId(), sender.getId());
-//            if (room.isEmpty()) {
-//            } else {
-//                chatRoom = room.get();
-//            }
-//        } else {
-//            chatRoom = room.get();
-//        }
         return room;
     }
 }

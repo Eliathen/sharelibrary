@@ -18,7 +18,7 @@ public class Author {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String surname;
 
-    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Book> books;
 
     @Override
