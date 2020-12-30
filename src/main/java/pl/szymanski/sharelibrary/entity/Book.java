@@ -1,6 +1,7 @@
 package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
+import pl.szymanski.sharelibrary.enums.BookCondition;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,6 +20,13 @@ public class Book {
 
     @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
+    private BookCondition condition;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
+    @JoinColumn(name = "language_id")
+    private Language language;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     //@Size(max = 1, min = 1)

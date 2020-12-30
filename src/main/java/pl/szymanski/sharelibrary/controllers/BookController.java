@@ -14,6 +14,7 @@ import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.requests.AddBookRequest;
 import pl.szymanski.sharelibrary.requests.AuthorRequest;
 import pl.szymanski.sharelibrary.response.BookWithoutUsersResponse;
+import pl.szymanski.sharelibrary.response.LanguageResponse;
 import pl.szymanski.sharelibrary.response.UserBookResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CoverService;
@@ -55,7 +56,10 @@ public class BookController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
-    public ResponseEntity<BookWithoutUsersResponse> saveBook(@ModelAttribute AddBookRequest book, MultipartFile image, Long userId) throws IOException {
+    public ResponseEntity<BookWithoutUsersResponse> saveBook(
+            @ModelAttribute AddBookRequest book,
+            MultipartFile image,
+            Long userId) throws IOException {
         return new ResponseEntity<>(BookWithoutUsersResponse.of(bookService.saveBook(RequestConverter.addBookRequestToBook(book), image, userId)), CREATED);
     }
 
@@ -87,6 +91,13 @@ public class BookController {
                         .map(BookWithoutUsersResponse::of)
                         .collect(Collectors.toSet()),
                 OK);
+    }
+
+    @GetMapping("/languages")
+    public ResponseEntity<Set<LanguageResponse>> getLanguages() {
+        return new ResponseEntity<>(
+                bookService.getLanguages().stream().map(LanguageResponse::of).collect(Collectors.toSet()), OK
+        );
     }
 
 }

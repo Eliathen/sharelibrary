@@ -2,6 +2,7 @@ package pl.szymanski.sharelibrary.converters;
 
 import org.springframework.beans.BeanUtils;
 import pl.szymanski.sharelibrary.entity.*;
+import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.requests.*;
 
 import java.util.LinkedList;
@@ -15,9 +16,12 @@ public class RequestConverter {
         addBookRequest.getAuthors().forEach(it -> authors.add(authorRequestToAuthor(it)));
         List<Category> categories = new LinkedList<>();
         addBookRequest.getCategories().forEach(it -> categories.add(categoryRequestToCategory(it)));
+
         book.setAuthors(authors);
         book.setCategories(categories);
-        BeanUtils.copyProperties(addBookRequest, book, "authors", "image", "categories");
+        book.setLanguage(languageRequestToLanguage(addBookRequest.getLanguage()));
+        book.setCondition(BookCondition.values()[addBookRequest.getConditionId()]);
+        BeanUtils.copyProperties(addBookRequest, book, "authors", "image", "categories", "language");
         return book;
     }
 
@@ -38,6 +42,12 @@ public class RequestConverter {
         Coordinates coordinates = new Coordinates();
         BeanUtils.copyProperties(coordinatesRequest, coordinates);
         return coordinates;
+    }
+
+    public static Language languageRequestToLanguage(LanguageRequest languageRequest) {
+        Language language = new Language();
+        BeanUtils.copyProperties(languageRequest, language);
+        return language;
     }
 
     public static User userRequestToUser(UserRequest userRequest) {

@@ -4,6 +4,7 @@ package pl.szymanski.sharelibrary.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.szymanski.sharelibrary.entity.UserBook;
+import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 
 import java.util.List;
@@ -25,6 +26,10 @@ public class UserBookResponse {
 
     private UserResponse atUser;
 
+    private LanguageResponse languageResponse;
+
+    private BookCondition condition;
+
     public static UserBookResponse of(UserBook user) {
         return new UserBookResponse(
                 user.getBook().getId(),
@@ -32,7 +37,9 @@ public class UserBookResponse {
                 user.getBook().getAuthors().stream().map(AuthorResponse::of).collect(Collectors.toList()),
                 user.getBook().getCategories().stream().map(CategoryResponse::of).collect(Collectors.toList()),
                 user.getStatus(),
-                (user.getAtUser() != null) ? UserResponse.of(user.getAtUser()) : null
+                (user.getAtUser() != null) ? UserResponse.of(user.getAtUser()) : null,
+                LanguageResponse.of(user.getBook().getLanguage()),
+                user.getBook().getCondition()
         );
     }
 

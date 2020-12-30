@@ -6,8 +6,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
+import pl.szymanski.sharelibrary.exceptions.books.LanguageNotFoundException;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
+import pl.szymanski.sharelibrary.repositories.ports.LanguageRepository;
 import pl.szymanski.sharelibrary.response.UserBookResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CategoryService;
@@ -23,6 +25,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final LanguageRepository languageRepository;
     private final UserService userService;
     private final CategoryService categoryService;
 
@@ -69,11 +72,17 @@ public class BookServiceImpl implements BookService {
         Set<Category> categories = book.getCategories().stream().map(it ->
                 categoryService.findByName(it.getName())
         ).collect(Collectors.toSet());
+        book.setLanguage(getLanguageById(book.getLanguage().getId()));
         book.setAuthors(new ArrayList<>(authors));
         book.setCategories(new ArrayList<>(categories));
         Book newBook = bookRepository.saveBook(book);
         userService.assignBookToUser(userId, newBook.getId());
         return newBook;
+    }
+
+    @Override
+    public Set<Language> getLanguages() {
+        return languageRepository.getAll();
     }
 
     @Override
@@ -92,6 +101,10 @@ public class BookServiceImpl implements BookService {
                 cover.getContentType(),
                 cover.getBytes()
         );
+    }
+
+    private Language getLanguageById(Integer id) {
+        return languageRepository.getLanguageById(id).orElseThrow(LanguageNotFoundException::new);
     }
 
 }
