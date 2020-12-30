@@ -5,6 +5,8 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 
 @Entity
 @Data
@@ -22,7 +24,7 @@ public class Book {
     //@Size(max = 1, min = 1)
     private List<Cover> cover;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = ALL)
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "authorId"))
     private List<Author> authors;

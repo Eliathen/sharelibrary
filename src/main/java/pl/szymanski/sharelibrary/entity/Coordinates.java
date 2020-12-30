@@ -5,6 +5,8 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Data
 @Table(name = "coordinates")
@@ -18,9 +20,7 @@ public class Coordinates {
     @Column(nullable = false)
     private Double longitude;
 
-    //    @OneToOne(fetch = FetchType.LAZY, mappedBy = "coordinates")
-//    private Address address;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coordinates")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "coordinates", cascade = ALL)
     private List<Exchange> exchanges;
 
     @Override
