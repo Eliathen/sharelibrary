@@ -5,12 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
 import pl.szymanski.sharelibrary.entity.*;
+import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
 import pl.szymanski.sharelibrary.repositories.ports.CategoryRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
+import pl.szymanski.sharelibrary.repositories.ports.LanguageRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
@@ -31,6 +33,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final UserService userService;
     private final CoordinatesRepository coordinatesRepository;
     private final CategoryRepository categoryRepository;
+    private final LanguageRepository languageRepository;
 
     @Override
     public Exchange saveExchange(AddExchangeRequest addExchangeRequest) {
@@ -151,15 +154,31 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<ExchangeResponse> filter(Double latitude, Double longitude, Double radius, List<String> categories, String query) {
-        List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius);
-        if (query != null && categories != null) {
-            List<Category> newCategories = getCategoryListFromNameList(categories);
-            exchanges = filterByCategoryAndQuery(exchanges, newCategories, query);
-        } else if (categories != null) {
+    public List<ExchangeResponse> filter(Double latitude,
+                                         Double longitude,
+                                         Double radius,
+                                         List<String> categories,
+                                         String query,
+                                         Integer languageId,
+                                         Integer bookCondition) {
+        List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius)
+                .stream()
+                .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED))
+                .collect(Collectors.toList());
+        if (bookCondition != null) {
+            exchanges = filterByBookCondition(exchanges, BookCondition.values()[bookCondition]);
+        }
+        if (languageId != null) {
+            Optional<Language> language = languageRepository.getLanguageById(languageId);
+            if (language.isPresent()) {
+                exchanges = filterByLanguage(exchanges, language.get());
+            }
+        }
+        if (categories != null) {
             List<Category> newCategories = getCategoryListFromNameList(categories);
             exchanges = filterByCategory(exchanges, newCategories);
-        } else if (query != null && !query.isBlank()) {
+        }
+        if (query != null && !query.isBlank()) {
             exchanges = filterByQuery(exchanges, query);
         }
         return exchanges.stream().map(it -> ExchangeResponse.of(it,
@@ -171,10 +190,23 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .collect(Collectors.toList());
     }
 
-    private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
-        Set<Exchange> result = new HashSet<>(filterByCategory(exchanges, categories));
-        return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
+    private List<Exchange> filterByLanguage(List<Exchange> exchanges, Language language) {
+        return exchanges.stream()
+                .filter(it -> it.getBook().getLanguage().getId().equals(language.getId()))
+                .collect(Collectors.toList());
     }
+
+    private List<Exchange> filterByBookCondition(List<Exchange> exchanges, BookCondition bookCondition) {
+        return exchanges.stream()
+                .filter(it -> it.getBook().getCondition().equals(bookCondition))
+                .collect(Collectors.toList());
+    }
+
+//
+//    private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
+//        Set<Exchange> result = new HashSet<>(filterByCategory(exchanges, categories));
+//        return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
+//    }
 
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));

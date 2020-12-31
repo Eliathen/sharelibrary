@@ -25,7 +25,7 @@ public class AddBookRequest {
     public AddBookRequest(@JsonProperty(value = "title", required = true) String title,
                           @JsonProperty(value = "authors", required = true) List<AuthorRequest> authors,
                           @JsonProperty(value = "categories", required = true) List<CategoryRequest> categories,
-                          @JsonProperty(value = "languageId", required = true) LanguageRequest language,
+                          @JsonProperty(value = "language", required = true) LanguageRequest language,
                           @JsonProperty(value = "conditionId", required = true) Integer conditionId
     ) {
         this.title = title;

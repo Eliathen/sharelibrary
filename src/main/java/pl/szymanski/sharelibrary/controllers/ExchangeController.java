@@ -44,11 +44,11 @@ public class ExchangeController {
             @RequestParam(value = "rad", defaultValue = "100.0") Double radius,
             @RequestParam(value = "cat", required = false) List<String> categories,
             @RequestParam(value = "q", required = false) String query,
-            @RequestParam(value = "lan", required = false) Long language,
-            @RequestParam(value = "con", required = false) Long condition
+            @RequestParam(value = "lan", required = false) Integer languageId,
+            @RequestParam(value = "con", required = false) Integer condition
     ) {
         return new ResponseEntity<>(
-                exchangeService.filter(latitude, longitude, radius, categories, query),
+                exchangeService.filter(latitude, longitude, radius, categories, query, languageId, condition),
                 OK);
     }
 

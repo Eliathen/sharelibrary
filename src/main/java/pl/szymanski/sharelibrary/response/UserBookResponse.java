@@ -26,7 +26,7 @@ public class UserBookResponse {
 
     private UserResponse atUser;
 
-    private LanguageResponse languageResponse;
+    private LanguageResponse language;
 
     private BookCondition condition;
 

@@ -31,7 +31,9 @@ public interface ExchangeService {
                                   Double longitude,
                                   Double radius,
                                   List<String> categories,
-                                  String query
+                                  String query,
+                                  Integer languageId,
+                                  Integer bookCondition
     );
 
     double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2);
