@@ -160,13 +160,16 @@ public class ExchangeServiceImpl implements ExchangeService {
                                          List<String> categories,
                                          String query,
                                          Integer languageId,
-                                         Integer bookCondition) {
+                                         List<Integer> conditions) {
         List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius)
                 .stream()
                 .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED))
                 .collect(Collectors.toList());
-        if (bookCondition != null) {
-            exchanges = filterByBookCondition(exchanges, BookCondition.values()[bookCondition]);
+        if (conditions != null) {
+            List<BookCondition> bookConditions = Arrays.stream(BookCondition.values())
+                    .filter(it -> conditions.contains(it.ordinal()))
+                    .collect(Collectors.toList());
+            exchanges = filterByBookCondition(exchanges, bookConditions);
         }
         if (languageId != null) {
             Optional<Language> language = languageRepository.getLanguageById(languageId);
@@ -196,9 +199,9 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .collect(Collectors.toList());
     }
 
-    private List<Exchange> filterByBookCondition(List<Exchange> exchanges, BookCondition bookCondition) {
+    private List<Exchange> filterByBookCondition(List<Exchange> exchanges, List<BookCondition> bookCondition) {
         return exchanges.stream()
-                .filter(it -> it.getBook().getCondition().equals(bookCondition))
+                .filter(it -> bookCondition.contains(it.getBook().getCondition()))
                 .collect(Collectors.toList());
     }
 
@@ -260,9 +263,9 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
-        exchanges = exchanges.stream()
-                .filter(exchange -> exchange.getExchangeStatus() == ExchangeStatus.STARTED)
-                .collect(Collectors.toList());
+//        exchanges = exchanges.stream()
+//                .filter(exchange -> exchange.getExchangeStatus() == ExchangeStatus.STARTED)
+//                .collect(Collectors.toList());
         List<Exchange> finalExchanges = getExchangeWhichContainsAllCategories(exchanges, categories);
         return new LinkedList<>(finalExchanges);
     }
@@ -293,5 +296,4 @@ public class ExchangeServiceImpl implements ExchangeService {
                 radius
         );
     }
-
 }

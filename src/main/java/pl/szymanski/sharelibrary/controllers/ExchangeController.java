@@ -45,7 +45,7 @@ public class ExchangeController {
             @RequestParam(value = "cat", required = false) List<String> categories,
             @RequestParam(value = "q", required = false) String query,
             @RequestParam(value = "lan", required = false) Integer languageId,
-            @RequestParam(value = "con", required = false) Integer condition
+            @RequestParam(value = "con", required = false) List<Integer> condition
     ) {
         return new ResponseEntity<>(
                 exchangeService.filter(latitude, longitude, radius, categories, query, languageId, condition),
