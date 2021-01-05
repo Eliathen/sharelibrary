@@ -42,5 +42,10 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
         return exchangeJPARepository.findByLatitudeAndLongitudeAndRadius(latitude, longitude, radius);
     }
 
+    @Override
+    public List<Exchange> getExchangeByBoundingCoordinates(double latMin, double latMax, double longMin, double longMax) {
+        return exchangeJPARepository.findByBoundingCoordinates(latMin, latMax, longMin, longMax);
+    }
+
 
 }
