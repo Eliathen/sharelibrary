@@ -16,8 +16,10 @@ import pl.szymanski.sharelibrary.requests.AuthorRequest;
 import pl.szymanski.sharelibrary.response.BookWithoutUsersResponse;
 import pl.szymanski.sharelibrary.response.LanguageResponse;
 import pl.szymanski.sharelibrary.response.UserBookResponse;
+import pl.szymanski.sharelibrary.response.UserResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CoverService;
+import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,6 +36,7 @@ public class BookController {
 
     private final BookService bookService;
     private final CoverService coverService;
+    private final UserService userService;
 
     @GetMapping("/{bookId}")
     public ResponseEntity<BookWithoutUsersResponse> getBookById(@PathVariable Long bookId) {
@@ -97,6 +100,15 @@ public class BookController {
     public ResponseEntity<Set<LanguageResponse>> getLanguages() {
         return new ResponseEntity<>(
                 bookService.getLanguages().stream().map(LanguageResponse::of).collect(Collectors.toSet()), OK
+        );
+    }
+
+    //get list of user with books which user of id userId have
+    @GetMapping("/{userId}/exchanged")
+    public ResponseEntity<List<UserResponse>> getExchangedBooks(@PathVariable Long userId) {
+        return new ResponseEntity<>(
+                userService.getUsersWithBooksWhereAtUserIs(userId).stream().map(UserResponse::of).collect(Collectors.toList()),
+                OK
         );
     }
 

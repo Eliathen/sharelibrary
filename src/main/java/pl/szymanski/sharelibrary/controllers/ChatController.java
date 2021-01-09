@@ -22,7 +22,8 @@ public class ChatController {
     public @ResponseBody
     ResponseEntity<List<ChatRoomResponse>> getUserRooms(@PathVariable("user") Long userId) {
         return new ResponseEntity<>(
-                chatRoomService.getRoomByUserId(userId).stream().map(ChatRoomResponse::of).collect(Collectors.toList()), HttpStatus.OK
+                chatRoomService.getRoomByUserId(userId).stream().map(ChatRoomResponse::of).collect(Collectors.toList()),
+                HttpStatus.OK
         );
     }
 
