@@ -89,9 +89,15 @@ public class ExchangeServiceImpl implements ExchangeService {
         User withUser = userService.getUserById(executeExchangeRequest.getWithUserId());
         if (executeExchangeRequest.getForBookId() != null) {
             exchange.setForBook(bookService.findBookById(executeExchangeRequest.getForBookId()));
-            withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(), exchange.getForBook().getId(), BookStatus.EXCHANGED, exchange.getUser().getId());
+            withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(),
+                    exchange.getForBook().getId(),
+                    BookStatus.EXCHANGED,
+                    exchange.getUser().getId());
         }
-        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.EXCHANGED, executeExchangeRequest.getWithUserId());
+        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(),
+                exchange.getBook().getId(),
+                BookStatus.EXCHANGED,
+                executeExchangeRequest.getWithUserId());
         exchange.setExchangeStatus(ExchangeStatus.DURING);
         exchange.setWithUser(withUser);
         exchange.setUser(owner);

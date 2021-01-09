@@ -6,7 +6,7 @@ import pl.szymanski.sharelibrary.enums.BookCondition;
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 
 
 @Entity
@@ -28,7 +28,7 @@ public class Book {
     @JoinColumn(name = "language_id")
     private Language language;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = ALL)
     //@Size(max = 1, min = 1)
     private List<Cover> cover;
 
@@ -40,7 +40,7 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<UserBook> users;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH})
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private List<Category> categories;

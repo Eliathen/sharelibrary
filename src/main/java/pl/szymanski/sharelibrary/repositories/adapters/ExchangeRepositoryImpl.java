@@ -21,7 +21,6 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
         return exchangeJPARepository.saveAndFlush(exchange);
     }
 
-
     @Override
     public List<Exchange> getAll() {
         return exchangeJPARepository.findAll();
