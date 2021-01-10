@@ -27,7 +27,7 @@ public class Cover {
     private byte[] data;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "bookId")
     private Book book;
 
     public Cover(String name, String type, byte[] data) {

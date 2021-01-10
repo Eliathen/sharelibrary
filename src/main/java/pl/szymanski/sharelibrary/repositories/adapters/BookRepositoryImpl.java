@@ -23,11 +23,9 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book saveBook(Book book) {
-        System.out.println("Book = " + book);
         for (Cover cover : book.getCover()) {
             cover.setBook(book);
         }
-        System.out.println("Cover = " + book.getCover());
         return bookJPARepository.saveAndFlush(book);
     }
 

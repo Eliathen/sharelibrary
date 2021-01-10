@@ -28,7 +28,7 @@ public class Book {
     @JoinColumn(name = "language_id")
     private Language language;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = ALL, mappedBy = "book")
     //@Size(max = 1, min = 1)
     private List<Cover> cover;
 
