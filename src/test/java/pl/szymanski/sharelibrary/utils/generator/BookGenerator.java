@@ -6,6 +6,7 @@ import pl.szymanski.sharelibrary.entity.UserBook;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.requests.AssignBookRequest;
+import pl.szymanski.sharelibrary.response.BookWithoutUsersResponse;
 import pl.szymanski.sharelibrary.utils.constant.BookConstant;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class BookGenerator {
         book.setTitle(BookConstant.TEST_BOOK_TITLE);
         book.setAuthors(List.of(AuthorGenerator.getAuthor()));
         book.setCategories(List.of(CategoryGenerator.getCategory()));
+        book.setId(1L);
         Language language = new Language();
         language.setId(1);
         language.setName("English");
@@ -36,5 +38,9 @@ public class BookGenerator {
         userBook.setStatus(BookStatus.AT_OWNER);
 
         return userBook;
+    }
+
+    public static BookWithoutUsersResponse getBookWithoutUsersResponse() {
+        return BookWithoutUsersResponse.of(getBook());
     }
 }

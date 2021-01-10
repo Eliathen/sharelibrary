@@ -7,7 +7,7 @@ import pl.szymanski.sharelibrary.requests.LoginRequest;
 import pl.szymanski.sharelibrary.requests.RemoveBookFromUserRequest;
 import pl.szymanski.sharelibrary.requests.UserRequest;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserGenerator {
@@ -35,14 +35,13 @@ public class UserGenerator {
     }
 
     public static User getUserWithBooks() {
-        User user = new User();
-        user.setName("John");
-        user.setSurname("Dee");
-        user.setUsername("johnDee");
-        user.setEmail("john@dee.com");
-        user.setCoordinates(CoordinatesGenerator.getCoordinates());
-        List<UserBook> userBooks = new ArrayList<>();
-        userBooks.add(BookGenerator.getUserBook());
+        User user = getUser();
+        UserBook userBook = new UserBook();
+        userBook.setBook(BookGenerator.getBook());
+        userBook.setUser(user);
+        List<UserBook> userBooks = Arrays.asList(
+                userBook
+        );
         user.setBooks(userBooks);
         return user;
     }

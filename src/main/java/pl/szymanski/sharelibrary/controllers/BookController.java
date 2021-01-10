@@ -56,7 +56,6 @@ public class BookController {
         return new ResponseEntity<>(bookService.getBooks(query).stream().map(BookWithoutUsersResponse::of).collect(Collectors.toSet()), OK);
     }
 
-
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
     public ResponseEntity<BookWithoutUsersResponse> saveBook(
