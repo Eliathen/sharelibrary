@@ -5,10 +5,12 @@ import pl.szymanski.sharelibrary.entity.Language;
 import pl.szymanski.sharelibrary.entity.UserBook;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
+import pl.szymanski.sharelibrary.requests.AddBookRequest;
 import pl.szymanski.sharelibrary.requests.AssignBookRequest;
 import pl.szymanski.sharelibrary.response.BookWithoutUsersResponse;
 import pl.szymanski.sharelibrary.utils.constant.BookConstant;
 
+import java.util.Collections;
 import java.util.List;
 
 public class BookGenerator {
@@ -42,5 +44,15 @@ public class BookGenerator {
 
     public static BookWithoutUsersResponse getBookWithoutUsersResponse() {
         return BookWithoutUsersResponse.of(getBook());
+    }
+
+    public static AddBookRequest getAddBookRequest() {
+        return new AddBookRequest(
+                BookConstant.TEST_BOOK_TITLE,
+                Collections.singletonList(AuthorGenerator.getAuthorRequest()),
+                Collections.singletonList(CategoryGenerator.getCategoryRequest()),
+                LanguageGenerator.getLanguageRequest(),
+                BookCondition.NEW.ordinal()
+        );
     }
 }

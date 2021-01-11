@@ -13,9 +13,9 @@ public class CategoryRequest {
     private String name;
 
     @JsonCreator
-    public CategoryRequest(@JsonProperty(value = "id") String id,
+    public CategoryRequest(@JsonProperty(value = "id") int id,
                            @JsonProperty(value = "name") String name) {
-        this.id = Integer.parseInt(id);
+        this.id = id;
         this.name = name;
     }
 }

@@ -9,10 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.szymanski.sharelibrary.converters.RequestConverter;
-import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.requests.AddBookRequest;
-import pl.szymanski.sharelibrary.requests.AuthorRequest;
 import pl.szymanski.sharelibrary.response.BookWithoutUsersResponse;
 import pl.szymanski.sharelibrary.response.LanguageResponse;
 import pl.szymanski.sharelibrary.response.UserBookResponse;
@@ -56,7 +54,8 @@ public class BookController {
         return new ResponseEntity<>(bookService.getBooks(query).stream().map(BookWithoutUsersResponse::of).collect(Collectors.toSet()), OK);
     }
 
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE})
     @Transactional
     public ResponseEntity<BookWithoutUsersResponse> saveBook(
             @ModelAttribute AddBookRequest book,
@@ -66,16 +65,16 @@ public class BookController {
     }
 
 
-    @GetMapping("/author")
-    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByAuthor(@RequestBody AuthorRequest authorRequest) {
-        Author author = RequestConverter.authorRequestToAuthor(authorRequest);
-        return new ResponseEntity<>(
-                bookService.getBooksByAuthorNameAndSurname(author)
-                        .stream()
-                        .map(BookWithoutUsersResponse::of)
-                        .collect(Collectors.toSet()),
-                OK);
-    }
+//    @GetMapping("/author")
+//    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByAuthor(@RequestBody AuthorRequest authorRequest) {
+//        Author author = RequestConverter.authorRequestToAuthor(authorRequest);
+//        return new ResponseEntity<>(
+//                bookService.getBooksByAuthorNameAndSurname(author)
+//                        .stream()
+//                        .map(BookWithoutUsersResponse::of)
+//                        .collect(Collectors.toSet()),
+//                OK);
+//    }
 
     @GetMapping("user/{userId}")
     public ResponseEntity<List<UserBookResponse>> getUsersBooks(@PathVariable Long userId) {
@@ -85,15 +84,15 @@ public class BookController {
         );
     }
 
-    @GetMapping("/title")
-    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByTitle(@RequestParam String title) {
-        return new ResponseEntity<>(
-                bookService.getBooksByTitle(title)
-                        .stream()
-                        .map(BookWithoutUsersResponse::of)
-                        .collect(Collectors.toSet()),
-                OK);
-    }
+//    @GetMapping("/title")
+//    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByTitle(@RequestParam String title) {
+//        return new ResponseEntity<>(
+//                bookService.getBooksByTitle(title)
+//                        .stream()
+//                        .map(BookWithoutUsersResponse::of)
+//                        .collect(Collectors.toSet()),
+//                OK);
+//    }
 
     @GetMapping("/languages")
     public ResponseEntity<Set<LanguageResponse>> getLanguages() {

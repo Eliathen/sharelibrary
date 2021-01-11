@@ -6,6 +6,7 @@ import pl.szymanski.sharelibrary.requests.EditUserRequest;
 import pl.szymanski.sharelibrary.requests.LoginRequest;
 import pl.szymanski.sharelibrary.requests.RemoveBookFromUserRequest;
 import pl.szymanski.sharelibrary.requests.UserRequest;
+import pl.szymanski.sharelibrary.response.UserResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,5 +65,9 @@ public class UserGenerator {
         return new RemoveBookFromUserRequest(
                 1L, 1L
         );
+    }
+
+    public static UserResponse getUserResponse() {
+        return UserResponse.of(getUser());
     }
 }

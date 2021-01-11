@@ -3,6 +3,8 @@ package pl.szymanski.sharelibrary.utils.generator;
 import pl.szymanski.sharelibrary.entity.ChatMessage;
 import pl.szymanski.sharelibrary.entity.ChatRoom;
 import pl.szymanski.sharelibrary.entity.User;
+import pl.szymanski.sharelibrary.response.BaseUserResponse;
+import pl.szymanski.sharelibrary.response.ChatMessageResponse;
 import pl.szymanski.sharelibrary.response.ChatRoomResponse;
 
 import java.time.LocalDateTime;
@@ -37,5 +39,16 @@ public class ChatGenerator {
         return message;
     }
 
+    public static ChatMessageResponse getChatMessageResponse() {
+        return new ChatMessageResponse(
+                1L,
+                ChatRoomResponse.of(getChatRoom()),
+                BaseUserResponse.of(UserGenerator.getUser()),
+                BaseUserResponse.of(UserGenerator.getUser()),
+                "Message",
+                LocalDateTime.now()
+
+        );
+    }
 
 }

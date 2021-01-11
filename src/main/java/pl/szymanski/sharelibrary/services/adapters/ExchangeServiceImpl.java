@@ -8,7 +8,7 @@ import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
-import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
+import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.CategoryRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
@@ -62,7 +62,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void finishExchange(Long exchangeId) {
-        Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
+        Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExist(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         exchangeRepository.saveExchange(exchange);
         changeUserBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
@@ -78,7 +78,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public Exchange getExchangeById(Long id) {
-        return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExists(id));
+        return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExist(id));
     }
 
 
