@@ -64,18 +64,6 @@ public class BookController {
         return new ResponseEntity<>(BookWithoutUsersResponse.of(bookService.saveBook(RequestConverter.addBookRequestToBook(book), image, userId)), CREATED);
     }
 
-
-//    @GetMapping("/author")
-//    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByAuthor(@RequestBody AuthorRequest authorRequest) {
-//        Author author = RequestConverter.authorRequestToAuthor(authorRequest);
-//        return new ResponseEntity<>(
-//                bookService.getBooksByAuthorNameAndSurname(author)
-//                        .stream()
-//                        .map(BookWithoutUsersResponse::of)
-//                        .collect(Collectors.toSet()),
-//                OK);
-//    }
-
     @GetMapping("user/{userId}")
     public ResponseEntity<List<UserBookResponse>> getUsersBooks(@PathVariable Long userId) {
         return new ResponseEntity<>(
@@ -83,16 +71,6 @@ public class BookController {
                 OK
         );
     }
-
-//    @GetMapping("/title")
-//    public ResponseEntity<Set<BookWithoutUsersResponse>> getBooksByTitle(@RequestParam String title) {
-//        return new ResponseEntity<>(
-//                bookService.getBooksByTitle(title)
-//                        .stream()
-//                        .map(BookWithoutUsersResponse::of)
-//                        .collect(Collectors.toSet()),
-//                OK);
-//    }
 
     @GetMapping("/languages")
     public ResponseEntity<Set<LanguageResponse>> getLanguages() {

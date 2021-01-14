@@ -38,9 +38,11 @@ public class BookServiceImpl implements BookService {
     public List<Book> getBooks(String query) {
         Set<Book> books = new HashSet<>(bookRepository.findBooksByTitle(query));
         List<String> queries = Arrays.asList(query.split(" "));
-        queries.forEach(it -> books.addAll(bookRepository.findBooksByTitle(it)));
-        queries.forEach(it -> authorRepository.findAuthorByNameAndSurname(it, it).map(author ->
-                        author.getBooks().stream().map(books::add)
+        queries.forEach(it -> books.addAll(bookRepository.findBooksByTitle(it.toLowerCase())));
+        queries.forEach(it -> authorRepository.findAuthorByNameOrSurname(it.toLowerCase(), it.toLowerCase()).forEach(author -> {
+                    System.out.println("Author = " + author);
+                    books.addAll(author.getBooks());
+                }
                 )
         );
         return new ArrayList<>(books);
