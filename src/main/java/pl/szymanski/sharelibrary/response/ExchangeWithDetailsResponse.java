@@ -8,8 +8,7 @@ import pl.szymanski.sharelibrary.enums.ExchangeStatus;
 
 @AllArgsConstructor
 @Data
-public class ExchangeResponse {
-
+public class ExchangeWithDetailsResponse {
     private Long id;
 
     private ExchangeStatus exchangeStatus;
@@ -24,8 +23,12 @@ public class ExchangeResponse {
 
     private CoordinatesResponse coordinates;
 
-    public static ExchangeResponse of(Exchange exchange) {
-        return new ExchangeResponse(
+    private BaseUserResponse withUser;
+
+    private BookWithoutUsersResponse forBook;
+
+    public static ExchangeWithDetailsResponse of(Exchange exchange) {
+        return new ExchangeWithDetailsResponse(
                 exchange.getId(),
                 exchange.getExchangeStatus(),
                 exchange.getDeposit(),
@@ -35,22 +38,9 @@ public class ExchangeResponse {
                         .filter(it -> it.getBook().getId().equals(exchange.getBook().getId()))
                         .findFirst().orElse(new UserBook(null, null, null, null))),
                 BaseUserResponse.of(exchange.getUser()),
-                CoordinatesResponse.of(exchange.getCoordinates())
-        );
-    }
-
-    public static ExchangeResponse of(Exchange exchange, double distance) {
-        return new ExchangeResponse(
-                exchange.getId(),
-                exchange.getExchangeStatus(),
-                exchange.getDeposit(),
-                distance,
-                UserBookResponse.of(exchange.getUser().getBooks()
-                        .stream()
-                        .filter(it -> it.getBook().getId().equals(exchange.getBook().getId()))
-                        .findFirst().orElse(new UserBook(null, null, null, null))),
-                BaseUserResponse.of(exchange.getUser()),
-                CoordinatesResponse.of(exchange.getCoordinates())
+                CoordinatesResponse.of(exchange.getCoordinates()),
+                (exchange.getWithUser() != null) ? BaseUserResponse.of(exchange.getWithUser()) : new BaseUserResponse(),
+                (exchange.getForBook() != null) ? BookWithoutUsersResponse.of(exchange.getForBook()) : new BookWithoutUsersResponse()
         );
     }
 

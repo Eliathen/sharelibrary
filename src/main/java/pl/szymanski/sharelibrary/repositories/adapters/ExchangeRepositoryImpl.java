@@ -9,6 +9,7 @@ import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -44,6 +45,11 @@ public class ExchangeRepositoryImpl implements ExchangeRepository {
     @Override
     public List<Exchange> getExchangeByBoundingCoordinates(double latMin, double latMax, double longMin, double longMax) {
         return exchangeJPARepository.findByBoundingCoordinates(latMin, latMax, longMin, longMax);
+    }
+
+    @Override
+    public List<Exchange> getExchangesLinkedWithUser(Long userId) {
+        return exchangeJPARepository.findAllLinkedWithUser(userId).stream().filter(it -> it.getExchangeStatus().equals(ExchangeStatus.DURING)).collect(Collectors.toList());
     }
 
 

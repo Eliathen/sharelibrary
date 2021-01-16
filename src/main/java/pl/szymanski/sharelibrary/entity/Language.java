@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Language")
+@Table(name = "language")
 @Data
 public class Language {
 

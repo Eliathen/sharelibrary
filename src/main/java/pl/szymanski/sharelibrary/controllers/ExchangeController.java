@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.response.ExchangeResponse;
+import pl.szymanski.sharelibrary.response.ExchangeWithDetailsResponse;
 import pl.szymanski.sharelibrary.response.RequirementResponse;
 import pl.szymanski.sharelibrary.services.ports.ExchangeService;
 
@@ -88,4 +89,10 @@ public class ExchangeController {
         );
     }
 
+    @GetMapping("users/{userId}")
+    public ResponseEntity<List<ExchangeWithDetailsResponse>> getCurrentExchangesLinkedWithUser(@PathVariable("userId") Long userId) {
+        return new ResponseEntity<>(
+                exchangeService.getExchangesLinkedByUser(userId).stream().map(ExchangeWithDetailsResponse::of).collect(Collectors.toList()), OK
+        );
+    }
 }

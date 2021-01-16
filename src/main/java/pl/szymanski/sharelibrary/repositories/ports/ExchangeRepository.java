@@ -19,4 +19,6 @@ public interface ExchangeRepository {
     List<Exchange> getExchangeByCoordinatesAndRadius(Double latitude, Double longitude, Double radius);
 
     List<Exchange> getExchangeByBoundingCoordinates(double latMin, double latMax, double longMin, double longMax);
+
+    List<Exchange> getExchangesLinkedWithUser(Long userId);
 }

@@ -264,6 +264,11 @@ public class ExchangeServiceImpl implements ExchangeService {
         );
     }
 
+    @Override
+    public List<Exchange> getExchangesLinkedByUser(Long userId) {
+        return exchangeRepository.getExchangesLinkedWithUser(userId);
+    }
+
     private List<Exchange> filterByCoordinatesAndRadius(double latitude, double longitude, double radius) {
         return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
     }

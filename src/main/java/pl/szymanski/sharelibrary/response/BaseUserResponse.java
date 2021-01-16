@@ -2,10 +2,12 @@ package pl.szymanski.sharelibrary.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.szymanski.sharelibrary.entity.User;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class BaseUserResponse {
 
     private Long id;

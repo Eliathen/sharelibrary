@@ -27,4 +27,7 @@ public interface ExchangeJPARepository extends JpaRepository<Exchange, Long> {
 
     @Query(value = "SELECT * FROM Exchange e JOIN Coordinates c ON e.COORDINATES_ID = c.ID WHERE c.latitude BETWEEN :latMin AND :latMax AND c.longitude BETWEEN :longMin AND :longMax", nativeQuery = true)
     List<Exchange> findByBoundingCoordinates(double latMin, double latMax, double longMin, double longMax);
+
+    @Query(value = "SELECT * FROM Exchange e WHERE e.user_id = :userId OR e.with_user_id = :userId", nativeQuery = true)
+    List<Exchange> findAllLinkedWithUser(Long userId);
 }

@@ -36,4 +36,6 @@ public interface ExchangeService {
     );
 
     double countDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2);
+
+    List<Exchange> getExchangesLinkedByUser(Long userId);
 }
