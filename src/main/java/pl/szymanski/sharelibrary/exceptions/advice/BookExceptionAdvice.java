@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pl.szymanski.sharelibrary.exceptions.ExceptionMessages;
 import pl.szymanski.sharelibrary.exceptions.books.BookDoesNotExist;
+import pl.szymanski.sharelibrary.exceptions.covers.CoverForBookDoesNotExists;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,6 +16,14 @@ public class BookExceptionAdvice {
 
     @ExceptionHandler(BookDoesNotExist.class)
     public ResponseEntity<ErrorInfo> bookDoesNotExist(BookDoesNotExist exception) {
+        ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
+        return new ResponseEntity<>(
+                errorInfo, HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler(CoverForBookDoesNotExists.class)
+    public ResponseEntity<ErrorInfo> coverDoesNotExists(CoverForBookDoesNotExists exception) {
         ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
         return new ResponseEntity<>(
                 errorInfo, HttpStatus.NOT_FOUND

@@ -3,6 +3,7 @@ package pl.szymanski.sharelibrary.repositories.adapters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import pl.szymanski.sharelibrary.entity.Book;
+import pl.szymanski.sharelibrary.entity.Cover;
 import pl.szymanski.sharelibrary.repositories.jpa.BookJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.BookRepository;
 
@@ -22,6 +23,9 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public Book saveBook(Book book) {
+        for (Cover cover : book.getCover()) {
+            cover.setBook(book);
+        }
         return bookJPARepository.saveAndFlush(book);
     }
 

@@ -10,13 +10,11 @@ import pl.szymanski.sharelibrary.entity.ChatMessage;
 import pl.szymanski.sharelibrary.requests.ChatMessageRequest;
 import pl.szymanski.sharelibrary.response.ChatMessageResponse;
 import pl.szymanski.sharelibrary.services.ports.ChatMessageService;
-import pl.szymanski.sharelibrary.services.ports.ChatRoomService;
 
 @Controller
 @RequiredArgsConstructor
 public class SocketController {
 
-    private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -31,7 +29,5 @@ public class SocketController {
                 message.getSender().getId().toString(), "/queue/messages",
                 ChatMessageResponse.of(message)
         );
-
     }
-
 }

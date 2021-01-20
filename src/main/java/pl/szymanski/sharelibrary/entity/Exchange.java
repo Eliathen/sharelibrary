@@ -18,33 +18,33 @@ public class Exchange {
     @Column(nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "exchange_status")
     private ExchangeStatus exchangeStatus;
 
     @Column(columnDefinition = "NUMBER")
     private Double deposit;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
-    @JoinColumn(name = "bookId")
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
-    @JoinColumn(name = "coordinatesId")
+    @JoinColumn(name = "coordinates_id")
     private Coordinates coordinates;
 
     @OneToMany(mappedBy = "exchange", fetch = FetchType.LAZY, cascade = ALL)
     private List<Requirement> requirements;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
-    @JoinColumn(name = "forBookId")
+    @JoinColumn(name = "for_book_id")
     private Book forBook;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = ALL)
-    @JoinColumn(name = "withUserId")
+    @JoinColumn(name = "with_user_id")
     private User withUser;
 
     @Override

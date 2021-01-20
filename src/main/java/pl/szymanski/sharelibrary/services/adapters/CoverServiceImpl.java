@@ -3,7 +3,7 @@ package pl.szymanski.sharelibrary.services.adapters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.szymanski.sharelibrary.entity.Cover;
-import pl.szymanski.sharelibrary.exceptions.covers.CoverWithIdDoesNotExists;
+import pl.szymanski.sharelibrary.exceptions.covers.CoverForBookDoesNotExists;
 import pl.szymanski.sharelibrary.services.ports.BookService;
 import pl.szymanski.sharelibrary.services.ports.CoverService;
 
@@ -15,6 +15,6 @@ public class CoverServiceImpl implements CoverService {
 
     @Override
     public Cover getCoverByBookId(Long id) {
-        return bookService.findBookById(id).getCover().stream().findFirst().orElseThrow(() -> new CoverWithIdDoesNotExists(id));
+        return bookService.findBookById(id).getCover().stream().findFirst().orElseThrow(() -> new CoverForBookDoesNotExists(id));
     }
 }

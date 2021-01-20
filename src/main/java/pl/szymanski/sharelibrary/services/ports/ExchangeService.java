@@ -3,7 +3,6 @@ package pl.szymanski.sharelibrary.services.ports;
 import pl.szymanski.sharelibrary.entity.Exchange;
 import pl.szymanski.sharelibrary.entity.Requirement;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
-import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.response.ExchangeResponse;
 
@@ -19,7 +18,7 @@ public interface ExchangeService {
 
     Exchange getExchangeById(Long id);
 
-    List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinates, Double radius);
+    List<Exchange> getExchangesByCoordinatesAndRadius(double latitude, double longitude, double radius);
 
     Exchange executeExchange(ExecuteExchangeRequest executeExchangeRequest);
 
@@ -31,8 +30,12 @@ public interface ExchangeService {
                                   Double longitude,
                                   Double radius,
                                   List<String> categories,
-                                  String query
+                                  String query,
+                                  Integer languageId,
+                                  List<Integer> conditions
     );
 
-    double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2);
+    double countDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2);
+
+    List<Exchange> getExchangesLinkedByUser(Long userId);
 }

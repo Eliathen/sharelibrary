@@ -19,5 +19,4 @@ public interface UserRepository {
 
     Optional<User> getUserByUsernameOrEmail(String user, String email);
 
-
 }
