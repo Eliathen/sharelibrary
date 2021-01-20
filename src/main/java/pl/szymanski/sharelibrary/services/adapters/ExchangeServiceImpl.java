@@ -212,12 +212,6 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .collect(Collectors.toList());
     }
 
-//
-//    private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
-//        Set<Exchange> result = new HashSet<>(filterByCategory(exchanges, categories));
-//        return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
-//    }
-
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));
         Set<Exchange> result = filterByTitle(exchanges, query);
@@ -269,9 +263,9 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeRepository.getExchangesLinkedWithUser(userId);
     }
 
-    private List<Exchange> filterByCoordinatesAndRadius(double latitude, double longitude, double radius) {
-        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
-    }
+//    private List<Exchange> filterByCoordinatesAndRadius(double latitude, double longitude, double radius) {
+//        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
+//    }
 
     private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
         return new LinkedList<>(getExchangeWhichContainsAllCategories(exchanges, categories));
@@ -299,8 +293,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         double LAT_MAX = PI / 2;
         double LON_MIN = -PI;
         double LON_MAX = PI;
-//        Double latitude = coordinatesRequest.getLatitude();
-//        Double longitude = coordinatesRequest.getLongitude();
         double latMin, latMax, lonMin, lonMax;
         double radiusInKM = 6371.0;
         double lat = Math.toRadians(latitude);
@@ -325,14 +317,13 @@ public class ExchangeServiceImpl implements ExchangeService {
             lonMin = LON_MIN;
             lonMax = LON_MAX;
         }
-        return exchangeRepository.getExchangeByBoundingCoordinates(toDegrees(latMin), toDegrees(latMax), toDegrees(lonMin), toDegrees(lonMax))
+        return exchangeRepository.getExchangeByBoundingCoordinates(
+                toDegrees(latMin),
+                toDegrees(latMax),
+                toDegrees(lonMin),
+                toDegrees(lonMax))
                 .stream().filter(it ->
                         countDistanceBetweenPoints(latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude()) <= radiusInM
                 ).collect(Collectors.toList());
-//        return exchangeRepository.getExchangeByCoordinatesAndRadius(
-//                latitude,
-//                longitude,
-//                radius
-//        );
     }
 }
