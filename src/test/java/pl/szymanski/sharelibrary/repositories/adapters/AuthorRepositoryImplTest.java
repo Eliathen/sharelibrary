@@ -11,11 +11,11 @@ import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.repositories.jpa.BookJPARepository;
 import pl.szymanski.sharelibrary.repositories.jpa.ExchangeJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
+import pl.szymanski.sharelibrary.utils.generator.AuthorGenerator;
 import pl.szymanski.sharelibrary.utils.generator.BookGenerator;
 
+import java.util.List;
 import java.util.Optional;
-
-import static pl.szymanski.sharelibrary.utils.generator.AuthorGenerator.getAuthor;
 
 @SpringBootTest
 class AuthorRepositoryImplTest {
@@ -42,13 +42,26 @@ class AuthorRepositoryImplTest {
     @Test
     void should_find_author_by_name_and_surname() {
         //given
-        Author author = getAuthor();
+        Author author = AuthorGenerator.getAuthor();
         Book in = BookGenerator.getBook();
         bookJPARepository.saveAndFlush(in);
         //when
         Optional<Author> out = authorRepository.findAuthorByNameAndSurname(author.getName(), author.getSurname());
         //then
         Assertions.assertThat(out).isPresent().containsInstanceOf(Author.class);
+    }
+
+    @Test
+    void should_find_author_by_name_or_surname() {
+        //given
+        Author author = AuthorGenerator.getAuthor();
+        Book in = BookGenerator.getBook();
+        bookJPARepository.saveAndFlush(in);
+        //when
+        List<Author> out = authorRepository.findAuthorByNameOrSurname(author.getName(), author.getSurname());
+        //then
+        Assertions.assertThat(out).isNotEmpty();
+        Assertions.assertThat(out.size()).isEqualTo(1);
     }
 
 }

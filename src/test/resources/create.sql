@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS AUTHOR
 
 CREATE TABLE IF NOT EXISTS CATEGORY
 (
-    ID   INTEGER,
+    ID   serial,
     NAME VARCHAR(255),
     constraint category_pkey primary key (ID)
 );
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS COORDINATES
 
 CREATE TABLE IF NOT EXISTS LANGUAGE
 (
-    ID   INTEGER,
+    ID   serial,
     NAME VARCHAR(255) not null,
     constraint language_pkey primary key (ID)
 );

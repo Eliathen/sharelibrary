@@ -45,8 +45,8 @@ class CategoryControllerTest {
                 CategoryGenerator.getCategory(),
                 CategoryGenerator.getCategory()
         );
-        //when
         when(categoryService.getAll()).thenReturn(categoryList);
+        //when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories"))
                 .andExpect(status().isOk())
                 .andReturn();

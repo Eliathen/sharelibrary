@@ -1,7 +1,6 @@
 package pl.szymanski.sharelibrary.utils.generator;
 
 import pl.szymanski.sharelibrary.entity.Book;
-import pl.szymanski.sharelibrary.entity.Language;
 import pl.szymanski.sharelibrary.entity.UserBook;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
@@ -17,14 +16,11 @@ public class BookGenerator {
 
     public static Book getBook() {
         Book book = new Book();
+        book.setId(1L);
         book.setTitle(BookConstant.TEST_BOOK_TITLE);
         book.setAuthors(List.of(AuthorGenerator.getAuthor()));
         book.setCategories(List.of(CategoryGenerator.getCategory()));
-        book.setId(1L);
-        Language language = new Language();
-        language.setId(1);
-        language.setName("English");
-        book.setLanguage(language);
+        book.setLanguage(LanguageGenerator.getLanguage());
         book.setCondition(BookCondition.GOOD);
         return book;
     }

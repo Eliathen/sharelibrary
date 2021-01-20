@@ -9,6 +9,7 @@ public class CategoryGenerator {
     public static Category getCategory() {
         Category category = new Category();
         category.setName(CategoryConstant.TEST_NAME);
+        category.setId(1);
         return category;
     }
 
