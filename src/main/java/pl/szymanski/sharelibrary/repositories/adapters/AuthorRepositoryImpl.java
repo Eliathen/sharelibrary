@@ -6,6 +6,7 @@ import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.repositories.jpa.AuthorJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +18,11 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     @Override
     public Optional<Author> findAuthorByNameAndSurname(String name, String surname) {
-        return authorJPARepository.findAuthorByNameAndSurname(name, surname);
+        return authorJPARepository.findAuthorByNameIgnoreCaseAndSurnameIgnoreCase(name, surname);
     }
 
+    @Override
+    public List<Author> findAuthorByNameOrSurname(String name, String surname) {
+        return authorJPARepository.findAuthorsByNameIgnoreCaseOrSurnameIgnoreCase(name, surname);
+    }
 }

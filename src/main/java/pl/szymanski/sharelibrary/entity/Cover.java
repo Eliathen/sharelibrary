@@ -2,6 +2,7 @@ package pl.szymanski.sharelibrary.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -15,13 +16,14 @@ public class Cover {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     private String name;
 
     private String type;
 
     @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] data;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,13 +44,13 @@ public class Cover {
         return Objects.equals(id, cover.id) &&
                 Objects.equals(name, cover.name) &&
                 Objects.equals(type, cover.type) &&
-                Arrays.equals(data, cover.data) &&
-                Objects.equals(book, cover.book);
+                Arrays.equals(data, cover.data) /*&&*/
+                /*Objects.equals(book, cover.book)*/;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, type, book);
+        return Objects.hash(id, name, type/*, book*/);
     }
 
     @Override

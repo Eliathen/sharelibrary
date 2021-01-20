@@ -10,7 +10,7 @@ import pl.szymanski.sharelibrary.entity.Cover;
 @NoArgsConstructor
 public class CoverResponse {
 
-    private String id;
+    private Long id;
 
     private String name;
 

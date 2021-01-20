@@ -5,8 +5,9 @@ import pl.szymanski.sharelibrary.enums.BookCondition;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 
 
 @Entity
@@ -28,7 +29,7 @@ public class Book {
     @JoinColumn(name = "language_id")
     private Language language;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = ALL, mappedBy = "book")
     //@Size(max = 1, min = 1)
     private List<Cover> cover;
 
@@ -40,7 +41,7 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<UserBook> users;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(cascade = {PERSIST, MERGE, REFRESH})
     @JoinTable(joinColumns = @JoinColumn(name = "bookId"),
             inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private List<Category> categories;
@@ -51,7 +52,35 @@ public class Book {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", authors=" + authors +
-                ", categories=" + categories +
+                ", language=" + language +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return title.equals(book.title) &&
+                language.equals(book.language) &&
+                isAuthorsListEquals(book.getAuthors());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, language, getHashCodeForAuthorList());
+    }
+
+    private int getHashCodeForAuthorList() {
+        return authors.stream().mapToInt(Author::hashCode).sum();
+    }
+
+    private boolean isAuthorsListEquals(List<Author> authors) {
+        for (int i = 0; i < authors.size(); i++) {
+            if (!this.authors.get(i).getId().equals(authors.get(i).getId())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

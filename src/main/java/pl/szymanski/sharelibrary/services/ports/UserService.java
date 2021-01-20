@@ -5,6 +5,7 @@ import pl.szymanski.sharelibrary.requests.EditUserRequest;
 import pl.szymanski.sharelibrary.requests.LoginRequest;
 import pl.szymanski.sharelibrary.security.JwtAuthenticationResponse;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -27,4 +28,6 @@ public interface UserService {
     User getUserById(Long id);
 
     User withdrawBookFromUser(Long userId, Long bookId);
+
+    List<User> getUsersWithBooksWhereAtUserIs(Long userId);
 }

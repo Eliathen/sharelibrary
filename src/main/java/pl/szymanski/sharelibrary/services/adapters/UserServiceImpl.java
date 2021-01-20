@@ -29,10 +29,8 @@ import pl.szymanski.sharelibrary.security.JwtTokenProvider;
 import pl.szymanski.sharelibrary.services.ports.UserService;
 import pl.szymanski.sharelibrary.utilities.Utils;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -134,6 +132,31 @@ public class UserServiceImpl implements UserService {
                 it.getBook().getId().equals(bookId)
         );
         return userRepository.saveUser(user);
+    }
+
+    @Override
+    public List<User> getUsersWithBooksWhereAtUserIs(Long userId) {
+        Set<User> result = new HashSet<>();
+        List<User> users = userRepository.getUsers();
+        users.forEach(user -> {
+            if (user.getBooks() != null && !user.getBooks().isEmpty()) {
+                for (UserBook userBook : user.getBooks()) {
+                    if (userBook.getAtUser() != null && userBook.getAtUser().getId().equals(userId)) {
+                        result.add(user);
+                        break;
+                    }
+                }
+            }
+        });
+        result.forEach(
+                user -> {
+                    List<UserBook> books = (
+                            user.getBooks().stream().filter(ub ->
+                                    ub.getAtUser() != null && ub.getAtUser().getId().equals(userId)
+                            ).collect(Collectors.toList()));
+                    user.setBooks(books);
+                });
+        return new ArrayList<>(result);
     }
 
     private void validateUser(User user) {

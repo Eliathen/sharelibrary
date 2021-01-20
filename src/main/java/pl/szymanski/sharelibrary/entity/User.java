@@ -10,7 +10,7 @@ import static javax.persistence.CascadeType.*;
 
 @Entity
 @Data
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -32,8 +32,8 @@ public class User {
     @OneToMany(cascade = ALL, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     private List<UserBook> books;
 
-    @OneToMany(cascade = ALL, fetch = FetchType.LAZY)
-    private List<ChatRoom> chatRooms;
+//    @OneToMany(cascade = ALL, fetch = FetchType.LAZY)
+//    private List<ChatRoom> chatRooms;
 
     @ManyToOne(cascade = {PERSIST, MERGE})
     @JoinColumn(name = "coordinatesId")

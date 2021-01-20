@@ -29,7 +29,7 @@ public class ExchangeResponse {
                 exchange.getId(),
                 exchange.getExchangeStatus(),
                 exchange.getDeposit(),
-                0.0,
+                null,
                 UserBookResponse.of(exchange.getUser().getBooks()
                         .stream()
                         .filter(it -> it.getBook().getId().equals(exchange.getBook().getId()))

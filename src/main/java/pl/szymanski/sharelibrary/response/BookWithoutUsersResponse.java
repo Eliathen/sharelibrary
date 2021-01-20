@@ -2,6 +2,7 @@ package pl.szymanski.sharelibrary.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.szymanski.sharelibrary.entity.Book;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class BookWithoutUsersResponse {
 
     private Long id;

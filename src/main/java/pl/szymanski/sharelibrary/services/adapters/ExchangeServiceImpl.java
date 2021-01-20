@@ -8,13 +8,12 @@ import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
-import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExists;
+import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.CategoryRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
 import pl.szymanski.sharelibrary.repositories.ports.ExchangeRepository;
 import pl.szymanski.sharelibrary.repositories.ports.LanguageRepository;
 import pl.szymanski.sharelibrary.requests.AddExchangeRequest;
-import pl.szymanski.sharelibrary.requests.CoordinatesRequest;
 import pl.szymanski.sharelibrary.requests.ExecuteExchangeRequest;
 import pl.szymanski.sharelibrary.response.ExchangeResponse;
 import pl.szymanski.sharelibrary.services.ports.BookService;
@@ -23,6 +22,8 @@ import pl.szymanski.sharelibrary.services.ports.UserService;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.Math.*;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void finishExchange(Long exchangeId) {
-        Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExists(exchangeId));
+        Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExist(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
         exchangeRepository.saveExchange(exchange);
         changeUserBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
@@ -77,7 +78,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public Exchange getExchangeById(Long id) {
-        return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExists(id));
+        return exchangeRepository.getExchangeById(id).orElseThrow(() -> new ExchangeNotExist(id));
     }
 
 
@@ -88,9 +89,15 @@ public class ExchangeServiceImpl implements ExchangeService {
         User withUser = userService.getUserById(executeExchangeRequest.getWithUserId());
         if (executeExchangeRequest.getForBookId() != null) {
             exchange.setForBook(bookService.findBookById(executeExchangeRequest.getForBookId()));
-            withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(), exchange.getForBook().getId(), BookStatus.EXCHANGED, exchange.getUser().getId());
+            withUser = changeBookStatusAndAtUser(executeExchangeRequest.getWithUserId(),
+                    exchange.getForBook().getId(),
+                    BookStatus.EXCHANGED,
+                    exchange.getUser().getId());
         }
-        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.EXCHANGED, executeExchangeRequest.getWithUserId());
+        User owner = changeBookStatusAndAtUser(exchange.getUser().getId(),
+                exchange.getBook().getId(),
+                BookStatus.EXCHANGED,
+                executeExchangeRequest.getWithUserId());
         exchange.setExchangeStatus(ExchangeStatus.DURING);
         exchange.setWithUser(withUser);
         exchange.setUser(owner);
@@ -161,7 +168,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                                          String query,
                                          Integer languageId,
                                          List<Integer> conditions) {
-        List<Exchange> exchanges = filterByCoordinatesAndRadius(latitude, longitude, radius)
+        List<Exchange> exchanges = getExchangesByCoordinatesAndRadius(latitude, longitude, radius)
                 .stream()
                 .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED))
                 .collect(Collectors.toList());
@@ -205,12 +212,6 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .collect(Collectors.toList());
     }
 
-//
-//    private List<Exchange> filterByCategoryAndQuery(List<Exchange> exchanges, List<Category> categories, String query) {
-//        Set<Exchange> result = new HashSet<>(filterByCategory(exchanges, categories));
-//        return new LinkedList<>(filterByQuery(new ArrayList<>(result), query));
-//    }
-
     private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));
         Set<Exchange> result = filterByTitle(exchanges, query);
@@ -245,29 +246,29 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public double countDistanceBetweenPoints(double lat1, Double lon1, double lat2, Double lon2) {
+    public double countDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2) {
         double radiusInM = 6371000.0;
-        double thetaLat = Math.toRadians(lat2 - lat1);
-        double thetaLong = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
-        double dist =
-                Math.sin(thetaLat / 2) * Math.sin(thetaLat / 2) +
-                        Math.cos(lat1) * Math.cos(lat2) *
-                                Math.sin(thetaLong / 2) * Math.sin(thetaLong / 2);
-        return 2 * Math.atan2(Math.sqrt(dist), Math.sqrt(1 - dist)) * radiusInM;
+        lon1 = Math.toRadians(lon1);
+        lon2 = Math.toRadians(lon2);
+        return 2 * radiusInM * Math.asin(Math.sqrt(
+                Math.pow(Math.sin((lat2 - lat1) / 2), 2) +
+                        cos(lat1) * cos(lat2) * Math.pow(Math.sin((lon2 - lon1) / 2), 2))
+        );
     }
 
-    private List<Exchange> filterByCoordinatesAndRadius(Double latitude, Double longitude, Double radius) {
-        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
+    @Override
+    public List<Exchange> getExchangesLinkedByUser(Long userId) {
+        return exchangeRepository.getExchangesLinkedWithUser(userId);
     }
+
+//    private List<Exchange> filterByCoordinatesAndRadius(double latitude, double longitude, double radius) {
+//        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
+//    }
 
     private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
-//        exchanges = exchanges.stream()
-//                .filter(exchange -> exchange.getExchangeStatus() == ExchangeStatus.STARTED)
-//                .collect(Collectors.toList());
-        List<Exchange> finalExchanges = getExchangeWhichContainsAllCategories(exchanges, categories);
-        return new LinkedList<>(finalExchanges);
+        return new LinkedList<>(getExchangeWhichContainsAllCategories(exchanges, categories));
     }
 
     private List<Exchange> getExchangeWhichContainsAllCategories(List<Exchange> exchanges, List<Category> categories) {
@@ -286,14 +287,43 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public List<Exchange> getExchangesByCoordinatesAndRadius(CoordinatesRequest coordinatesRequest, Double radius) {
-        Double latitude = coordinatesRequest.getLatitude();
-        Double longitude = coordinatesRequest.getLongitude();
+    public List<Exchange> getExchangesByCoordinatesAndRadius(double latitude, double longitude, double radius) {
+        double radiusInM = radius * 1000.0;
+        double LAT_MIN = -PI / 2;
+        double LAT_MAX = PI / 2;
+        double LON_MIN = -PI;
+        double LON_MAX = PI;
+        double latMin, latMax, lonMin, lonMax;
+        double radiusInKM = 6371.0;
+        double lat = Math.toRadians(latitude);
+        double lon = Math.toRadians(longitude);
 
-        return exchangeRepository.getExchangeByCoordinatesAndRadius(
-                latitude,
-                longitude,
-                radius
-        );
+        // angular distance in radians on a great circle
+        double angularRadius = radius / radiusInKM;
+        latMin = lat - angularRadius;
+        latMax = lat + angularRadius;
+        if (latMin > LAT_MIN && latMax < LAT_MAX) {
+            double dLon = asin(sin(angularRadius) / cos(lat));
+            lonMin = lon - dLon;
+            if (lonMin < LON_MIN) lonMin += 2 * PI;
+            lonMax = lon + dLon;
+            if (lonMax > LON_MAX) lonMax -= 2 * PI;
+        } else if (latMin < LAT_MIN) {
+            latMax = LAT_MAX;
+            lonMin = LON_MIN;
+            lonMax = LON_MAX;
+        } else {
+            latMin = LAT_MIN;
+            lonMin = LON_MIN;
+            lonMax = LON_MAX;
+        }
+        return exchangeRepository.getExchangeByBoundingCoordinates(
+                toDegrees(latMin),
+                toDegrees(latMax),
+                toDegrees(lonMin),
+                toDegrees(lonMax))
+                .stream().filter(it ->
+                        countDistanceBetweenPoints(latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude()) <= radiusInM
+                ).collect(Collectors.toList());
     }
 }
