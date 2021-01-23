@@ -38,7 +38,17 @@ class CoordinatesRepositoryImplTest {
         //given
         Coordinates in = CoordinatesGenerator.getCoordinates();
         //when
-        Coordinates out = coordinatesJPARepository.saveAndFlush(in);
+        Coordinates out = coordinatesRepository.saveCoordinates(in);
+        //then
+        Assertions.assertThat(out).isEqualTo(in);
+    }
+
+    @Test
+    void should_throw_coordinates() {
+        //given
+        Coordinates in = CoordinatesGenerator.getCoordinates();
+        //when
+        Coordinates out = coordinatesRepository.saveCoordinates(in);
         //then
         Assertions.assertThat(out).isEqualTo(in);
     }

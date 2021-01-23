@@ -5,7 +5,7 @@ public class Constants {
     public static final String RESPONSE_WITH_UNAUTH_ERROR = "Responding with unauthorized error. Message - {}";
     public static final String AUTH_HEADER = "Authorization";
     public static final String BEARER_TOKEN_BEGIN = "Bearer ";
-    public static final String HOME_URL = "http://localhost:8081";
+    public static final String HOME_URL = "http://192.168.8.100:8081";
 
     public static String[] getUnprotectedEndpoints() {
         return new String[]{
