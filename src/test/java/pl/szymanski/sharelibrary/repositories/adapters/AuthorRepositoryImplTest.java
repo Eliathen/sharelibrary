@@ -4,18 +4,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.szymanski.sharelibrary.entity.Author;
 import pl.szymanski.sharelibrary.entity.Book;
+import pl.szymanski.sharelibrary.repositories.jpa.AuthorJPARepository;
 import pl.szymanski.sharelibrary.repositories.jpa.BookJPARepository;
-import pl.szymanski.sharelibrary.repositories.jpa.ExchangeJPARepository;
 import pl.szymanski.sharelibrary.repositories.ports.AuthorRepository;
 import pl.szymanski.sharelibrary.utils.generator.AuthorGenerator;
 import pl.szymanski.sharelibrary.utils.generator.BookGenerator;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.Mockito.times;
 
 @SpringBootTest
 class AuthorRepositoryImplTest {
@@ -24,18 +27,14 @@ class AuthorRepositoryImplTest {
     private BookJPARepository bookJPARepository;
     @Autowired
     private AuthorRepository authorRepository;
-    @Autowired
-    ExchangeJPARepository exchangeJPARepository;
 
     @BeforeEach
     void setUp() {
-        exchangeJPARepository.deleteAll();
         bookJPARepository.deleteAll();
     }
 
     @AfterEach
     void cleanUp() {
-        exchangeJPARepository.deleteAll();
         bookJPARepository.deleteAll();
     }
 
@@ -64,4 +63,28 @@ class AuthorRepositoryImplTest {
         Assertions.assertThat(out.size()).isEqualTo(1);
     }
 
+    @Test
+    void should_call_method_find_by_name_or_surname_from_jpa_repository() {
+        //given
+        Author author = AuthorGenerator.getAuthor();
+        AuthorJPARepository authorJPARepository = Mockito.mock(AuthorJPARepository.class);
+        AuthorRepository repository = new AuthorRepositoryImpl(authorJPARepository);
+        //when
+        List<Author> result = repository.findAuthorByNameOrSurname(author.getName(), author.getSurname());
+        //then
+        Mockito.verify(authorJPARepository, times(1))
+                .findAuthorsByNameIgnoreCaseOrSurnameIgnoreCase(author.getName(), author.getSurname());
+    }
+
+    @Test
+    void should_call_method_find_by_name_and_surname_from_jpa_repository() {
+        //given
+        Author author = AuthorGenerator.getAuthor();
+        AuthorJPARepository authorJPARepository = Mockito.mock(AuthorJPARepository.class);
+        AuthorRepository repository = new AuthorRepositoryImpl(authorJPARepository);
+        //when
+        Optional<Author> result = repository.findAuthorByNameAndSurname(author.getName(), author.getSurname());
+        //then
+        Mockito.verify(authorJPARepository, times(1)).findAuthorByNameIgnoreCaseAndSurnameIgnoreCase(author.getName(), author.getSurname());
+    }
 }

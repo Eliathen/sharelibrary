@@ -200,19 +200,19 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .collect(Collectors.toList());
     }
 
-    private List<Exchange> filterByLanguage(List<Exchange> exchanges, Language language) {
+    public List<Exchange> filterByLanguage(List<Exchange> exchanges, Language language) {
         return exchanges.stream()
                 .filter(it -> it.getBook().getLanguage().getId().equals(language.getId()))
                 .collect(Collectors.toList());
     }
 
-    private List<Exchange> filterByBookCondition(List<Exchange> exchanges, List<BookCondition> bookCondition) {
+    public List<Exchange> filterByBookCondition(List<Exchange> exchanges, List<BookCondition> bookCondition) {
         return exchanges.stream()
                 .filter(it -> bookCondition.contains(it.getBook().getCondition()))
                 .collect(Collectors.toList());
     }
 
-    private List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
+    public List<Exchange> filterByQuery(List<Exchange> exchanges, String query) {
         List<String> queries = Arrays.asList(query.split(" "));
         Set<Exchange> result = filterByTitle(exchanges, query);
         result.addAll(filterByAuthors(exchanges, query));
@@ -223,7 +223,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return new LinkedList<>(result);
     }
 
-    private Set<Exchange> filterByTitle(List<Exchange> exchanges, String query) {
+    public Set<Exchange> filterByTitle(List<Exchange> exchanges, String query) {
         Set<Exchange> result = new HashSet<>();
         exchanges.forEach(it -> {
             if (it.getBook().getTitle().toLowerCase().contains(query)) {
@@ -233,7 +233,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return result;
     }
 
-    private Set<Exchange> filterByAuthors(List<Exchange> exchanges, String query) {
+    public Set<Exchange> filterByAuthors(List<Exchange> exchanges, String query) {
         Set<Exchange> result = new HashSet<>();
         exchanges.forEach(exchange -> {
             if (exchange.getBook().getAuthors()
@@ -263,10 +263,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeRepository.getExchangesLinkedWithUser(userId);
     }
 
-//    private List<Exchange> filterByCoordinatesAndRadius(double latitude, double longitude, double radius) {
-//        return exchangeRepository.getExchangeByCoordinatesAndRadius(latitude, longitude, radius);
-//    }
-
     private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
         return new LinkedList<>(getExchangeWhichContainsAllCategories(exchanges, categories));
     }
@@ -294,12 +290,11 @@ public class ExchangeServiceImpl implements ExchangeService {
         double LON_MIN = -PI;
         double LON_MAX = PI;
         double latMin, latMax, lonMin, lonMax;
-        double radiusInKM = 6371.0;
+        double earthRadiusInKM = 6371.0;
         double lat = Math.toRadians(latitude);
         double lon = Math.toRadians(longitude);
 
-        // angular distance in radians on a great circle
-        double angularRadius = radius / radiusInKM;
+        double angularRadius = radius / earthRadiusInKM;
         latMin = lat - angularRadius;
         latMax = lat + angularRadius;
         if (latMin > LAT_MIN && latMax < LAT_MAX) {
@@ -317,13 +312,12 @@ public class ExchangeServiceImpl implements ExchangeService {
             lonMin = LON_MIN;
             lonMax = LON_MAX;
         }
+
         return exchangeRepository.getExchangeByBoundingCoordinates(
-                toDegrees(latMin),
-                toDegrees(latMax),
-                toDegrees(lonMin),
-                toDegrees(lonMax))
-                .stream().filter(it ->
-                        countDistanceBetweenPoints(latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude()) <= radiusInM
+                toDegrees(latMin), toDegrees(latMax), toDegrees(lonMin), toDegrees(lonMax))
+                .stream().filter(it -> countDistanceBetweenPoints(
+                        latitude, longitude, it.getCoordinates().getLatitude(), it.getCoordinates().getLongitude()
+                        ) <= radiusInM
                 ).collect(Collectors.toList());
     }
 }

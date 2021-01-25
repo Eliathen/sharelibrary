@@ -31,6 +31,9 @@ public class UserGenerator {
         user.setSurname("Dee");
         user.setUsername("johnDee");
         user.setEmail("john@dee.com");
+        user.setPassword(new char[]{
+                'z', 'a', 'q', '1', '@', 'W', 'S', 'X'
+        });
         user.setCoordinates(CoordinatesGenerator.getCoordinates());
         return user;
     }

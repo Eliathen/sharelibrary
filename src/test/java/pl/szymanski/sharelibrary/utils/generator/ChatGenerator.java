@@ -20,7 +20,7 @@ public class ChatGenerator {
         room.setId(1L);
         User sender = UserGenerator.getUser();
         User recipient = UserGenerator.getUser();
-        recipient.setId(2L);
+        recipient.setId(1L);
         room.setSender(sender);
         room.setRecipient(recipient);
         return room;
@@ -29,8 +29,9 @@ public class ChatGenerator {
     public static ChatMessage getChatMessage() {
         User sender = UserGenerator.getUser();
         User recipient = UserGenerator.getUser();
-        recipient.setId(2L);
+        recipient.setId(1L);
         ChatMessage message = new ChatMessage();
+        message.setChat(getChatRoom());
         message.setTimestamp(LocalDateTime.now());
         message.setContent("This is test message");
         message.setSender(sender);

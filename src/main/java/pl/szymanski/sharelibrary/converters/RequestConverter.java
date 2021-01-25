@@ -25,7 +25,7 @@ public class RequestConverter {
         return book;
     }
 
-    private static Category categoryRequestToCategory(CategoryRequest categoryRequest) {
+    public static Category categoryRequestToCategory(CategoryRequest categoryRequest) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryRequest, category);
         return category;

@@ -106,7 +106,7 @@ class ChatControllerTest {
                 });
         Assertions.assertThat(response.size()).isEqualTo(3);
         Assertions.assertThat(response.get(0).getSender().getId()).isEqualTo(1L);
-        Assertions.assertThat(response.get(0).getRecipient().getId()).isEqualTo(2L);
+        Assertions.assertThat(response.get(0).getRecipient().getId()).isEqualTo(1L);
 
     }
 
@@ -129,7 +129,7 @@ class ChatControllerTest {
     void should_return_chat_room_response_and_status_200() throws Exception {
         //given
         Long firstUser = 1L;
-        Long secondUser = 2L;
+        Long secondUser = 1L;
         when(chatRoomService.getRoomBySenderIdAndRecipientId(firstUser, secondUser))
                 .thenReturn(ChatGenerator.getChatRoom());
         when(chatRoomService.getRoomBySenderIdAndRecipientId(secondUser, firstUser))
