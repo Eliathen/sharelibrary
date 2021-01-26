@@ -38,7 +38,7 @@ class LanguageRepositoryImplTest {
     }
 
     @Test
-    void should_return_language() {
+    void shouldReturnLanguage() {
         //given
         Language language = languageJPARepository.save(LanguageGenerator.getLanguage());
         //when
@@ -49,7 +49,7 @@ class LanguageRepositoryImplTest {
     }
 
     @Test
-    void should_return_languages() {
+    void shouldReturnLanguages() {
         //given
         Language language = languageJPARepository.save(LanguageGenerator.getLanguage());
         //when
@@ -59,7 +59,7 @@ class LanguageRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_all_from_jpa_repository() {
+    void shouldCallMethodFindAllFromJpaRepository() {
         //given
         LanguageJPARepository languageJPA = Mockito.mock(LanguageJPARepository.class);
         LanguageRepository repository = new LanguageRepositoryImpl(languageJPA);
@@ -70,7 +70,7 @@ class LanguageRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_by_id_from_jpa_repository() {
+    void shouldCallMethodFindByIdFromJpaRepository() {
         //given
         LanguageJPARepository languageJPA = Mockito.mock(LanguageJPARepository.class);
         LanguageRepository repository = new LanguageRepositoryImpl(languageJPA);

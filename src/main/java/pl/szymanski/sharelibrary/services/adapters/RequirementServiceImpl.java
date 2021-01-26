@@ -41,11 +41,6 @@ public class RequirementServiceImpl implements RequirementService {
     }
 
     @Override
-    public void cancelRequirement(Long id) {
-
-    }
-
-    @Override
     public List<Requirement> getUserRequirements(Long userId) {
         List<Exchange> userExchanges = exchangeService.getExchangesByUserId(userId);
         List<Requirement> requirements = new ArrayList<>();

@@ -39,7 +39,7 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void should_find_author_by_name_and_surname() {
+    void shouldFindAuthorByNameAndSurname() {
         //given
         Author author = AuthorGenerator.getAuthor();
         Book in = BookGenerator.getBook();
@@ -51,7 +51,7 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void should_find_author_by_name_or_surname() {
+    void shouldFindAuthorByNameOrSurname() {
         //given
         Author author = AuthorGenerator.getAuthor();
         Book in = BookGenerator.getBook();
@@ -64,7 +64,7 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_by_name_or_surname_from_jpa_repository() {
+    void shouldCallMethodFindByNameOrSurnameFromJpaRepository() {
         //given
         Author author = AuthorGenerator.getAuthor();
         AuthorJPARepository authorJPARepository = Mockito.mock(AuthorJPARepository.class);
@@ -77,7 +77,7 @@ class AuthorRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_by_name_and_surname_from_jpa_repository() {
+    void shouldCallMethodFindByNameAndSurnameFromJpaRepository() {
         //given
         Author author = AuthorGenerator.getAuthor();
         AuthorJPARepository authorJPARepository = Mockito.mock(AuthorJPARepository.class);

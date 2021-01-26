@@ -38,7 +38,7 @@ class LoginControllerTest {
 
 
     @Test
-    void should_login_and_return_token() throws Exception {
+    void shouldLoginAndReturnToken() throws Exception {
         String login = objectMapper.writeValueAsString(UserGenerator.getLoginRequest());
         User user = UserGenerator.getUser();
         when(userService.getUserByEmailOrUserName(anyString())).thenReturn(user);
@@ -54,7 +54,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void should_throw_exception_invalid_email_username_or_password_and_return_status_400() throws Exception {
+    void shouldThrowExceptionInvalidEmailUsernameOrPasswordAndReturnStatus400() throws Exception {
         String login = objectMapper.writeValueAsString(UserGenerator.getLoginRequest());
         when(userService.getUserByEmailOrUserName(anyString())).thenThrow(new InvalidUsernameEmailOrPassword());
         mockMvc.perform(post("/api/v1/login")

@@ -44,7 +44,7 @@ class ChatControllerTest {
     private ChatRoomServiceImpl chatRoomService;
 
     @Test
-    void should_return_list_of_chat_room_response_and_status_200() throws Exception {
+    void shouldReturnListOfChatRoomResponseAndStatus200() throws Exception {
         //given
         Long userId = 1L;
         List<ChatRoom> rooms = Arrays.asList(
@@ -68,7 +68,7 @@ class ChatControllerTest {
     }
 
     @Test
-    void should_return_empty_list_of_chat_room_response_and_status_200() throws Exception {
+    void shouldReturnEmptyListOfChatRoomResponseAndStatus200() throws Exception {
         //given
         Long userId = 1L;
         List<ChatRoom> rooms = new ArrayList<>();
@@ -87,7 +87,7 @@ class ChatControllerTest {
     }
 
     @Test
-    void should_return_list_of_chat_message_response_and_status_200() throws Exception {
+    void shouldReturnListOfChatMessageResponseAndStatus200() throws Exception {
         //given
         Long roomId = 1L;
         List<ChatMessage> messages = Arrays.asList(
@@ -106,12 +106,12 @@ class ChatControllerTest {
                 });
         Assertions.assertThat(response.size()).isEqualTo(3);
         Assertions.assertThat(response.get(0).getSender().getId()).isEqualTo(1L);
-        Assertions.assertThat(response.get(0).getRecipient().getId()).isEqualTo(1L);
+        Assertions.assertThat(response.get(0).getRecipient().getId()).isEqualTo(2L);
 
     }
 
     @Test
-    void should_throw_exception_room_not_exists_and_return_status_404() throws Exception {
+    void shouldThrowExceptionRoomNotExistsAndReturnStatus404() throws Exception {
         //given
         Long roomId = 3L;
         when(chatRoomService.getMessageFromRoom(roomId)).thenThrow(new RoomNotExist());
@@ -126,10 +126,10 @@ class ChatControllerTest {
     }
 
     @Test
-    void should_return_chat_room_response_and_status_200() throws Exception {
+    void shouldReturnChatRoomResponseAndStatus200() throws Exception {
         //given
         Long firstUser = 1L;
-        Long secondUser = 1L;
+        Long secondUser = 2L;
         when(chatRoomService.getRoomBySenderIdAndRecipientId(firstUser, secondUser))
                 .thenReturn(ChatGenerator.getChatRoom());
         when(chatRoomService.getRoomBySenderIdAndRecipientId(secondUser, firstUser))

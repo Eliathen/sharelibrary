@@ -58,8 +58,8 @@ public class UserGenerator {
 
     public static EditUserRequest getEditUserRequest() {
         return new EditUserRequest(
-                "John",
-                "Dee",
+                "William",
+                "Johnson",
                 CoordinatesGenerator.getCoordinatesRequest()
         );
     }

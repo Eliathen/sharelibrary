@@ -49,7 +49,7 @@ class ChatMessageRepositoryImplTest {
     }
 
     @Test
-    void should_return_chat_message() {
+    void shouldReturnChatMessage() {
         //given
         User user = userJPARepository.saveAndFlush(UserGenerator.getUser());
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
@@ -70,7 +70,7 @@ class ChatMessageRepositoryImplTest {
     }
 
     @Test
-    void should_call_save_method_from_jpa_repository() {
+    void shouldCallSaveMethodFromJpaRepository() {
         //given
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
         ChatMessageJPARepository chatMessageJPARepository = Mockito.mock(ChatMessageJPARepository.class);

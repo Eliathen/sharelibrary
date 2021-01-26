@@ -37,7 +37,7 @@ class CoordinatesRepositoryImplTest {
     }
 
     @Test
-    void should_add_coordinates() {
+    void shouldAddCoordinates() {
         //given
         Coordinates in = CoordinatesGenerator.getCoordinates();
         //when
@@ -47,7 +47,7 @@ class CoordinatesRepositoryImplTest {
     }
 
     @Test
-    void should_return_coordinates() {
+    void shouldReturnCoordinates() {
         //given
         Coordinates in = CoordinatesGenerator.getCoordinates();
         coordinatesJPARepository.saveAndFlush(in);
@@ -58,7 +58,7 @@ class CoordinatesRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_by_latitude_and_longitude_from_jpa_repository() {
+    void shouldCallMethodFindByLatitudeAndLongitudeFromJpaRepository() {
         //given
         Coordinates coordinates = CoordinatesGenerator.getCoordinates();
         CoordinatesJPARepository coordinatesJPARepository = Mockito.mock(CoordinatesJPARepository.class);
@@ -71,7 +71,7 @@ class CoordinatesRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_save_and_flush_from_jpa_repository() {
+    void shouldCallMethodSaveAndFlushFromJpaRepository() {
         //given
         Coordinates coordinates = CoordinatesGenerator.getCoordinates();
         CoordinatesJPARepository coordinatesJPARepository = Mockito.mock(CoordinatesJPARepository.class);

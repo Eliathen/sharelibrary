@@ -39,7 +39,7 @@ class CategoryRepositoryImplTest {
 
 
     @Test
-    void should_return_all_categories() {
+    void shouldReturnAllCategories() {
         //given
         //when
         List<Category> categories = categoryRepository.getAll();
@@ -48,7 +48,7 @@ class CategoryRepositoryImplTest {
     }
 
     @Test
-    void should_return_category() {
+    void shouldReturnCategory() {
         //given
         Category category = CategoryGenerator.getCategory();
         //when
@@ -58,7 +58,7 @@ class CategoryRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_all_from_jpa_repository() {
+    void shouldCallMethodFindAllFromJpaRepository() {
         //given
         Category category = CategoryGenerator.getCategory();
         CategoryJPARepository categoryJPARepository = Mockito.mock(CategoryJPARepository.class);
@@ -71,7 +71,7 @@ class CategoryRepositoryImplTest {
     }
 
     @Test
-    void should_call_method_find_by_name_from_jpa_repository() {
+    void shouldCallMethodFindByNameFromJpaRepository() {
         //given
         Category category = CategoryGenerator.getCategory();
         CategoryJPARepository categoryJPARepository = Mockito.mock(CategoryJPARepository.class);

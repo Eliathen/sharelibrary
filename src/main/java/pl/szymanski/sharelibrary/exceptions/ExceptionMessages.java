@@ -21,4 +21,5 @@ public class ExceptionMessages {
     public static final String CHAT_ROOM_NOT_EXIST_FORMAT = "Room does not exist";
     public static final String CATEGORY_NOT_EXISTS = "Category %s does not exist";
     public static final String LANGUAGE_NOT_EXISTS = "Language does not exist";
+    public static final String COORDINATES_CANNOT_BE_NULL = "Coordinates cannot be null";
 }

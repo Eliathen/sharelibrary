@@ -88,7 +88,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getUserById(userId).orElseThrow(() -> new UserNotFoundById(userId));
         Book book = bookRepository.getBookById(bookId).orElseThrow(() -> new BookDoesNotExist(bookId));
 
-        List<UserBook> usersBooks = user.getBooks();
+        List<UserBook> usersBooks = new ArrayList<UserBook>();
+        if (user.getBooks() != null) {
+            usersBooks = user.getBooks();
+        }
         UserBook userBook = new UserBook(user, book, BookStatus.AT_OWNER, null);
         usersBooks.add(userBook);
         user.setBooks(usersBooks);
@@ -128,10 +131,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public User withdrawBookFromUser(Long userId, Long bookId) {
         User user = getUserById(userId);
-        user.getBooks().removeIf(it ->
+        List<UserBook> userBooks = user.getBooks();
+        System.out.println(userBooks);
+        userBooks.removeIf(it ->
                 it.getBook().getId().equals(bookId)
         );
-        return userRepository.saveUser(user);
+        user.setBooks(userBooks);
+        return user;
     }
 
     @Override

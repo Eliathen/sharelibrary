@@ -2,6 +2,7 @@ package pl.szymanski.sharelibrary.services.adapters;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.szymanski.sharelibrary.entity.*;
@@ -40,7 +41,6 @@ public class BookServiceImpl implements BookService {
         List<String> queries = Arrays.asList(query.split(" "));
         queries.forEach(it -> books.addAll(bookRepository.findBooksByTitle(it.toLowerCase())));
         queries.forEach(it -> authorRepository.findAuthorByNameOrSurname(it.toLowerCase(), it.toLowerCase()).forEach(author -> {
-                    System.out.println("Author = " + author);
                     books.addAll(author.getBooks());
                 }
                 )
@@ -60,6 +60,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book saveBook(Book book, MultipartFile cover, Long userId) throws IOException {
         book.setTitle(book.getTitle().replace("\"", ""));
         if (!Objects.isNull(cover)) {

@@ -45,7 +45,7 @@ class RequirementControllerTest {
     private RequirementServiceImpl requirementService;
 
     @Test
-    void should_return_list_of_user_requirements_and_status_200() throws Exception {
+    void shouldReturnListOfUserRequirementsAndStatus200() throws Exception {
         //given
         List<Requirement> requirementList = Arrays.asList(
                 RequirementGenerator.getRequirement(),
@@ -69,7 +69,7 @@ class RequirementControllerTest {
     }
 
     @Test
-    void should_return_requirement_and_status_200() throws Exception {
+    void shouldReturnRequirementAndStatus200() throws Exception {
         //given
         CreateRequirementRequest createRequirementRequest = RequirementGenerator.getCreateRequirementRequest();
         String request = objectMapper.writeValueAsString(createRequirementRequest);
@@ -94,7 +94,7 @@ class RequirementControllerTest {
     }
 
     @Test
-    void should_throw_requirement_already_exists_during_create_and_status_302() throws Exception {
+    void shouldThrowRequirementAlreadyExistsDuringCreateAndStatus302() throws Exception {
         //given
         CreateRequirementRequest createRequirementRequest = RequirementGenerator.getCreateRequirementRequest();
         String request = objectMapper.writeValueAsString(createRequirementRequest);

@@ -49,7 +49,8 @@ public class UserController {
     @PostMapping("/withdrawal")
     public ResponseEntity<UserResponse> withdrawBookFromUser(@RequestBody RemoveBookFromUserRequest removeBookFromUserRequest) {
         return new ResponseEntity<>(
-                UserResponse.of(userService.withdrawBookFromUser(removeBookFromUserRequest.getUserId(), removeBookFromUserRequest.getBookId())),
+                UserResponse.of(userService.withdrawBookFromUser(removeBookFromUserRequest.getUserId(),
+                        removeBookFromUserRequest.getBookId())),
                 HttpStatus.OK
         );
     }

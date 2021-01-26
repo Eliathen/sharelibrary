@@ -10,7 +10,7 @@ class RequestConverterTest {
 
 
     @Test
-    void should_return_boo() {
+    void shouldReturnBook() {
         //given
         AddBookRequest addBookRequest = BookGenerator.getAddBookRequest();
         //when
@@ -26,7 +26,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_category() {
+    void shouldReturnCategory() {
         //given
         CategoryRequest request = CategoryGenerator.getCategoryRequest();
         //when
@@ -39,7 +39,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_author() {
+    void shouldReturnAuthor() {
         //given
         AuthorRequest request = AuthorGenerator.getAuthorRequest();
         //when
@@ -52,7 +52,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_coordinates() {
+    void shouldReturnCoordinates() {
         //given
         CoordinatesRequest request = CoordinatesGenerator.getCoordinatesRequest();
         //when
@@ -64,7 +64,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_language() {
+    void shouldReturnLanguage() {
         //given
         LanguageRequest request = LanguageGenerator.getLanguageRequest();
         //when
@@ -76,7 +76,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_user() {
+    void shouldReturnUser() {
         //given
         UserRequest request = UserGenerator.getUserRequest();
         //when
@@ -93,7 +93,7 @@ class RequestConverterTest {
     }
 
     @Test
-    void should_return_exchange() {
+    void shouldReturnExchange() {
         //given
         AddExchangeRequest request = ExchangeGenerator.getAddExchangeRequest();
         //when

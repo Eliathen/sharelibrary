@@ -8,6 +8,7 @@ import pl.szymanski.sharelibrary.entity.*;
 import pl.szymanski.sharelibrary.enums.BookCondition;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 import pl.szymanski.sharelibrary.enums.ExchangeStatus;
+import pl.szymanski.sharelibrary.exceptions.ExceptionMessages;
 import pl.szymanski.sharelibrary.exceptions.exchanges.ExchangeNotExist;
 import pl.szymanski.sharelibrary.repositories.ports.CategoryRepository;
 import pl.szymanski.sharelibrary.repositories.ports.CoordinatesRepository;
@@ -62,13 +63,25 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void finishExchange(Long exchangeId) {
-        Exchange exchange = exchangeRepository.getExchangeById(exchangeId).orElseThrow(() -> new ExchangeNotExist(exchangeId));
+        Exchange exchange = exchangeRepository.getExchangeById(exchangeId)
+                .orElseThrow(() -> new ExchangeNotExist(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
-        exchangeRepository.saveExchange(exchange);
-        changeUserBookStatus(exchange.getUser().getId(), exchange.getBook().getId(), BookStatus.AT_OWNER);
+
+        exchange.getUser().getBooks().stream().forEach(it -> {
+            if (it.getBook().getId().equals(exchange.getBook().getId())) {
+                it.setStatus(BookStatus.AT_OWNER);
+                it.setAtUser(null);
+            }
+        });
         if (exchange.getForBook() != null) {
-            changeUserBookStatus(exchange.getWithUser().getId(), exchange.getForBook().getId(), BookStatus.AT_OWNER);
+            exchange.getWithUser().getBooks().forEach(it -> {
+                if (it.getBook().getId().equals(exchange.getForBook().getId())) {
+                    it.setStatus(BookStatus.AT_OWNER);
+                    it.setAtUser(null);
+                }
+            });
         }
+        exchangeRepository.saveExchange(exchange);
     }
 
     @Override
@@ -153,7 +166,6 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     public List<Exchange> getExchangesByWithUserId(Long userId) {
-        System.out.println();
         List<Exchange> exchanges = exchangeRepository.getExchangeByStatus(ExchangeStatus.DURING);
         return exchanges.stream()
                 .filter(it -> it.getWithUser() != null && it.getWithUser().getId().equals(userId))
@@ -168,6 +180,8 @@ public class ExchangeServiceImpl implements ExchangeService {
                                          String query,
                                          Integer languageId,
                                          List<Integer> conditions) {
+        if (latitude == null || longitude == null)
+            throw new IllegalArgumentException(ExceptionMessages.COORDINATES_CANNOT_BE_NULL);
         List<Exchange> exchanges = getExchangesByCoordinatesAndRadius(latitude, longitude, radius)
                 .stream()
                 .filter(it -> it.getExchangeStatus().equals(ExchangeStatus.STARTED))
@@ -226,7 +240,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     public Set<Exchange> filterByTitle(List<Exchange> exchanges, String query) {
         Set<Exchange> result = new HashSet<>();
         exchanges.forEach(it -> {
-            if (it.getBook().getTitle().toLowerCase().contains(query)) {
+            if (it.getBook().getTitle().toLowerCase().contains(query.toLowerCase())) {
                 result.add(it);
             }
         });
@@ -238,7 +252,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchanges.forEach(exchange -> {
             if (exchange.getBook().getAuthors()
                     .stream()
-                    .anyMatch(author -> author.getName().contains(query) || author.getSurname().contains(query))) {
+                    .anyMatch(author -> author.getName().toLowerCase().contains(query.toLowerCase()) || author.getSurname().toLowerCase().contains(query.toLowerCase()))) {
                 result.add(exchange);
             }
         });
@@ -263,7 +277,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeRepository.getExchangesLinkedWithUser(userId);
     }
 
-    private LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
+    LinkedList<Exchange> filterByCategory(List<Exchange> exchanges, List<Category> categories) {
         return new LinkedList<>(getExchangeWhichContainsAllCategories(exchanges, categories));
     }
 

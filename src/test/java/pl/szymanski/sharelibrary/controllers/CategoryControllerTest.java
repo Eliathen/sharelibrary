@@ -39,7 +39,7 @@ class CategoryControllerTest {
     private CategoryServiceImpl categoryService;
 
     @Test
-    void should_return_list_of_category_response_and_status_200() throws Exception {
+    void shouldReturnListOfCategoryResponseAndStatus200() throws Exception {
         //given
         List<Category> categoryList = Arrays.asList(
                 CategoryGenerator.getCategory(),

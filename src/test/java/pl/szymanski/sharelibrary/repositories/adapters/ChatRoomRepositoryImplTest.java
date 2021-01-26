@@ -52,7 +52,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_return_room_by_sender_id_and_recipient_id() {
+    void shouldReturnRoomBySenderIdAndRecipientId() {
         //given
         User user = userJPARepository.saveAndFlush(UserGenerator.getUser());
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
@@ -70,7 +70,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_call_find_by_sender_id_and_recipient_id_method_from_jpa_repository() {
+    void shouldCallFindBySenderIdAndRecipientIdMethodFromJpaRepository() {
         //given
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
         ChatRoom chatRoom = ChatGenerator.getChatRoom();
@@ -85,7 +85,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_return_room() {
+    void shouldReturnChatRoom() {
         //given
         User user = userJPARepository.saveAndFlush(UserGenerator.getUser());
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
@@ -101,7 +101,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_call_save_and_flush_method_from_jpa_repository() {
+    void shouldCallSaveAndFlushMethodFromJpaRepository() {
         //given
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
         ChatRoom chatRoom = ChatGenerator.getChatRoom();
@@ -116,7 +116,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_return_room_by_id() {
+    void shouldReturnChatRoomById() {
         //given
         User user = userJPARepository.saveAndFlush(UserGenerator.getUser());
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
@@ -133,7 +133,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_call_find_by_id_method_from_jpa_repository() {
+    void shouldCallFindByIdMethodFromJpaRepository() {
         //given
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
         ChatRoom chatRoom = ChatGenerator.getChatRoom();
@@ -148,7 +148,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_return_rooms() {
+    void shouldReturnRooms() {
         //given
         User user = userJPARepository.saveAndFlush(UserGenerator.getUser());
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
@@ -164,7 +164,7 @@ class ChatRoomRepositoryImplTest {
     }
 
     @Test
-    void should_call_find_all_method_from_jpa_repository() {
+    void shouldCallFindAllMethodFromJpaRepository() {
         //given
         ChatMessage chatMessage = ChatGenerator.getChatMessage();
         ChatRoom chatRoom = ChatGenerator.getChatRoom();

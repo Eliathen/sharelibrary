@@ -65,7 +65,7 @@ class BookControllerTest {
     private UserService userService;
 
     @Test
-    void should_return_book_without_users_and_status_200() throws Exception {
+    void shouldReturnBookWithoutUsersAndStatus200() throws Exception {
         //given
         Book book = BookGenerator.getBook();
         when(bookService.findBookById(anyLong())).thenReturn(book);
@@ -79,7 +79,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_throw_book_not_exists_and_status_404() throws Exception {
+    void shouldThrowBookNotExistsAndStatus404() throws Exception {
         //given
         long bookId = 1L;
         when(bookService.findBookById(anyLong())).thenThrow(new BookDoesNotExist(bookId));
@@ -91,7 +91,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_cover_data_and_status_200() throws Exception {
+    void shouldReturnCoverDataAndStatus200() throws Exception {
         //given
         Cover cover = CoverGenerator.getCover();
         long bookId = 1L;
@@ -105,7 +105,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_throw_cover_for_book_does_not_exists_and_return_status_404() throws Exception {
+    void shouldThrowCoverForBookDoesNotExistsAndReturnStatus404() throws Exception {
         //given
         Cover cover = CoverGenerator.getCover();
         long bookId = 1L;
@@ -121,7 +121,7 @@ class BookControllerTest {
 
 
     @Test
-    void should_return_set_of_language_response_and_status_200() throws Exception {
+    void shouldReturnSetOfLanguageResponseAndStatus200() throws Exception {
         //given
         Set<Language> languageSet = Set.of(
                 LanguageGenerator.getLanguage()
@@ -142,7 +142,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_list_of_books_and_status_200() throws Exception {
+    void shouldReturnListOfBooksAndStatus200() throws Exception {
         //given
         Book book = BookGenerator.getBook();
         book.setTitle("New lord");
@@ -189,7 +189,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_book_after_save_and_status_201() throws Exception {
+    void shouldReturnBookAfterSaveAndStatus201() throws Exception {
         //given
         Book book = BookGenerator.getBook();
         when(bookService.saveBook(any(), any(), anyLong())).thenReturn(book);
@@ -230,7 +230,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_list_of_user_books_and_status_200() throws Exception {
+    void shouldReturnListOfUserBooksAndStatus200() throws Exception {
         //given
         List<UserBookResponse> books = Stream.of(
                 BookGenerator.getUserBook(), BookGenerator.getUserBook()).map(UserBookResponse::of).collect(Collectors.toList()
@@ -252,7 +252,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_empty_list_of_user_books_and_status_200() throws Exception {
+    void shouldReturnEmptyListOfUserBooksAndStatus200() throws Exception {
         //given
         when(bookService.findBooksByUserId(anyLong())).thenReturn(new ArrayList<>());
         long userId = 1L;
@@ -271,7 +271,7 @@ class BookControllerTest {
     }
 
     @Test
-    void should_return_list_of_users_with_books_which_have_user_of_id_and_status_200() throws Exception {
+    void shouldReturnListOfUsersWithBooksWhichHaveUserOfIdAndStatus200() throws Exception {
         //given
         List<User> users = Arrays.asList(
                 UserGenerator.getUserWithBooks(),

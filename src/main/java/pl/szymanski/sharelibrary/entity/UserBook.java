@@ -1,13 +1,15 @@
 package pl.szymanski.sharelibrary.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import pl.szymanski.sharelibrary.enums.BookStatus;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -21,7 +23,7 @@ public class UserBook {
     private User user;
 
     @Id
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 

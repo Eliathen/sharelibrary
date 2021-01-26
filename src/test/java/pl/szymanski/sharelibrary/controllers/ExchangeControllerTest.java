@@ -50,7 +50,7 @@ class ExchangeControllerTest {
 
 
     @Test
-    void should_return_exchange_response_and_status_201() throws Exception {
+    void shouldReturnExchangeResponseAndStatus201() throws Exception {
         //given
         AddExchangeRequest request = ExchangeGenerator.getAddExchangeRequest();
         Exchange exchange = ExchangeGenerator.getExchange();
@@ -69,7 +69,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_return_list_of_user_exchanges_and_status_200() throws Exception {
+    void shouldReturnListOfUserExchangesAndStatus200() throws Exception {
         //given
         Exchange exchange = ExchangeGenerator.getExchange();
         List<Exchange> exchanges = List.of(exchange, exchange);
@@ -92,7 +92,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_execute_and_return_exchange_and_status_200() throws Exception {
+    void shouldExecuteAndReturnExchangeAndStatus200() throws Exception {
         //given
         Exchange exchange = ExchangeGenerator.getExchange();
         ExecuteExchangeRequest request = ExchangeGenerator.getExecuteExchangeRequest();
@@ -111,7 +111,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_finish_and_return_exchange_and_status_200() throws Exception {
+    void shouldFinishAndReturnExchangeAndStatus200() throws Exception {
         //given
         Exchange exchange = ExchangeGenerator.getExchange();
         ExecuteExchangeRequest request = ExchangeGenerator.getExecuteExchangeRequest();
@@ -125,7 +125,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_return_exchange_with_id_and_status_200() throws Exception {
+    void shouldReturnExchangeWithIdAndStatus200() throws Exception {
         //given
         Exchange exchange = ExchangeGenerator.getExchange();
         long exchangeId = 1L;
@@ -142,7 +142,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_throw_exception_exchange_not_exist_and_status_404() throws Exception {
+    void shouldThrowExceptionExchangeNotExistAndStatus404() throws Exception {
         //given
         long exchangeId = 1L;
         when(exchangeService.getExchangeById(exchangeId)).thenThrow(new ExchangeNotExist(exchangeId));
@@ -157,7 +157,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_return_list_of_requirement_by_exchange_id() throws Exception {
+    void shouldReturnListOfRequirementByExchangeId() throws Exception {
         //given
         List<Requirement> requirements = List.of(RequirementGenerator.getRequirement());
         long exchangeId = 1L;
@@ -176,7 +176,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_return_list_of_exchanges_and_status_200() throws Exception {
+    void shouldReturnListOfExchangesAndStatus200() throws Exception {
         //given
         Exchange exchange = ExchangeGenerator.getExchange();
         List<Exchange> exchanges = List.of(exchange, exchange);
@@ -198,7 +198,7 @@ class ExchangeControllerTest {
     }
 
     @Test
-    void should_return_filtered_list_of_exchanges_and_status_200() throws Exception {
+    void shouldReturnFilteredListOfExchangesAndStatus200() throws Exception {
         //given
         ExchangeResponse exchange = ExchangeResponse.of(ExchangeGenerator.getExchange());
         List<ExchangeResponse> exchanges = List.of(exchange, exchange);

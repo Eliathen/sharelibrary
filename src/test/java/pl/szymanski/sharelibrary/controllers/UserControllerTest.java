@@ -48,7 +48,7 @@ class UserControllerTest {
     private BookServiceImpl bookService;
 
     @Test
-    void should_return_user_request() throws Exception {
+    void shouldReturnUserRequest() throws Exception {
         //given
         String userRequest = objectMapper.writeValueAsString(UserGenerator.getUserRequest());
         User user = UserGenerator.getUser();
@@ -70,7 +70,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_throw_email_already_exists_exception_and_return_302() throws Exception {
+    void shouldThrowEmailAlreadyExistsExceptionAndReturn302() throws Exception {
         //given
         User user = RequestConverter.userRequestToUser(UserGenerator.getUserRequest());
         when(userService.saveUser(any())).thenThrow(new EmailAlreadyExist(user.getEmail()));
@@ -84,7 +84,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_throw_username_already_exists_exception_and_return_302() throws Exception {
+    void shouldThrowUsernameAlreadyExistsExceptionAndReturn302() throws Exception {
         //given
         User user = RequestConverter.userRequestToUser(UserGenerator.getUserRequest());
         when(userService.saveUser(any())).thenThrow(new UsernameAlreadyExists(user.getUsername()));
@@ -98,7 +98,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_assign_book_and_return_status_200() throws Exception {
+    void shouldAssignBookAndReturnStatus200() throws Exception {
         //given
         String request = objectMapper.writeValueAsString(BookGenerator.getAssignBookRequest());
         when(userService.assignBookToUser(anyLong(), anyLong())).thenReturn(UserGenerator.getUserWithBooks());
@@ -112,7 +112,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_edit_user_and_return_status_200() throws Exception {
+    void shouldEditUserAndReturnStatus200() throws Exception {
         final Long userId = 1L;
         EditUserRequest user = UserGenerator.getEditUserRequest();
         String request = objectMapper.writeValueAsString(user);
@@ -125,7 +125,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_throw_exception_user_not_found_and_return_status_404() throws Exception {
+    void shouldThrowExceptionUserNotFoundAndReturnStatus404() throws Exception {
         final Long userId = 1L;
         EditUserRequest user = UserGenerator.getEditUserRequest();
         String request = objectMapper.writeValueAsString(user);
@@ -140,7 +140,7 @@ class UserControllerTest {
 
 
     @Test
-    void should_withdraw_book_and_return_status_200() throws Exception {
+    void shouldWithdrawBookAndReturnStatus200() throws Exception {
         //given
         String request = objectMapper.writeValueAsString(UserGenerator.getRemoveBookFromUserRequest());
         when(userService.withdrawBookFromUser(anyLong(), anyLong())).thenReturn(UserGenerator.getUserWithBooks());
@@ -155,7 +155,7 @@ class UserControllerTest {
 
 
     @Test
-    void should_get_user_and_return_status_200() throws Exception {
+    void shouldGetUserAndReturnStatus200() throws Exception {
         final Long userId = 1L;
         when(userService.getUserById(userId)).thenReturn(UserGenerator.getUser());
         mockMvc.perform(get("/api/v1/users/" + userId)
@@ -165,7 +165,7 @@ class UserControllerTest {
     }
 
     @Test
-    void should_throw_exception_user_not_found_by_id_and_return_status_404() throws Exception {
+    void shouldThrowExceptionUserNotFoundByIdAndReturnStatus404() throws Exception {
         final Long userId = 1L;
         when(userService.getUserById(userId)).thenThrow(new UserNotFoundById(userId));
         mockMvc.perform(get("/api/v1/users/" + userId)

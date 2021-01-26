@@ -9,8 +9,6 @@ public interface RequirementService {
 
     Requirement createRequirement(CreateRequirementRequest createRequirementRequest);
 
-    void cancelRequirement(Long id);
-
     List<Requirement> getUserRequirements(Long userId);
 
 }

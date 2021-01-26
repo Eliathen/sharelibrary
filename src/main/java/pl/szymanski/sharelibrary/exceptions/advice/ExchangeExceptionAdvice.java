@@ -19,4 +19,12 @@ public class ExchangeExceptionAdvice {
         );
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInfo> incorrectArgumentValue(IllegalArgumentException exception) {
+        ErrorInfo errorInfo = new ErrorInfo(LocalDateTime.now(), exception.getMessage());
+        return new ResponseEntity<>(
+                errorInfo, HttpStatus.NOT_FOUND
+        );
+    }
+
 }
