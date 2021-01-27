@@ -22,7 +22,7 @@ import static org.mockito.Mockito.times;
 class LanguageRepositoryImplTest {
 
     @Autowired
-    private LanguageRepository languageRepository;
+    private LanguageRepositoryImpl languageRepository;
 
     @Autowired
     private LanguageJPARepository languageJPARepository;

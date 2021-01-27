@@ -223,9 +223,9 @@ class ExchangeServiceImplTest {
     void shouldThrowIllegalArgumentExceptionWhenLongitudeIsNull() {
         //given
         List<String> categoryList = List.of("Biography");
-        //when
-        Assertions.assertThatThrownBy(
-                () -> exchangeService.filter(50.12,
+        //when & then
+        Assertions.assertThatThrownBy(() ->
+                exchangeService.filter(50.12,
                         null,
                         100.0,
                         categoryList,
@@ -234,7 +234,6 @@ class ExchangeServiceImplTest {
                         List.of(1)
                 )
         ).isInstanceOf(IllegalArgumentException.class);
-        //then
     }
 
     @Test
@@ -278,8 +277,6 @@ class ExchangeServiceImplTest {
         verify(exchangeRepository).saveExchange(argument.capture());
         Assertions.assertThat(argument.getValue().getId()).isEqualTo(exchange.getId());
         Assertions.assertThat(argument.getValue().getExchangeStatus()).isEqualTo(ExchangeStatus.FINISHED);
-
-
     }
 
     @Test

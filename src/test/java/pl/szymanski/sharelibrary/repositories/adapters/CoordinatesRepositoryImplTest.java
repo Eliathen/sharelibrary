@@ -43,7 +43,8 @@ class CoordinatesRepositoryImplTest {
         //when
         Coordinates out = coordinatesRepository.saveCoordinates(in);
         //then
-        Assertions.assertThat(out).isEqualTo(in);
+        Assertions.assertThat(out.getLatitude()).isEqualTo(in.getLatitude());
+        Assertions.assertThat(out.getLongitude()).isEqualTo(in.getLongitude());
     }
 
     @Test
