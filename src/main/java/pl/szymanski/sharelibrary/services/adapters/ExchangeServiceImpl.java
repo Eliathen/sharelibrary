@@ -67,7 +67,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                 .orElseThrow(() -> new ExchangeNotExist(exchangeId));
         exchange.setExchangeStatus(ExchangeStatus.FINISHED);
 
-        exchange.getUser().getBooks().stream().forEach(it -> {
+        exchange.getUser().getBooks().forEach(it -> {
             if (it.getBook().getId().equals(exchange.getBook().getId())) {
                 it.setStatus(BookStatus.AT_OWNER);
                 it.setAtUser(null);
@@ -117,7 +117,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchange.getRequirements().forEach(requirement -> requirement.setActual(false));
 
         Exchange savedExchange = exchangeRepository.saveExchange(exchange);
-        //If for book is shared. Finish exchange
+
         if (savedExchange != null && savedExchange.getForBook() != null) {
             getUserExchange(withUser.getId())
                     .stream()

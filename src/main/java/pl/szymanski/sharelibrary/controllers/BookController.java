@@ -79,7 +79,6 @@ public class BookController {
         );
     }
 
-    //get list of user with books which user of id userId have
     @GetMapping("/{userId}/exchanged")
     public ResponseEntity<List<UserResponse>> getExchangedBooks(@PathVariable Long userId) {
         return new ResponseEntity<>(

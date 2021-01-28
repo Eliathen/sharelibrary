@@ -50,9 +50,4 @@ public class SwaggerConfig {
         return new ApiKey("JWT", "Authorization", "header");
     }
 
-//    @Bean(initMethod = "start", destroyMethod = "stop")
-//    public Server inMemoryH2DatabaseServer() throws SQLException {
-//        return Server.createTcpServer(
-//                "-tcp", "-tcpAllowOthers", "-tcpPort", "9090");
-//    }
 }
